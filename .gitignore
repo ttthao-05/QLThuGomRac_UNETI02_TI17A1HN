@@ -1,0 +1,25 @@
+# Visual Studio / .NET
+.vs/
+.vscode/
+.idea/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+bin/
+obj/
+TestResults/
+
+# Local secrets
+.env
+.env.*
+appsettings.*.local.json
+
+# Database files
+*.db
+*.db-shm
+*.db-wal
+
+# OS files
+.DS_Store
+Thumbs.db
