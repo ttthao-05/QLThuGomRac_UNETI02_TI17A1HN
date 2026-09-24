@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using QLThuGomRac_UNETI02_TI17A1HN.Data;
+using QLThuGomRac_UNETI02_TI17A1HN.Data.Seed;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,5 +30,12 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
 
+// Tạo CSDL từ Migration (Code First) và nạp dữ liệu mẫu (§15).
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    db.Database.Migrate();
+    SeedData.EnsureSeeded(db);
+}
 
 app.Run();
