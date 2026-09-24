@@ -1,0 +1,109 @@
+@* // Họ và tên: Trần Thị Thảo
+   // Mã sinh viên: 23103100025
+   // Nội dung thực hiện: Module 1 – Quản lý tài khoản (§5.1 Quản lý tài khoản) *@
+@using QLThuGomRac_UNETI02_TI17A1HN.Models.Entities
+@using QLThuGomRac_UNETI02_TI17A1HN.Models.Enums
+@using QLThuGomRac_UNETI02_TI17A1HN.Models.ViewModels.Module1
+@model TaiKhoanIndexViewModel
+@{
+    ViewData["Title"] = "Quản lý tài khoản";
+}
+
+<h1 class="mb-1">Quản lý tài khoản</h1>
+<p class="text-muted">§5.1 – Xem danh sách, xem chi tiết, thêm, sửa, khóa/mở khóa tài khoản.</p>
+
+@if (TempData["ThongBao"] is string thongBao)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @thongBao
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+@* Tìm kiếm và lọc: submit bằng GET nên điều kiện được giữ trên URL khi mở lại trang. *@
+<form asp-controller="TaiKhoan" asp-action="Index" method="get" class="row g-2 align-items-end mb-3">
+    <div class="col-md-4">
+        <label asp-for="TuKhoa" class="form-label"></label>
+        <input asp-for="TuKhoa" class="form-control" placeholder="Tên đăng nhập hoặc họ tên" />
+    </div>
+    <div class="col-md-3">
+        <label asp-for="LoaiTaiKhoan" class="form-label"></label>
+        <select name="LoaiTaiKhoan" class="form-select" asp-items="Model.LoaiTaiKhoanItems"></select>
+    </div>
+    <div class="col-md-3">
+        <label asp-for="TrangThai" class="form-label"></label>
+        <select name="TrangThai" class="form-select" asp-items="Model.TrangThaiItems"></select>
+    </div>
+    <div class="col-md-2 d-flex gap-2">
+        <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+        <a asp-controller="TaiKhoan" asp-action="Index" class="btn btn-outline-secondary">Đặt lại</a>
+    </div>
+</form>
+
+<div class="d-flex justify-content-between align-items-center mb-2">
+    <span class="text-muted">Tổng số tài khoản: <strong>@Model.DanhSach.Count</strong></span>
+    <a asp-controller="TaiKhoan" asp-action="Create" class="btn btn-success">+ Thêm tài khoản</a>
+</div>
+
+@if (Model.DanhSach.Count == 0)
+{
+    <div class="alert alert-info">Không tìm thấy tài khoản phù hợp với điều kiện tìm kiếm/lọc.</div>
+}
+else
+{
+    <table class="table table-bordered table-hover align-middle">
+        <thead class="table-light">
+            <tr>
+                <th>Mã</th>
+                <th>Tên đăng nhập</th>
+                <th>Họ tên</th>
+                <th>Số điện thoại</th>
+                <th>Loại tài khoản</th>
+                <th>Trạng thái</th>
+                <th style="width: 260px;">Thao tác</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.DanhSach)
+            {
+                <tr>
+                    <td>@item.MaTaiKhoan</td>
+                    <td>@item.TenDangNhap</td>
+                    <td>@item.HoTen</td>
+                    <td>@item.SoDienThoai</td>
+                    <td>@item.LoaiTaiKhoan.GetDisplayName()</td>
+                    <td>
+                        @if (item.TrangThai == TrangThaiTaiKhoan.DangHoatDong)
+                        {
+                            <span class="badge bg-success">@item.TrangThai.GetDisplayName()</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-danger">@item.TrangThai.GetDisplayName()</span>
+                        }
+                    </td>
+                    <td>
+                        <a asp-controller="TaiKhoan" asp-action="Details" asp-route-id="@item.MaTaiKhoan"
+                           class="btn btn-sm btn-outline-primary">Chi tiết</a>
+                        <a asp-controller="TaiKhoan" asp-action="Edit" asp-route-id="@item.MaTaiKhoan"
+                           class="btn btn-sm btn-outline-secondary">Sửa</a>
+                        <form asp-controller="TaiKhoan" asp-action="KhoaMoKhoa" asp-route-id="@item.MaTaiKhoan"
+                              method="post" class="d-inline">
+                            @Html.AntiForgeryToken()
+                            @if (item.TrangThai == TrangThaiTaiKhoan.DangHoatDong)
+                            {
+                                <button type="submit" class="btn btn-sm btn-outline-danger"
+                                        onclick="return confirm('Khóa tài khoản @item.TenDangNhap?');">Khóa</button>
+                            }
+                            else
+                            {
+                                <button type="submit" class="btn btn-sm btn-outline-success"
+                                        onclick="return confirm('Mở khóa tài khoản @item.TenDangNhap?');">Mở khóa</button>
+                            }
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
