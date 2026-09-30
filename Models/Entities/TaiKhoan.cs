@@ -1,4 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿//Họ tên: Trần Thị Thảo
+//Msv: 23103100025
+//ND: Module 1-Qlí tài khoản(5.1.Qlí tài khoản)
+using System.ComponentModel.DataAnnotations;
 using QLThuGomRac_UNETI02_TI17A1HN.Models.Enums;
 
 namespace QLThuGomRac_UNETI02_TI17A1HN.Models.Entities;
