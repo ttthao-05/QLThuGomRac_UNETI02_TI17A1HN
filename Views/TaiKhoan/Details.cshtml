@@ -1,0 +1,56 @@
+@* // Họ và tên: Trần Thị Thảo
+   // Mã sinh viên: 23103100025
+   // Nội dung thực hiện: Module 1 – Quản lý tài khoản (§5.1 Quản lý tài khoản) *@
+@using QLThuGomRac_UNETI02_TI17A1HN.Models.Entities
+@using QLThuGomRac_UNETI02_TI17A1HN.Models.Enums
+@model TaiKhoan
+@{
+    ViewData["Title"] = "Chi tiết tài khoản";
+}
+
+<h1 class="mb-3">Chi tiết tài khoản</h1>
+
+@if (TempData["ThongBao"] is string thongBao)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @thongBao
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<dl class="row">
+    <dt class="col-sm-3">@Html.DisplayNameFor(m => m.MaTaiKhoan)</dt>
+    <dd class="col-sm-9">@Model.MaTaiKhoan</dd>
+
+    <dt class="col-sm-3">@Html.DisplayNameFor(m => m.TenDangNhap)</dt>
+    <dd class="col-sm-9">@Model.TenDangNhap</dd>
+
+    <dt class="col-sm-3">@Html.DisplayNameFor(m => m.MatKhau)</dt>
+    <dd class="col-sm-9"><code>@Model.MatKhau</code></dd>
+
+    <dt class="col-sm-3">@Html.DisplayNameFor(m => m.HoTen)</dt>
+    <dd class="col-sm-9">@Model.HoTen</dd>
+
+    <dt class="col-sm-3">@Html.DisplayNameFor(m => m.SoDienThoai)</dt>
+    <dd class="col-sm-9">@Model.SoDienThoai</dd>
+
+    <dt class="col-sm-3">@Html.DisplayNameFor(m => m.LoaiTaiKhoan)</dt>
+    <dd class="col-sm-9">@Model.LoaiTaiKhoan.GetDisplayName()</dd>
+
+    <dt class="col-sm-3">@Html.DisplayNameFor(m => m.TrangThai)</dt>
+    <dd class="col-sm-9">
+        @if (Model.TrangThai == TrangThaiTaiKhoan.DangHoatDong)
+        {
+            <span class="badge bg-success">@Model.TrangThai.GetDisplayName()</span>
+        }
+        else
+        {
+            <span class="badge bg-danger">@Model.TrangThai.GetDisplayName()</span>
+        }
+    </dd>
+</dl>
+
+<div class="mt-3">
+    <a asp-controller="TaiKhoan" asp-action="Edit" asp-route-id="@Model.MaTaiKhoan" class="btn btn-primary">Sửa</a>
+    <a asp-controller="TaiKhoan" asp-action="Index" class="btn btn-outline-secondary">Về danh sách</a>
+</div>
