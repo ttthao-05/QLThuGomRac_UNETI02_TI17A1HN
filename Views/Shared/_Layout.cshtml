@@ -60,9 +60,26 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="NhanVien" asp-action="Index">Nhân viên</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="Dashboard">Quản trị</a>
-                        </li>
+                        
+                        @if (Context.Session.GetString("VaiTro") == "Admin")
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark"
+                                   asp-controller="TaiKhoan"
+                                   asp-action="Index">
+                                    Quản lý tài khoản
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link text-dark"
+                                   asp-controller="KhuVuc"
+                                   asp-action="Index">
+                                    Quản lý khu vực
+                                </a>
+                            </li>
+                        }
+
                     </ul>
                 </div>
             </div>

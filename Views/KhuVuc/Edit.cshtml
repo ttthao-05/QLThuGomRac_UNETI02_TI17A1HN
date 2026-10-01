@@ -1,0 +1,74 @@
+﻿@model QLThuGomRac_UNETI02_TI17A1HN.Models.Entities.KhuVuc
+
+@{
+    ViewData["Title"] = "Sửa khu vực";
+}
+
+<h2>Sửa khu vực</h2>
+
+<form asp-action="Edit" method="post">
+    @Html.AntiForgeryToken()
+
+    <input type="hidden"
+           asp-for="MaKhuVuc" />
+
+    <div asp-validation-summary="ModelOnly"
+         class="text-danger">
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="TenKhuVuc"
+               class="form-label">
+        </label>
+
+        <input asp-for="TenKhuVuc"
+               class="form-control" />
+
+        <span asp-validation-for="TenKhuVuc"
+              class="text-danger">
+        </span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="DiaChiMoTa"
+               class="form-label">
+        </label>
+
+        <textarea asp-for="DiaChiMoTa"
+                  class="form-control"
+                  rows="3">
+        </textarea>
+
+        <span asp-validation-for="DiaChiMoTa"
+              class="text-danger">
+        </span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="TrangThai"
+               class="form-label">
+        </label>
+
+        <select asp-for="TrangThai"
+                class="form-select"
+                asp-items="Html.GetEnumSelectList<QLThuGomRac_UNETI02_TI17A1HN.Models.Enums.TrangThaiKhuVuc>()">
+        </select>
+    </div>
+
+    <button type="submit"
+            class="btn btn-primary">
+        Lưu thay đổi
+    </button>
+
+    <a asp-action="Index"
+       class="btn btn-secondary">
+        Quay lại
+    </a>
+</form>
+
+@section Scripts
+{
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
