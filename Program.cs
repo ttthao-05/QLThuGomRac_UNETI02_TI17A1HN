@@ -4,10 +4,15 @@ using QLThuGomRac_UNETI02_TI17A1HN.Data.Seed;
 
 var builder = WebApplication.CreateBuilder(args);
 
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
+    ?? throw new InvalidOperationException("Chưa cấu hình DefaultConnection.");
+if (builder.Environment.IsDevelopment() && OperatingSystem.IsWindows())
+    connectionString = DevelopmentLocalDb.ResolveConnectionString(connectionString);
+
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlServer(connectionString));
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession();
 

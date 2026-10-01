@@ -22,7 +22,20 @@ public static class SeedData
             return;
         }
 
+<<<<<<< Updated upstream
         var danhSach = new List<TaiKhoan>
+=======
+        foreach (var account in context.TaiKhoans.Where(x => x.LoaiTaiKhoan == LoaiTaiKhoan.NguoiDan && !context.NguoiDans.Any(n => n.MaTaiKhoan == x.MaTaiKhoan)).ToList())
+            context.NguoiDans.Add(new NguoiDan { MaTaiKhoan = account.MaTaiKhoan, HoTen = account.HoTen, SoDienThoai = account.SoDienThoai });
+        if (!context.LoaiRacs.Any())
+            context.LoaiRacs.AddRange(new LoaiRac { TenLoaiRac = "Giấy" }, new LoaiRac { TenLoaiRac = "Nhựa" }, new LoaiRac { TenLoaiRac = "Kim loại" }, new LoaiRac { TenLoaiRac = "Thủy tinh" });
+        context.SaveChanges();
+
+        // =========================
+        // Seed khu vực §5.5
+        // =========================
+        if (!context.KhuVucs.Any())
+>>>>>>> Stashed changes
         {
             // 02 tài khoản Admin (§15)
             new() { TenDangNhap = "admin", MatKhau = "123456", HoTen = "Quản trị viên", SoDienThoai = "0901000001", LoaiTaiKhoan = LoaiTaiKhoan.Admin, TrangThai = TrangThaiTaiKhoan.DangHoatDong },

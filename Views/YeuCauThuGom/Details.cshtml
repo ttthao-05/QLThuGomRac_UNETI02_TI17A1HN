@@ -1,0 +1,18 @@
+﻿@* Họ và tên: Phạm Văn Hào | Mã sinh viên: 23103100041 | Nội dung thực hiện: Module 2 – Chi tiết yêu cầu (§6.2–§6.5) *@
+@model QLThuGomRac_UNETI02_TI17A1HN.Models.Entities.YeuCauThuGom
+@using QLThuGomRac_UNETI02_TI17A1HN.Models.Enums
+@{ ViewData["Title"] = "Chi tiết yêu cầu"; }
+<h1>Yêu cầu #@Model.MaYeuCau</h1>
+@if (TempData["ThongBao"] is string message) { <div class="alert alert-success" role="status">@message</div> }
+<dl class="row">
+    <dt class="col-sm-3">Trạng thái</dt><dd class="col-sm-9">@Model.TrangThai.GetDisplayName()</dd>
+    <dt class="col-sm-3">Ngày đăng ký</dt><dd class="col-sm-9">@Model.NgayDangKy.ToString("dd/MM/yyyy HH:mm")</dd>
+    <dt class="col-sm-3">Ngày thu gom</dt><dd class="col-sm-9">@Model.NgayMongMuonThuGom.ToString("dd/MM/yyyy") — @Model.KhungGio</dd>
+    <dt class="col-sm-3">Khu vực</dt><dd class="col-sm-9">@Model.KhuVuc.TenKhuVuc</dd>
+    <dt class="col-sm-3">Địa chỉ thu gom</dt><dd class="col-sm-9">@Model.DiaChiThuGom</dd>
+    <dt class="col-sm-3">Điện thoại liên hệ</dt><dd class="col-sm-9">@Model.SoDienThoaiLienHe</dd>
+    <dt class="col-sm-3">Ghi chú</dt><dd class="col-sm-9">@Model.GhiChu</dd>
+</dl>
+<h2 class="h4">Chi tiết loại rác</h2>
+<table class="table"><thead><tr><th>Loại rác</th><th>Số lượng dự kiến</th><th>Đơn vị</th><th>Ghi chú</th></tr></thead><tbody>@foreach (var item in Model.ChiTietYeuCaus) { <tr><td>@item.LoaiRac.TenLoaiRac</td><td>@item.SoLuongDuKien</td><td>@item.LoaiRac.DonViTinh</td><td>@item.GhiChu</td></tr> }</tbody></table>
+<a asp-action="Index">Về lịch sử yêu cầu</a>

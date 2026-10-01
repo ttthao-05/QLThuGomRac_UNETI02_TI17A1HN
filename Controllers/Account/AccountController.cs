@@ -89,7 +89,10 @@ public class AccountController : Controller
                 "TaiKhoan");
         }
 
-        // Nhân viên và Người dân tạm về trang chủ
+        if (taiKhoan.LoaiTaiKhoan == LoaiTaiKhoan.NguoiDan)
+            return RedirectToAction("Index", "YeuCauThuGom");
+
+        // Nhân viên tạm về trang chủ
         // vì các module tương ứng chưa hoàn thiện.
         return RedirectToAction(
             "Index",

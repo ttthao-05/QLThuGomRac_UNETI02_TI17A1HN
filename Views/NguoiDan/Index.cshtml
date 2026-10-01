@@ -1,0 +1,14 @@
+﻿@* Họ và tên: Phạm Văn Hào | Mã sinh viên: 23103100041 | Nội dung thực hiện: Module 2 – Danh sách người dân (§6.1) *@
+@model List<QLThuGomRac_UNETI02_TI17A1HN.Models.Entities.NguoiDan>
+@using QLThuGomRac_UNETI02_TI17A1HN.Models.Enums
+@{ ViewData["Title"] = "Quản lý người dân"; }
+<h1>Quản lý người dân</h1>
+<form method="get" class="row g-2 mb-4">
+    <div class="col-md-6"><label for="tuKhoa" class="form-label">Tìm theo họ tên, điện thoại, email</label><input id="tuKhoa" name="tuKhoa" value="@ViewBag.TuKhoa" class="form-control" /></div>
+    <div class="col-md-4"><label for="trangThai" class="form-label">Trạng thái</label><select id="trangThai" name="trangThai" class="form-select"><option value="">Tất cả</option>@foreach (var status in Enum.GetValues<TrangThaiNguoiDan>()) { <option value="@((int)status)" selected="@(ViewBag.TrangThai == status)">@status.GetDisplayName()</option> }</select></div>
+    <div class="col-md-2 align-self-end"><button class="btn btn-primary">Tìm kiếm</button></div>
+</form>
+<div class="table-responsive"><table class="table table-striped"><thead><tr><th>Mã</th><th>Họ tên</th><th>Điện thoại</th><th>Email</th><th>Trạng thái</th><th></th></tr></thead><tbody>
+@foreach (var person in Model) { <tr><td>@person.MaNguoiDan</td><td>@person.HoTen</td><td>@person.SoDienThoai</td><td>@person.Email</td><td>@person.TrangThai.GetDisplayName()</td><td><a asp-action="Details" asp-route-id="@person.MaNguoiDan">Chi tiết</a></td></tr> }
+</tbody></table></div>
+@if (Model.Count == 0) { <p class="text-muted">Không tìm thấy người dân phù hợp.</p> }
