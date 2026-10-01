@@ -16,6 +16,7 @@ namespace QLThuGomRac_UNETI02_TI17A1HN.Controllers.Admin;
 /// §5.1 Quản lý tài khoản: xem danh sách, xem chi tiết, thêm, sửa, khóa/mở khóa tài khoản.
 /// Mọi action đều được kiểm tra quyền qua <see cref="AdminOnlyAttribute"/> (chỉ Admin được dùng).
 /// </summary>
+/// Quyền đc kiểm tra ở Controller = AdminOnly, k chỉ ẩn menu trên View
 [AdminOnly]
 public class TaiKhoanController : Controller
 {
