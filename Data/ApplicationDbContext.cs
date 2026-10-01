@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using QLThuGomRac_UNETI02_TI17A1HN.Models.Entities;
 
 namespace QLThuGomRac_UNETI02_TI17A1HN.Data;
@@ -12,6 +12,9 @@ public class ApplicationDbContext : DbContext
 
     // Module 1 – Quản lý tài khoản (§5.1)
     public DbSet<TaiKhoan> TaiKhoans => Set<TaiKhoan>();
+
+    //Module 1 – Quản lý khu vực (§5.5)
+    public DbSet<KhuVuc> KhuVucs => Set<KhuVuc>();
 
     // Khai báo DbSet của các Module còn lại sau khi Entity được xây dựng.
 
@@ -32,8 +35,27 @@ public class ApplicationDbContext : DbContext
             entity.Property(x => x.LoaiTaiKhoan).HasConversion<int>();
             entity.Property(x => x.TrangThai).HasConversion<int>();
 
-            // §5.1: Tên đăng nhập không được trùng.
+            //5.1: Tên đăng nhập không được trùng.
             entity.HasIndex(x => x.TenDangNhap).IsUnique();
+        });
+
+        //5.5
+        modelBuilder.Entity<KhuVuc>(entity =>
+        {
+            entity.HasKey(x => x.MaKhuVuc);
+
+            entity.Property(x => x.TenKhuVuc)
+                .HasMaxLength(100)
+                .IsRequired();
+
+            entity.Property(x => x.DiaChiMoTa)
+                .HasMaxLength(255);
+
+            entity.Property(x => x.TrangThai)
+                .HasConversion<int>();
+
+            // §5.5: Tên khu vực không được trùng.
+            entity.HasIndex(x => x.TenKhuVuc).IsUnique();
         });
     }
 }

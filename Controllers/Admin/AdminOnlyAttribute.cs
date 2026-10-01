@@ -31,7 +31,7 @@ public sealed class AdminOnlyAttribute : Attribute, IAuthorizationFilter
 
         if (string.IsNullOrWhiteSpace(vaiTro))
         {
-            // Chưa có phiên đăng nhập (§5.2 chưa làm).
+            // Chưa có phiên đăng nhập thì chuyển về trang đăng nhập
             if (ChoPhepChuaDangNhap)
             {
                 return;
@@ -47,7 +47,7 @@ public sealed class AdminOnlyAttribute : Attribute, IAuthorizationFilter
             context.Result = new ContentResult
             {
                 StatusCode = StatusCodes.Status403Forbidden,
-                Content = "Bạn không có quyền sử dụng chức năng quản lý tài khoản."
+                Content = "Bạn không có quyền sử dụng chức năng quản trị"
             };
         }
     }

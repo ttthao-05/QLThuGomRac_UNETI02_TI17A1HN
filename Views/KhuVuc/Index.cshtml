@@ -1,0 +1,102 @@
+﻿@model IEnumerable<QLThuGomRac_UNETI02_TI17A1HN.Models.Entities.KhuVuc>
+
+@{
+    ViewData["Title"] = "Quản lý khu vực";
+}
+
+<h2>Quản lý khu vực</h2>
+
+@if (TempData["ThongBao"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["ThongBao"]
+    </div>
+}
+
+@if (TempData["Loi"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["Loi"]
+    </div>
+}
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">
+        Thêm khu vực
+    </a>
+</p>
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Mã khu vực</th>
+            <th>Tên khu vực</th>
+            <th>Địa chỉ mô tả</th>
+            <th>Trạng thái</th>
+            <th>Chức năng</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.MaKhuVuc</td>
+                <td>@item.TenKhuVuc</td>
+                <td>@item.DiaChiMoTa</td>
+
+                <td>
+                    @if (item.TrangThai ==
+                        QLThuGomRac_UNETI02_TI17A1HN.Models.Enums.TrangThaiKhuVuc.DangHoatDong)
+                    {
+                        <span>Đang hoạt động</span>
+                    }
+                    else
+                    {
+                        <span>Ngừng hoạt động</span>
+                    }
+                </td>
+
+                <td>
+                    <a asp-action="Details"
+                       asp-route-id="@item.MaKhuVuc"
+                       class="btn btn-info btn-sm">
+                        Chi tiết
+                    </a>
+
+                    <a asp-action="Edit"
+                       asp-route-id="@item.MaKhuVuc"
+                       class="btn btn-warning btn-sm">
+                        Sửa
+                    </a>
+
+                    <form asp-action="CapNhatTrangThai"
+                          asp-route-id="@item.MaKhuVuc"
+                          method="post"
+                          style="display:inline">
+                        @Html.AntiForgeryToken()
+
+                        <button type="submit"
+                                class="btn btn-secondary btn-sm">
+                            Đổi trạng thái
+                        </button>
+                    </form>
+
+                    <form asp-action="Delete"
+                          asp-route-id="@item.MaKhuVuc"
+                          method="post"
+                          style="display:inline"
+                          onsubmit="return confirm('Bạn có chắc muốn xóa khu vực này không?');">
+
+                        @Html.AntiForgeryToken()
+
+                        <button type="submit"
+                                class="btn btn-danger btn-sm">
+                            Xóa
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

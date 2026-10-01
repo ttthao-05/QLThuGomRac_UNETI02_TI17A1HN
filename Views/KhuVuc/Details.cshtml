@@ -1,0 +1,50 @@
+﻿@model QLThuGomRac_UNETI02_TI17A1HN.Models.Entities.KhuVuc
+
+@{
+    ViewData["Title"] = "Chi tiết khu vực";
+}
+
+<h2>Chi tiết khu vực</h2>
+
+<table class="table table-bordered">
+    <tr>
+        <th>Mã khu vực</th>
+        <td>@Model.MaKhuVuc</td>
+    </tr>
+
+    <tr>
+        <th>Tên khu vực</th>
+        <td>@Model.TenKhuVuc</td>
+    </tr>
+
+    <tr>
+        <th>Địa chỉ mô tả</th>
+        <td>@Model.DiaChiMoTa</td>
+    </tr>
+
+    <tr>
+        <th>Trạng thái</th>
+        <td>
+            @if (Model.TrangThai ==
+                QLThuGomRac_UNETI02_TI17A1HN.Models.Enums.TrangThaiKhuVuc.DangHoatDong)
+            {
+                <span>Đang hoạt động</span>
+            }
+            else
+            {
+                <span>Ngừng hoạt động</span>
+            }
+        </td>
+    </tr>
+</table>
+
+<a asp-action="Edit"
+   asp-route-id="@Model.MaKhuVuc"
+   class="btn btn-warning">
+    Sửa
+</a>
+
+<a asp-action="Index"
+   class="btn btn-secondary">
+    Quay lại
+</a>
