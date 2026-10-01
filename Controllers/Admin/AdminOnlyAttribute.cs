@@ -1,6 +1,6 @@
-// Họ và tên: Trần Thị Thảo
+﻿// Họ và tên: Trần Thị Thảo
 // Mã sinh viên: 23103100025
-// Nội dung thực hiện: Module 1 – Quản lý tài khoản (§5.1 Quản lý tài khoản)
+// ND: Module 1-Quản lí tài khoản, đăng nhập và phân quyền (§5.1,§5.4)
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -19,11 +19,11 @@ public sealed class AdminOnlyAttribute : Attribute, IAuthorizationFilter
     public const string KhoaVaiTro = "VaiTro";
 
     /// <summary>
-    /// TODO (§5.2): hiện Section 5.2 Đăng nhập chưa thực hiện nên chưa có phiên đăng nhập,
-    /// đặt cờ này = true để phần còn lại của §5.1 vẫn chạy được.
-    /// Sau khi hoàn thành §5.2 và §5.4 thì đặt = false để chỉ Admin mới vào được.
+    /// Chỉ cho phép tkhoan có vtro Admin truy cập chức năng quản trị
+    /// Nếu chưa đnhập thì chuyển về trang đăng nhập
+    /// Nếu đã đnhập nhưng k phải Admin thì từ chối truy cập
     /// </summary>
-    public static bool ChoPhepChuaDangNhap { get; set; } = true;
+    public static bool ChoPhepChuaDangNhap { get; set; } = false;
 
     public void OnAuthorization(AuthorizationFilterContext context)
     {
