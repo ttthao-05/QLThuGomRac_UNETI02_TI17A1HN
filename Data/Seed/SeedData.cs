@@ -75,5 +75,57 @@ public static class SeedData
             context.KhuVucs.AddRange(danhSachKhuVuc);
             context.SaveChanges();
         }
+
+        // =========================
+        // Seed loại rác §5.6
+        // =========================
+        if (!context.LoaiRacs.Any())
+        {
+            var danhSachLoaiRac = new List<LoaiRac>
+        {
+        new()
+        {
+            TenLoaiRac = "Giấy",
+            DonViTinh = "kg",
+            MoTa = "Giấy báo, sách, vở, thùng carton...",
+            TrangThai = TrangThaiLoaiRac.DangPhucVu
+        },
+
+        new()
+        {
+            TenLoaiRac = "Nhựa",
+            DonViTinh = "kg",
+            MoTa = "Chai nhựa, hộp nhựa và các sản phẩm nhựa có thể tái chế.",
+            TrangThai = TrangThaiLoaiRac.DangPhucVu
+        },
+
+        new()
+        {
+            TenLoaiRac = "Kim loại",
+            DonViTinh = "kg",
+            MoTa = "Sắt, thép, nhôm và các loại kim loại tái chế.",
+            TrangThai = TrangThaiLoaiRac.DangPhucVu
+        },
+
+        new()
+        {
+            TenLoaiRac = "Chai/lon",
+            DonViTinh = "kg",
+            MoTa = "Chai thủy tinh, lon nước và các loại bao bì tương tự.",
+            TrangThai = TrangThaiLoaiRac.DangPhucVu
+        },
+
+        new()
+        {
+            TenLoaiRac = "Thiết bị điện tử nhỏ",
+            DonViTinh = "cái",
+            MoTa = "Điện thoại cũ, phụ kiện điện tử và thiết bị điện tử kích thước nhỏ.",
+            TrangThai = TrangThaiLoaiRac.DangPhucVu
+        }
+        };
+
+            context.LoaiRacs.AddRange(danhSachLoaiRac);
+            context.SaveChanges();
+        }
     }
 }

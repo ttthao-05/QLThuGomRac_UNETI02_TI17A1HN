@@ -1,0 +1,55 @@
+﻿@model QLThuGomRac_UNETI02_TI17A1HN.Models.Entities.LoaiRac
+
+@{
+    ViewData["Title"] = "Chi tiết loại rác";
+}
+
+<h2>Chi tiết loại rác</h2>
+
+<table class="table table-bordered">
+    <tr>
+        <th>Mã loại rác</th>
+        <td>@Model.MaLoaiRac</td>
+    </tr>
+
+    <tr>
+        <th>Tên loại rác</th>
+        <td>@Model.TenLoaiRac</td>
+    </tr>
+
+    <tr>
+        <th>Đơn vị tính</th>
+        <td>@Model.DonViTinh</td>
+    </tr>
+
+    <tr>
+        <th>Mô tả</th>
+        <td>@Model.MoTa</td>
+    </tr>
+
+    <tr>
+        <th>Trạng thái</th>
+        <td>
+            @if (Model.TrangThai ==
+                QLThuGomRac_UNETI02_TI17A1HN.Models.Enums.TrangThaiLoaiRac.DangPhucVu)
+            {
+                <span>Đang phục vụ</span>
+            }
+            else
+            {
+                <span>Ngừng phục vụ</span>
+            }
+        </td>
+    </tr>
+</table>
+
+<a asp-action="Edit"
+   asp-route-id="@Model.MaLoaiRac"
+   class="btn btn-warning">
+    Sửa
+</a>
+
+<a asp-action="Index"
+   class="btn btn-secondary">
+    Quay lại
+</a>

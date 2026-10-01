@@ -16,6 +16,10 @@ public class ApplicationDbContext : DbContext
     //Module 1 – Quản lý khu vực (§5.5)
     public DbSet<KhuVuc> KhuVucs => Set<KhuVuc>();
 
+    //Module 1 – Quản lý loại rác (§5.6)
+    public DbSet<LoaiRac> LoaiRacs => Set<LoaiRac>();
+
+
     // Khai báo DbSet của các Module còn lại sau khi Entity được xây dựng.
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -56,6 +60,30 @@ public class ApplicationDbContext : DbContext
 
             // §5.5: Tên khu vực không được trùng.
             entity.HasIndex(x => x.TenKhuVuc).IsUnique();
+        });
+
+        //5.6
+        modelBuilder.Entity<LoaiRac>(entity =>
+        {
+            entity.HasKey(x => x.MaLoaiRac);
+
+            entity.Property(x => x.TenLoaiRac)
+                .HasMaxLength(100)
+                .IsRequired();
+
+            entity.Property(x => x.DonViTinh)
+                .HasMaxLength(50)
+                .IsRequired();
+
+            entity.Property(x => x.MoTa)
+                .HasMaxLength(500);
+
+            entity.Property(x => x.TrangThai)
+                .HasConversion<int>();
+
+            // 5.6: Tên loại rác không được trùng.
+            entity.HasIndex(x => x.TenLoaiRac)
+                .IsUnique();
         });
     }
 }
