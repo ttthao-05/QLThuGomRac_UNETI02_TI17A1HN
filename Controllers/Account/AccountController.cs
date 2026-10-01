@@ -1,6 +1,6 @@
 ﻿// Họ và tên: Trần Thị Thảo
 // Mã sinh viên: 23103100025
-// Nội dung thực hiện: Module 1 – Đăng nhập (§5.2)
+// Nội dung thực hiện: Module 1 – Đăng nhập và đăng xuất (§5.2, §5.3)
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -94,5 +94,15 @@ public class AccountController : Controller
         return RedirectToAction(
             "Index",
             "Home");
+    }
+
+    [HttpGet]
+    public IActionResult Logout()
+    {
+        HttpContext.Session.Clear();
+
+        TempData["ThongBao"] = "Đăng xuất thành công.";
+
+        return RedirectToAction("Login", "Account");
     }
 }
