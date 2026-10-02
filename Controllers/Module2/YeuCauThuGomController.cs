@@ -1,6 +1,6 @@
 ﻿// Họ và tên: Phạm Văn Hào
 // Mã sinh viên: 23103100041
-// Nội dung thực hiện: Module 2 – Yêu cầu thu gom (§6.2–§6.5)
+// Nội dung thực hiện: Module 2 – Quản lý yêu cầu thu gom (§6.2), đăng ký và tra cứu (§6.3–§6.5)
 
 using System.Data;
 using System.Security.Cryptography;

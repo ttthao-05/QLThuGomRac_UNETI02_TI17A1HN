@@ -9,6 +9,7 @@ namespace QLThuGomRac_UNETI02_TI17A1HN.Models.Entities;
 
 public class YeuCauThuGom
 {
+    // §6.2: thông tin đầu yêu cầu và trạng thái xử lý.
     [Key] public int MaYeuCau { get; set; }
     public int MaNguoiDan { get; set; }
     public int MaKhuVuc { get; set; }
