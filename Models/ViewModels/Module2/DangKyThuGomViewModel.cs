@@ -10,7 +10,7 @@ namespace QLThuGomRac_UNETI02_TI17A1HN.Models.ViewModels.Module2;
 
 public class DangKyThuGomViewModel : IValidatableObject
 {
-    // §6.3: danh sách chi tiết bắt buộc có ít nhất một loại rác.
+    // §6.4: dữ liệu lịch thu gom và §6.3: danh sách chi tiết bắt buộc có ít nhất một loại rác.
     public static readonly string[] CacKhungGio = ["08:00 - 10:00", "10:00 - 12:00", "13:00 - 15:00", "15:00 - 17:00"];
     [Range(1, int.MaxValue, ErrorMessage = "Vui lòng chọn khu vực."), Display(Name = "Khu vực")]
     public int MaKhuVuc { get; set; }

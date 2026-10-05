@@ -55,6 +55,7 @@ public class YeuCauThuGomController(ApplicationDbContext db) : Controller
     [HttpPost, ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(DangKyThuGomViewModel model)
     {
+        // §6.4: mọi điều kiện đăng ký phải hợp lệ trước khi tạo yêu cầu.
         if (!ModelState.IsValid) { await LoadOptions(model); return View(model); }
         // Giữ các trạng thái tài khoản/khu vực/loại rác ổn định đến khi lưu toàn bộ yêu cầu.
         try

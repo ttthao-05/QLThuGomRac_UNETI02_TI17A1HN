@@ -1,7 +1,7 @@
 ﻿@* Họ và tên: Phạm Văn Hào | Mã sinh viên: 23103100041 | Nội dung thực hiện: Module 2 – Chi tiết nhiều loại rác (§6.3), đăng ký lịch (§6.4) *@
 @model QLThuGomRac_UNETI02_TI17A1HN.Models.ViewModels.Module2.DangKyThuGomViewModel
 @using QLThuGomRac_UNETI02_TI17A1HN.Models.ViewModels.Module2
-@{ ViewData["Title"] = "Đăng ký lịch thu gom"; }
+@{ ViewData["Title"] = "Đăng ký lịch thu gom (§6.4)"; }
 <h1>Đăng ký lịch thu gom</h1>
 <p class="text-muted">Chọn ngày từ ngày mai và ít nhất một loại rác. Mỗi loại rác chỉ nhập một dòng.</p>
 @if (Model.KhuVucItems.Count == 0 || Model.LoaiRacItems.Count == 0) { <div class="alert alert-warning">Hiện chưa có đủ khu vực hoặc loại rác đang hoạt động để đăng ký.</div> }
