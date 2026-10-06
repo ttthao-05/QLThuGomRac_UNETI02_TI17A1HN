@@ -140,6 +140,8 @@ public class TaiKhoanController : Controller
         try
         {
             _context.TaiKhoans.Add(taiKhoan);
+            if (taiKhoan.LoaiTaiKhoan == LoaiTaiKhoan.NguoiDan)
+                _context.NguoiDans.Add(new NguoiDan { TaiKhoan = taiKhoan, HoTen = taiKhoan.HoTen, SoDienThoai = taiKhoan.SoDienThoai });
             await _context.SaveChangesAsync();
         }
         catch (DbUpdateException ex) when (LaViPhamTenDangNhapTrung(ex))
@@ -227,6 +229,18 @@ public class TaiKhoanController : Controller
         taiKhoan.SoDienThoai = model.SoDienThoai;
         taiKhoan.LoaiTaiKhoan = model.LoaiTaiKhoan;
         taiKhoan.TrangThai = model.TrangThai;
+
+        var hoSo = await _context.NguoiDans.SingleOrDefaultAsync(x => x.MaTaiKhoan == taiKhoan.MaTaiKhoan);
+        if (hoSo == null && taiKhoan.LoaiTaiKhoan == LoaiTaiKhoan.NguoiDan)
+        {
+            hoSo = new NguoiDan { TaiKhoan = taiKhoan };
+            _context.NguoiDans.Add(hoSo);
+        }
+        if (hoSo != null)
+        {
+            hoSo.HoTen = taiKhoan.HoTen;
+            hoSo.SoDienThoai = taiKhoan.SoDienThoai;
+        }
 
         // Mật khẩu để trống thì giữ nguyên mật khẩu cũ.
         if (!string.IsNullOrWhiteSpace(model.MatKhau))

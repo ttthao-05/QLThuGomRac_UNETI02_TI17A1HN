@@ -185,11 +185,35 @@ public class KhuVucController : Controller
             return NotFound();
         }
 
-        // Phần kiểm tra YeuCauThuGom sẽ bổ sung
-        // khi Entity YeuCauThuGom của Module 2 được tích hợp.
+        bool daCoYeuCauThuGom = await _context.YeuCauThuGoms
+            .AnyAsync(x => x.MaKhuVuc == id);
+
+        if (daCoYeuCauThuGom)
+        {
+            TempData["ThongBao"] =
+                "Khu vực đã có yêu cầu thu gom nên không thể xóa. " +
+                "Bạn có thể chuyển khu vực sang trạng thái ngừng hoạt động.";
+
+            return RedirectToAction(nameof(Index));
+        }
 
         _context.KhuVucs.Remove(khuVuc);
-        await _context.SaveChangesAsync();
+
+        try
+        {
+            await _context.SaveChangesAsync();
+        }
+        catch (DbUpdateException ex)
+            when (ex.InnerException is Microsoft.Data.SqlClient.SqlException
+            {
+                Number: 547
+            })
+        {
+            TempData["ThongBao"] =
+                "Khu vực vừa phát sinh dữ liệu liên quan nên không thể xóa.";
+
+            return RedirectToAction(nameof(Index));
+        }
 
         TempData["ThongBao"] =
             $"Đã xóa khu vực \"{khuVuc.TenKhuVuc}\".";

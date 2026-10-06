@@ -1,6 +1,6 @@
 ﻿// Họ và tên: Trần Thị Thảo
 // Mã sinh viên: 23103100025
-// Nội dung: Module 1 – Quản lý loại rác (5.6)
+// Nội dung thực hiện: Module 1 – Quản lý loại rác (§5.6)
 
 using System.ComponentModel.DataAnnotations;
 using QLThuGomRac_UNETI02_TI17A1HN.Models.Enums;
@@ -19,11 +19,11 @@ public class LoaiRac
     public string TenLoaiRac { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "Đơn vị tính là bắt buộc.")]
-    [StringLength(50)]
+    [StringLength(50, ErrorMessage = "Đơn vị tính không được quá 50 ký tự.")]
     [Display(Name = "Đơn vị tính")]
     public string DonViTinh { get; set; } = string.Empty;
 
-    [StringLength(500)]
+    [StringLength(500, ErrorMessage = "Mô tả không được quá 500 ký tự.")]
     [Display(Name = "Mô tả")]
     public string? MoTa { get; set; }
 

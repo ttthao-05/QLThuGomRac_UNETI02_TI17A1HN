@@ -10,40 +10,65 @@ public class ApplicationDbContext : DbContext
     {
     }
 
-    // Module 1 – Quản lý tài khoản (§5.1)
+    // Module 1 – Quản lý tài khoản (5.1)
     public DbSet<TaiKhoan> TaiKhoans => Set<TaiKhoan>();
 
-    //Module 1 – Quản lý khu vực (§5.5)
+    // Module 1 – Quản lý khu vực (5.5)
     public DbSet<KhuVuc> KhuVucs => Set<KhuVuc>();
 
-    //Module 1 – Quản lý loại rác (§5.6)
+    // Module 1 – Quản lý loại rác (5.6)
     public DbSet<LoaiRac> LoaiRacs => Set<LoaiRac>();
 
+    // Module 2 – Quản lý người dân
+    public DbSet<NguoiDan> NguoiDans => Set<NguoiDan>();
 
-    // Khai báo DbSet của các Module còn lại sau khi Entity được xây dựng.
+    // Module 2 – Quản lý yêu cầu thu gom
+    public DbSet<YeuCauThuGom> YeuCauThuGoms => Set<YeuCauThuGom>();
+
+    // Module 2 – Chi tiết yêu cầu
+    public DbSet<ChiTietYeuCau> ChiTietYeuCaus => Set<ChiTietYeuCau>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
 
+        // =========================
+        // MODULE 1 - TÀI KHOẢN
+        // =========================
         modelBuilder.Entity<TaiKhoan>(entity =>
         {
             entity.HasKey(x => x.MaTaiKhoan);
 
-            entity.Property(x => x.TenDangNhap).HasMaxLength(50).IsRequired();
-            entity.Property(x => x.MatKhau).HasMaxLength(100).IsRequired();
-            entity.Property(x => x.HoTen).HasMaxLength(100).IsRequired();
-            entity.Property(x => x.SoDienThoai).HasMaxLength(15).IsRequired();
+            entity.Property(x => x.TenDangNhap)
+                .HasMaxLength(50)
+                .IsRequired();
 
-            // Enum lưu kiểu int trong SQL Server.
-            entity.Property(x => x.LoaiTaiKhoan).HasConversion<int>();
-            entity.Property(x => x.TrangThai).HasConversion<int>();
+            entity.Property(x => x.MatKhau)
+                .HasMaxLength(100)
+                .IsRequired();
 
-            //5.1: Tên đăng nhập không được trùng.
-            entity.HasIndex(x => x.TenDangNhap).IsUnique();
+            entity.Property(x => x.HoTen)
+                .HasMaxLength(100)
+                .IsRequired();
+
+            entity.Property(x => x.SoDienThoai)
+                .HasMaxLength(15)
+                .IsRequired();
+
+            entity.Property(x => x.LoaiTaiKhoan)
+                .HasConversion<int>();
+
+            entity.Property(x => x.TrangThai)
+                .HasConversion<int>();
+
+            // 5.1: Tên đăng nhập không được trùng.
+            entity.HasIndex(x => x.TenDangNhap)
+                .IsUnique();
         });
 
-        //5.5
+        // =========================
+        // MODULE 1 - KHU VỰC
+        // =========================
         modelBuilder.Entity<KhuVuc>(entity =>
         {
             entity.HasKey(x => x.MaKhuVuc);
@@ -58,11 +83,14 @@ public class ApplicationDbContext : DbContext
             entity.Property(x => x.TrangThai)
                 .HasConversion<int>();
 
-            // §5.5: Tên khu vực không được trùng.
-            entity.HasIndex(x => x.TenKhuVuc).IsUnique();
+            // 5.5: Tên khu vực không được trùng.
+            entity.HasIndex(x => x.TenKhuVuc)
+                .IsUnique();
         });
 
-        //5.6
+        // =========================
+        // MODULE 1 - LOẠI RÁC
+        // =========================
         modelBuilder.Entity<LoaiRac>(entity =>
         {
             entity.HasKey(x => x.MaLoaiRac);
@@ -84,6 +112,83 @@ public class ApplicationDbContext : DbContext
             // 5.6: Tên loại rác không được trùng.
             entity.HasIndex(x => x.TenLoaiRac)
                 .IsUnique();
+        });
+
+        // =========================
+        // MODULE 2 - NGƯỜI DÂN
+        // =========================
+        modelBuilder.Entity<NguoiDan>(entity =>
+        {
+            entity.HasIndex(x => x.MaTaiKhoan)
+                .IsUnique();
+
+            entity.HasOne(x => x.TaiKhoan)
+                .WithOne()
+                .HasForeignKey<NguoiDan>(x => x.MaTaiKhoan)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.Property(x => x.NgaySinh)
+                .HasColumnType("date");
+        });
+
+        // =========================
+        // MODULE 2 - YÊU CẦU THU GOM
+        // =========================
+        modelBuilder.Entity<YeuCauThuGom>(entity =>
+        {
+            entity.HasOne(x => x.NguoiDan)
+                .WithMany()
+                .HasForeignKey(x => x.MaNguoiDan)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(x => x.KhuVuc)
+                .WithMany()
+                .HasForeignKey(x => x.MaKhuVuc)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.Property(x => x.NgayMongMuonThuGom)
+                .HasColumnType("date");
+
+            entity.HasIndex(x => x.KhoaChongTrung)
+                .IsUnique()
+                .HasFilter("[TrangThai] <> 6 AND [TrangThai] <> 7");
+
+            entity.HasIndex(x => new
+            {
+                x.MaNguoiDan,
+                x.TrangThai,
+                x.NgayDangKy
+            });
+        });
+
+        // =========================
+        // MODULE 2 - CHI TIẾT YÊU CẦU
+        // =========================
+        modelBuilder.Entity<ChiTietYeuCau>(entity =>
+        {
+            entity.HasOne(x => x.YeuCauThuGom)
+                .WithMany(x => x.ChiTietYeuCaus)
+                .HasForeignKey(x => x.MaYeuCau);
+
+            entity.HasOne(x => x.LoaiRac)
+                .WithMany()
+                .HasForeignKey(x => x.MaLoaiRac)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.Property(x => x.SoLuongDuKien)
+                .HasPrecision(12, 3);
+
+            entity.HasIndex(x => new
+            {
+                x.MaYeuCau,
+                x.MaLoaiRac
+            })
+            .IsUnique();
+
+            entity.ToTable(t =>
+                t.HasCheckConstraint(
+                    "CK_ChiTietYeuCau_SoLuong",
+                    "[SoLuongDuKien] > 0"));
         });
     }
 }

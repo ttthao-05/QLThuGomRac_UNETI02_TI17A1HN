@@ -1,6 +1,6 @@
 ﻿// Họ và tên: Trần Thị Thảo
 // Mã sinh viên: 23103100025
-// Nội dung thực hiện: Module 1 – Quản lý tài khoản và quản lý khu vực (§5.1, §5.5)
+// Nội dung thực hiện: Module 1 – Quản lý tài khoản, khu vực và loại rác (§5.1, §5.5, §5.6)
 
 using QLThuGomRac_UNETI02_TI17A1HN.Models.Entities;
 using QLThuGomRac_UNETI02_TI17A1HN.Models.Enums;
@@ -12,7 +12,7 @@ public static class SeedData
     public static void EnsureSeeded(ApplicationDbContext context)
     {
         // =========================
-        // Seed tài khoản §5.1
+        // MODULE 1 - Seed tài khoản §5.1
         // =========================
         if (!context.TaiKhoans.Any())
         {
@@ -44,7 +44,28 @@ public static class SeedData
         }
 
         // =========================
-        // Seed khu vực §5.5
+        // MODULE 2 - Tạo hồ sơ Người dân từ tài khoản Người dân
+        // =========================
+        var taiKhoanNguoiDanChuaCoHoSo = context.TaiKhoans
+            .Where(x =>
+                x.LoaiTaiKhoan == LoaiTaiKhoan.NguoiDan &&
+                !context.NguoiDans.Any(n => n.MaTaiKhoan == x.MaTaiKhoan))
+            .ToList();
+
+        foreach (var account in taiKhoanNguoiDanChuaCoHoSo)
+        {
+            context.NguoiDans.Add(new NguoiDan
+            {
+                MaTaiKhoan = account.MaTaiKhoan,
+                HoTen = account.HoTen,
+                SoDienThoai = account.SoDienThoai
+            });
+        }
+
+        context.SaveChanges();
+
+        // =========================
+        // MODULE 1 - Seed khu vực §5.5
         // =========================
         if (!context.KhuVucs.Any())
         {
@@ -77,52 +98,52 @@ public static class SeedData
         }
 
         // =========================
-        // Seed loại rác §5.6
+        // MODULE 1 - Seed loại rác §5.6
         // =========================
         if (!context.LoaiRacs.Any())
         {
             var danhSachLoaiRac = new List<LoaiRac>
-        {
-        new()
-        {
-            TenLoaiRac = "Giấy",
-            DonViTinh = "kg",
-            MoTa = "Giấy báo, sách, vở, thùng carton...",
-            TrangThai = TrangThaiLoaiRac.DangPhucVu
-        },
+            {
+                new()
+                {
+                    TenLoaiRac = "Giấy",
+                    DonViTinh = "kg",
+                    MoTa = "Giấy báo, sách, vở, thùng carton...",
+                    TrangThai = TrangThaiLoaiRac.DangPhucVu
+                },
 
-        new()
-        {
-            TenLoaiRac = "Nhựa",
-            DonViTinh = "kg",
-            MoTa = "Chai nhựa, hộp nhựa và các sản phẩm nhựa có thể tái chế.",
-            TrangThai = TrangThaiLoaiRac.DangPhucVu
-        },
+                new()
+                {
+                    TenLoaiRac = "Nhựa",
+                    DonViTinh = "kg",
+                    MoTa = "Chai nhựa, hộp nhựa và các sản phẩm nhựa có thể tái chế.",
+                    TrangThai = TrangThaiLoaiRac.DangPhucVu
+                },
 
-        new()
-        {
-            TenLoaiRac = "Kim loại",
-            DonViTinh = "kg",
-            MoTa = "Sắt, thép, nhôm và các loại kim loại tái chế.",
-            TrangThai = TrangThaiLoaiRac.DangPhucVu
-        },
+                new()
+                {
+                    TenLoaiRac = "Kim loại",
+                    DonViTinh = "kg",
+                    MoTa = "Sắt, thép, nhôm và các loại kim loại tái chế.",
+                    TrangThai = TrangThaiLoaiRac.DangPhucVu
+                },
 
-        new()
-        {
-            TenLoaiRac = "Chai/lon",
-            DonViTinh = "kg",
-            MoTa = "Chai thủy tinh, lon nước và các loại bao bì tương tự.",
-            TrangThai = TrangThaiLoaiRac.DangPhucVu
-        },
+                new()
+                {
+                    TenLoaiRac = "Chai/lon",
+                    DonViTinh = "kg",
+                    MoTa = "Chai thủy tinh, lon nước và các loại bao bì tương tự.",
+                    TrangThai = TrangThaiLoaiRac.DangPhucVu
+                },
 
-        new()
-        {
-            TenLoaiRac = "Thiết bị điện tử nhỏ",
-            DonViTinh = "cái",
-            MoTa = "Điện thoại cũ, phụ kiện điện tử và thiết bị điện tử kích thước nhỏ.",
-            TrangThai = TrangThaiLoaiRac.DangPhucVu
-        }
-        };
+                new()
+                {
+                    TenLoaiRac = "Thiết bị điện tử nhỏ",
+                    DonViTinh = "cái",
+                    MoTa = "Điện thoại cũ, phụ kiện điện tử và thiết bị điện tử kích thước nhỏ.",
+                    TrangThai = TrangThaiLoaiRac.DangPhucVu
+                }
+            };
 
             context.LoaiRacs.AddRange(danhSachLoaiRac);
             context.SaveChanges();

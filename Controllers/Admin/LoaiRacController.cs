@@ -164,10 +164,37 @@ public class LoaiRacController : Controller
         if (loaiRac is null)
             return NotFound();
 
-        // Sẽ bổ sung kiểm tra ChiTietYeuCau khi Module 2
-        // được tích hợp vào project.
+        // Không cho xóa loại rác nếu đã được sử dụng
+        // trong chi tiết yêu cầu thu gom.
+        bool daDuocSuDung = await _context.ChiTietYeuCaus
+            .AnyAsync(x => x.MaLoaiRac == id);
+
+        if (daDuocSuDung)
+        {
+            TempData["ThongBao"] =
+                "Loại rác đã được sử dụng trong yêu cầu thu gom nên không thể xóa. " +
+                "Bạn có thể chuyển loại rác sang trạng thái ngừng phục vụ.";
+
+            return RedirectToAction(nameof(Index));
+        }
+
         _context.LoaiRacs.Remove(loaiRac);
-        await _context.SaveChangesAsync();
+
+        try
+        {
+            await _context.SaveChangesAsync();
+        }
+        catch (DbUpdateException ex)
+            when (ex.InnerException is Microsoft.Data.SqlClient.SqlException
+            {
+                Number: 547
+            })
+        {
+            TempData["ThongBao"] =
+                "Loại rác vừa phát sinh dữ liệu liên quan nên không thể xóa.";
+
+            return RedirectToAction(nameof(Index));
+        }
 
         TempData["ThongBao"] =
             $"Đã xóa loại rác \"{loaiRac.TenLoaiRac}\".";

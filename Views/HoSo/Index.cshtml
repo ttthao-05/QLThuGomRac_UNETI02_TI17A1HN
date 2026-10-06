@@ -1,0 +1,18 @@
+﻿@* Họ và tên: Phạm Văn Hào | Mã sinh viên: 23103100041 | Nội dung thực hiện: Module 2 – Thông tin cá nhân (§6.1) *@
+@model QLThuGomRac_UNETI02_TI17A1HN.Models.ViewModels.Module2.HoSoViewModel
+@using QLThuGomRac_UNETI02_TI17A1HN.Models.Enums
+@{ ViewData["Title"] = "Thông tin cá nhân"; }
+<h1>Thông tin cá nhân</h1>
+<p>Trạng thái hồ sơ: <strong>@ViewBag.TrangThai</strong></p>
+@if (TempData["ThongBao"] is string message) { <div class="alert alert-success" role="status">@message</div> }
+<form asp-action="Index" method="post" class="col-lg-7">
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <div class="mb-3"><label asp-for="HoTen" class="form-label"></label><input asp-for="HoTen" class="form-control" /><span asp-validation-for="HoTen" class="text-danger"></span></div>
+    <div class="mb-3"><label asp-for="NgaySinh" class="form-label"></label><input asp-for="NgaySinh" max="@DateTime.Today.ToString("yyyy-MM-dd")" class="form-control" /><span asp-validation-for="NgaySinh" class="text-danger"></span></div>
+    <div class="mb-3"><label asp-for="GioiTinh" class="form-label"></label><select asp-for="GioiTinh" asp-items="Html.GetEnumSelectList<GioiTinh>()" class="form-select"><option value="">Chưa cung cấp</option></select></div>
+    <div class="mb-3"><label asp-for="SoDienThoai" class="form-label"></label><input asp-for="SoDienThoai" class="form-control" /><span asp-validation-for="SoDienThoai" class="text-danger"></span></div>
+    <div class="mb-3"><label asp-for="Email" class="form-label"></label><input asp-for="Email" class="form-control" /><span asp-validation-for="Email" class="text-danger"></span></div>
+    <div class="mb-3"><label asp-for="DiaChi" class="form-label"></label><textarea asp-for="DiaChi" class="form-control"></textarea></div>
+    <button class="btn btn-primary">Lưu thông tin</button>
+</form>
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

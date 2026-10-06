@@ -1,0 +1,39 @@
+﻿@* Họ và tên: Phạm Văn Hào | Mã sinh viên: 23103100041 | Nội dung thực hiện: Module 2 – Chi tiết nhiều loại rác (§6.3), đăng ký lịch (§6.4) *@
+@model QLThuGomRac_UNETI02_TI17A1HN.Models.ViewModels.Module2.DangKyThuGomViewModel
+@using QLThuGomRac_UNETI02_TI17A1HN.Models.ViewModels.Module2
+@{ ViewData["Title"] = "Đăng ký lịch thu gom (§6.4)"; }
+<h1>Đăng ký lịch thu gom</h1>
+<p class="text-muted">Chọn ngày từ ngày mai và ít nhất một loại rác. Mỗi loại rác chỉ nhập một dòng.</p>
+@if (Model.KhuVucItems.Count == 0 || Model.LoaiRacItems.Count == 0) { <div class="alert alert-warning">Hiện chưa có đủ khu vực hoặc loại rác đang hoạt động để đăng ký.</div> }
+<form asp-action="Create" method="post">
+    <div asp-validation-summary="All" class="text-danger" role="alert"></div>
+    <div class="row g-3">
+        <div class="col-md-6"><label asp-for="MaKhuVuc" class="form-label"></label><select asp-for="MaKhuVuc" asp-items="Model.KhuVucItems" class="form-select"><option value="">Chọn khu vực</option></select><span asp-validation-for="MaKhuVuc" class="text-danger"></span></div>
+        <div class="col-md-6"><label asp-for="SoDienThoaiLienHe" class="form-label"></label><input asp-for="SoDienThoaiLienHe" class="form-control" /><span asp-validation-for="SoDienThoaiLienHe" class="text-danger"></span></div>
+        <div class="col-12"><label asp-for="DiaChiThuGom" class="form-label"></label><input asp-for="DiaChiThuGom" class="form-control" /><span asp-validation-for="DiaChiThuGom" class="text-danger"></span></div>
+        <div class="col-md-6"><label asp-for="NgayMongMuonThuGom" class="form-label"></label><input asp-for="NgayMongMuonThuGom" min="@DateTime.Today.AddDays(1).ToString("yyyy-MM-dd")" class="form-control" /><span asp-validation-for="NgayMongMuonThuGom" class="text-danger"></span></div>
+        <div class="col-md-6"><label asp-for="KhungGio" class="form-label"></label><select asp-for="KhungGio" class="form-select"><option value="">Chọn khung giờ</option>@foreach (var slot in DangKyThuGomViewModel.CacKhungGio) { <option value="@slot">@slot</option> }</select><span asp-validation-for="KhungGio" class="text-danger"></span></div>
+        <div class="col-12"><label asp-for="GhiChu" class="form-label"></label><textarea asp-for="GhiChu" class="form-control"></textarea></div>
+    </div>
+    <h2 class="h4 mt-4">Loại rác cần thu gom</h2>
+    <div id="waste-rows">
+    @for (var i = 0; i < Model.ChiTiet.Count; i++)
+    {
+        <div class="row g-2 mb-3 waste-row">
+            <div class="col-md-4"><label asp-for="ChiTiet[i].MaLoaiRac" class="form-label">Loại rác</label><select asp-for="ChiTiet[i].MaLoaiRac" asp-items="Model.LoaiRacItems" class="form-select" required><option value="">Chọn loại rác</option></select></div>
+            <div class="col-md-2"><label asp-for="ChiTiet[i].SoLuongDuKien" class="form-label">Số lượng dự kiến</label><input asp-for="ChiTiet[i].SoLuongDuKien" type="number" min="0.001" max="999999999.999" step="0.001" required class="form-control" /></div>
+            <div class="col-md-4"><label asp-for="ChiTiet[i].GhiChu" class="form-label">Ghi chú loại rác</label><input asp-for="ChiTiet[i].GhiChu" maxlength="500" class="form-control" /></div>
+            <div class="col-md-2 align-self-end"><button type="button" class="btn btn-outline-danger remove-waste">Xóa dòng</button></div>
+        </div>
+    }
+    </div>
+    <button type="button" id="add-waste" class="btn btn-outline-secondary mb-4">Thêm loại rác</button>
+    <div class="d-flex gap-3"><button class="btn btn-primary" disabled="@(Model.KhuVucItems.Count == 0 || Model.LoaiRacItems.Count == 0)">Gửi đăng ký</button><a asp-action="Index" class="btn btn-outline-secondary">Về lịch sử</a></div>
+</form>
+<template id="waste-template"><div class="row g-2 mb-3 waste-row">
+    <div class="col-md-4"><label class="form-label">Loại rác</label><select data-field="MaLoaiRac" class="form-select" required><option value="">Chọn loại rác</option>@foreach (var item in Model.LoaiRacItems) { <option value="@item.Value">@item.Text</option> }</select></div>
+    <div class="col-md-2"><label class="form-label">Số lượng dự kiến</label><input data-field="SoLuongDuKien" type="number" min="0.001" max="999999999.999" step="0.001" required class="form-control" /></div>
+    <div class="col-md-4"><label class="form-label">Ghi chú loại rác</label><input data-field="GhiChu" maxlength="500" class="form-control" /></div>
+    <div class="col-md-2 align-self-end"><button type="button" class="btn btn-outline-danger remove-waste">Xóa dòng</button></div>
+</div></template>
+@section Scripts { <script src="~/js/dang-ky-thu-gom.js" asp-append-version="true"></script> }
