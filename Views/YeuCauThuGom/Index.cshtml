@@ -6,7 +6,6 @@
 
 @model List<QLThuGomRac_UNETI02_TI17A1HN.Models.Entities.YeuCauThuGom>
 @using QLThuGomRac_UNETI02_TI17A1HN.Models.Enums
-
 @{
     ViewData["Title"] = "Yêu cầu của tôi";
 }
@@ -20,6 +19,12 @@
     </a>
 </div>
 
+@if (TempData["ThongBao"] is string message)
+{
+    <div class="alert alert-success" role="status">
+        @message
+    </div>
+}
 
 <div class="request-filter-buttons">
 
@@ -29,31 +34,31 @@
     </a>
 
     <a asp-action="Index"
-       asp-route-trangThai="ChoXacNhan"
+       asp-route-trangThai="@TrangThaiYeuCau.ChoXacNhan"
        class="request-filter-btn">
         Chờ xác nhận
     </a>
 
     <a asp-action="Index"
-       asp-route-trangThai="DaXacNhan"
+       asp-route-trangThai="@TrangThaiYeuCau.DaXacNhan"
        class="request-filter-btn">
         Đã xác nhận
     </a>
 
     <a asp-action="Index"
-       asp-route-trangThai="DangXuLy"
+       asp-route-nhom="dang-xu-ly"
        class="request-filter-btn">
         Đang xử lý
     </a>
 
     <a asp-action="Index"
-       asp-route-trangThai="HoanThanh"
+       asp-route-trangThai="@TrangThaiYeuCau.HoanThanh"
        class="request-filter-btn">
         Hoàn thành
     </a>
 
     <a asp-action="Index"
-       asp-route-trangThai="TuChoi"
+       asp-route-nhom="tu-choi-huy"
        class="request-filter-btn">
         Từ chối / Hủy
     </a>
@@ -63,19 +68,6 @@
 <form method="get"
       asp-action="Index"
       class="row g-2 align-items-end mb-3">
-
-    <div class="col-md-3">
-        <label for="maYeuCau" class="form-label">
-            Mã yêu cầu
-        </label>
-
-        <input type="number"
-               id="maYeuCau"
-               name="maYeuCau"
-               value="@ViewBag.MaYeuCau"
-               class="form-control"
-               placeholder="Nhập mã yêu cầu" />
-    </div>
 
     <div class="col-md-3">
         <label for="trangThai" class="form-label">
@@ -108,7 +100,7 @@
     <div class="col-auto">
         <button type="submit"
                 class="btn btn-primary">
-            Tìm kiếm
+            Lọc
         </button>
     </div>
 
@@ -158,6 +150,7 @@
                     <td>@request.KhungGio</td>
                     <td>@request.KhuVuc.TenKhuVuc</td>
                     <td>@request.TrangThai.GetDisplayName()</td>
+
                     <td>
                         <a asp-action="Details"
                            asp-route-id="@request.MaYeuCau"
