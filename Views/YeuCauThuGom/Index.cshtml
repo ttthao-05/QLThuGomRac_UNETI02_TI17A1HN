@@ -1,7 +1,7 @@
 ﻿@* Họ và tên: Phạm Văn Hào | Mã sinh viên: 23103100041 | Nội dung thực hiện: Module 2 – Tra cứu yêu cầu (§6.5) *@
 @model List<QLThuGomRac_UNETI02_TI17A1HN.Models.Entities.YeuCauThuGom>
 @using QLThuGomRac_UNETI02_TI17A1HN.Models.Enums
-@{ ViewData["Title"] = "Yêu cầu của tôi"; }
+@{ ViewData["Title"] = "Yêu cầu của tôi (§6.5)"; }
 <div class="d-flex justify-content-between align-items-center mb-3"><h1>Yêu cầu của tôi</h1><a asp-action="Create" class="btn btn-primary">Đăng ký thu gom</a></div>
 @if (TempData["ThongBao"] is string message) { <div class="alert alert-success" role="status">@message</div> }
 <div class="d-flex gap-3 flex-wrap mb-3"><a asp-action="Index">Toàn bộ lịch sử</a><a asp-action="Index" asp-route-trangThai="1">Chờ xác nhận</a><a asp-action="Index" asp-route-trangThai="2">Đã xác nhận</a><a asp-action="Index" asp-route-nhom="dang-xu-ly">Đang xử lý</a><a asp-action="Index" asp-route-trangThai="5">Hoàn thành</a><a asp-action="Index" asp-route-nhom="tu-choi-huy">Từ chối / Hủy</a></div>
