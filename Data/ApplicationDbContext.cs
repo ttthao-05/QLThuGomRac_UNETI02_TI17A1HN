@@ -28,6 +28,9 @@ public class ApplicationDbContext : DbContext
     // Module 2 – Chi tiết yêu cầu
     public DbSet<ChiTietYeuCau> ChiTietYeuCaus => Set<ChiTietYeuCau>();
 
+    // Nội dung: Module 3 – Quản lý nhân viên
+    public DbSet<NhanVien> NhanViens => Set<NhanVien>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -189,6 +192,43 @@ public class ApplicationDbContext : DbContext
                 t.HasCheckConstraint(
                     "CK_ChiTietYeuCau_SoLuong",
                     "[SoLuongDuKien] > 0"));
+        });
+        // Họ và tên: Nguyễn Tiến Đạt
+        // Mã sinh viên: 23103100053
+        // Nội dung: Module 3 – Cấu hình nhân viên
+        modelBuilder.Entity<NhanVien>(entity =>
+        {
+            entity.HasKey(x => x.MaNhanVien);
+
+            entity.Property(x => x.HoTen)
+                .HasMaxLength(100)
+                .IsRequired();
+
+            entity.Property(x => x.SoDienThoai)
+                .HasMaxLength(15)
+                .IsRequired();
+
+            entity.Property(x => x.NgayVaoLam)
+                .HasColumnType("date");
+
+            entity.Property(x => x.TrangThai)
+                .HasConversion<int>();
+
+            // Một tài khoản chỉ liên kết với một nhân viên.
+            entity.HasIndex(x => x.MaTaiKhoan)
+                .IsUnique();
+
+            // TaiKhoan (1) – NhanVien (1).
+            entity.HasOne(x => x.TaiKhoan)
+                .WithOne()
+                .HasForeignKey<NhanVien>(x => x.MaTaiKhoan)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // KhuVuc (1) – NhanVien (n).
+            entity.HasOne(x => x.KhuVuc)
+                .WithMany()
+                .HasForeignKey(x => x.MaKhuVuc)
+                .OnDelete(DeleteBehavior.Restrict);
         });
     }
 }
