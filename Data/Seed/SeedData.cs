@@ -1,6 +1,10 @@
 ﻿// Họ và tên: Trần Thị Thảo
 // Mã sinh viên: 23103100025
-// Nội dung thực hiện: Module 1 – Quản lý tài khoản, khu vực và loại rác (§5.1, §5.5, §5.6)
+// Nội dung thực hiện: Module 1 – Dữ liệu mẫu tài khoản, khu vực, loại rác (§5.1, §5.5, §5.6)
+
+// Họ và tên: Phạm Văn Hào
+// Mã sinh viên: 23103100041
+// Nội dung thực hiện: Module 2 – Khởi tạo hồ sơ người dân từ tài khoản người dân
 
 using QLThuGomRac_UNETI02_TI17A1HN.Models.Entities;
 using QLThuGomRac_UNETI02_TI17A1HN.Models.Enums;

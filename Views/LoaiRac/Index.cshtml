@@ -1,4 +1,10 @@
-﻿@model IEnumerable<QLThuGomRac_UNETI02_TI17A1HN.Models.Entities.LoaiRac>
+﻿@*
+    Họ và tên: Trần Thị Thảo
+    Mã sinh viên: 23103100025
+    Nội dung thực hiện: Module 1 – Quản lý loại rác (§5.6)
+*@
+
+@model IEnumerable<QLThuGomRac_UNETI02_TI17A1HN.Models.Entities.LoaiRac>
 
 @{
     ViewData["Title"] = "Quản lý loại rác";
@@ -24,6 +30,29 @@
     <a asp-action="Create" class="btn btn-primary">
         Thêm loại rác
     </a>
+
+    <form method="get" asp-action="Index" class="mb-3">
+       <div class="row g-2">
+        <div class="col-md-5">
+            <input type="text"
+                   name="tuKhoa"
+                   value="@ViewBag.TuKhoa"
+                   class="form-control"
+                   placeholder="Nhập tên loại rác cần tìm..." />
+        </div>
+
+        <div class="col-auto">
+            <button type="submit" class="btn btn-primary">
+                Tìm kiếm
+            </button>
+
+            <a asp-action="Index"
+               class="btn btn-secondary">
+                Làm mới
+            </a>
+        </div>
+    </div>
+</form>
 </p>
 
 <table class="table table-bordered table-striped">

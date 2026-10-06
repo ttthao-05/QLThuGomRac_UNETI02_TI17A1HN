@@ -21,10 +21,23 @@ public class LoaiRacController : Controller
     }
 
     [HttpGet]
-    public async Task<IActionResult> Index()
+    public async Task<IActionResult> Index(string? tuKhoa)
     {
-        var danhSach = await _context.LoaiRacs
+        var query = _context.LoaiRacs
             .AsNoTracking()
+            .AsQueryable();
+
+        if (!string.IsNullOrWhiteSpace(tuKhoa))
+        {
+            tuKhoa = tuKhoa.Trim();
+
+            query = query.Where(x =>
+                x.TenLoaiRac.Contains(tuKhoa));
+        }
+
+        ViewBag.TuKhoa = tuKhoa;
+
+        var danhSach = await query
             .OrderBy(x => x.MaLoaiRac)
             .ToListAsync();
 

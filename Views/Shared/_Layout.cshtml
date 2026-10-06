@@ -1,4 +1,14 @@
-﻿<!DOCTYPE html>
+﻿@*
+    Họ và tên: Trần Thị Thảo
+    Mã sinh viên: 23103100025
+    Nội dung thực hiện: Module 1 – Tích hợp menu đăng nhập, phân quyền và chức năng quản trị
+
+    Họ và tên: Phạm Văn Hào
+    Mã sinh viên: 23103100041
+    Nội dung thực hiện: Module 2 – Tích hợp menu chức năng người dân
+*@
+
+<!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="utf-8" />
@@ -82,6 +92,22 @@
                         {
                             <li class="nav-item">
                                 <a class="nav-link text-dark"
+                                  asp-controller="ThongTinThuGom"
+                                  asp-action="LoaiRac">
+                                  Loại rác đang phục vụ
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link text-dark"
+                                    asp-controller="ThongTinThuGom"
+                                    asp-action="KhuVuc">
+                                      Khu vực phục vụ
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link text-dark"
                                    asp-controller="HoSo"
                                    asp-action="Index">
                                     Thông tin cá nhân
@@ -105,16 +131,7 @@
                             </li>
                         }
 
-                        @* =========================
-                           NHÂN VIÊN
-                           ========================= *@
-                        <li class="nav-item">
-                            <a class="nav-link text-dark"
-                               asp-controller="NhanVien"
-                               asp-action="Index">
-                                Nhân viên
-                            </a>
-                        </li>
+                        
 
                         @* =========================
                            ADMIN - MODULE 1 + MODULE 2
