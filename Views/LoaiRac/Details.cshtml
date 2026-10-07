@@ -4,58 +4,192 @@
     Nội dung thực hiện: Module 1 – Quản lý loại rác (§5.6)
 *@
 
+@using QLThuGomRac_UNETI02_TI17A1HN.Models.Enums
 @model QLThuGomRac_UNETI02_TI17A1HN.Models.Entities.LoaiRac
 
 @{
     ViewData["Title"] = "Chi tiết loại rác";
 }
 
-<h2>Chi tiết loại rác</h2>
+<div class="page-header-section">
 
-<table class="table table-bordered">
-    <tr>
-        <th>Mã loại rác</th>
-        <td>@Model.MaLoaiRac</td>
-    </tr>
+    <div>
+        <div class="page-title-icon">
+            <i class="bi bi-recycle"></i>
+        </div>
 
-    <tr>
-        <th>Tên loại rác</th>
-        <td>@Model.TenLoaiRac</td>
-    </tr>
+        <div>
+            <h1>
+                Chi tiết loại rác
+                <span class="edit-account-id">#@Model.MaLoaiRac</span>
+            </h1>
 
-    <tr>
-        <th>Đơn vị tính</th>
-        <td>@Model.DonViTinh</td>
-    </tr>
+            <p>Xem thông tin chi tiết loại rác tái chế trong hệ thống.</p>
+        </div>
+    </div>
 
-    <tr>
-        <th>Mô tả</th>
-        <td>@Model.MoTa</td>
-    </tr>
+    <a asp-action="Index"
+       class="btn btn-success">
 
-    <tr>
-        <th>Trạng thái</th>
-        <td>
-            @if (Model.TrangThai ==
-                QLThuGomRac_UNETI02_TI17A1HN.Models.Enums.TrangThaiLoaiRac.DangPhucVu)
-            {
-                <span>Đang phục vụ</span>
-            }
-            else
-            {
-                <span>Ngừng phục vụ</span>
-            }
-        </td>
-    </tr>
-</table>
+        <i class="bi bi-arrow-left"></i>
+        Quay lại
 
-<a asp-action="Edit"
-   asp-route-id="@Model.MaLoaiRac"
-   class="btn btn-warning">
-    Sửa
-</a>
+    </a>
 
-<a asp-action="Index"
-   class="btn btn-secondary">
-    Quay lại
-</a>
+</div>
+
+
+<div class="detail-card">
+
+    <div class="detail-card-header">
+
+        <div class="detail-user">
+
+            <div class="detail-avatar">
+                <i class="bi bi-recycle"></i>
+            </div>
+
+            <div>
+                <h2>@Model.TenLoaiRac</h2>
+                <span>Loại rác tái chế</span>
+            </div>
+
+        </div>
+
+
+        @if (Model.TrangThai == TrangThaiLoaiRac.DangPhucVu)
+        {
+            <span class="status-badge status-success">
+
+                <i class="bi bi-circle-fill"></i>
+                Đang phục vụ
+
+            </span>
+        }
+        else
+        {
+            <span class="status-badge status-danger">
+
+                <i class="bi bi-circle-fill"></i>
+                Ngừng phục vụ
+
+            </span>
+        }
+
+    </div>
+
+
+    <div class="detail-grid">
+
+        <!-- Mã loại rác -->
+        <div class="detail-item">
+
+            <div class="detail-item-icon">
+                <i class="bi bi-hash"></i>
+            </div>
+
+            <div>
+                <span>Mã loại rác</span>
+                <strong>#@Model.MaLoaiRac</strong>
+            </div>
+
+        </div>
+
+
+        <!-- Tên loại rác -->
+        <div class="detail-item">
+
+            <div class="detail-item-icon">
+                <i class="bi bi-trash3"></i>
+            </div>
+
+            <div>
+                <span>Tên loại rác</span>
+                <strong>@Model.TenLoaiRac</strong>
+            </div>
+
+        </div>
+
+
+        <!-- Đơn vị tính -->
+        <div class="detail-item">
+
+            <div class="detail-item-icon">
+                <i class="bi bi-box-seam"></i>
+            </div>
+
+            <div>
+                <span>Đơn vị tính</span>
+                <strong>
+                    @(string.IsNullOrWhiteSpace(Model.DonViTinh)
+                        ? "Chưa cập nhật"
+                        : Model.DonViTinh)
+                </strong>
+            </div>
+
+        </div>
+
+
+        <!-- Trạng thái -->
+        <div class="detail-item">
+
+            <div class="detail-item-icon">
+                <i class="bi bi-activity"></i>
+            </div>
+
+            <div>
+                <span>Trạng thái</span>
+
+                @if (Model.TrangThai == TrangThaiLoaiRac.DangPhucVu)
+                {
+                    <strong class="text-success">
+                        Đang phục vụ
+                    </strong>
+                }
+                else
+                {
+                    <strong class="text-danger">
+                        Ngừng phục vụ
+                    </strong>
+                }
+
+            </div>
+
+        </div>
+
+
+        <!-- Mô tả -->
+        <div class="detail-item detail-item-full">
+
+            <div class="detail-item-icon">
+                <i class="bi bi-card-text"></i>
+            </div>
+
+            <div>
+                <span>Mô tả</span>
+                <strong>
+                    @(string.IsNullOrWhiteSpace(Model.MoTa)
+                        ? "Chưa có mô tả"
+                        : Model.MoTa)
+                </strong>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="detail-actions">
+
+        <a asp-action="Edit"
+           asp-route-id="@Model.MaLoaiRac"
+           class="btn btn-success">
+
+            <i class="bi bi-pencil-square"></i>
+            Chỉnh sửa loại rác
+
+        </a>
+
+    </div>
+
+</div>

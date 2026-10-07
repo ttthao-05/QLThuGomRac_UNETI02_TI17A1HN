@@ -10,62 +10,138 @@
     ViewData["Title"] = "Đăng nhập";
 }
 
-<div class="row justify-content-center mt-5">
-    <div class="col-md-5">
+<div class="login-page">
 
-        <div class="card shadow-sm">
-            <div class="card-body p-4">
+    <div class="login-card">
 
-                <h2 class="text-center mb-4">
-                    Đăng nhập
-                </h2>
+        <!-- GIỚI THIỆU HỆ THỐNG -->
+        <div class="login-intro">
 
-                <form asp-controller="Account"
-                      asp-action="Login"
-                      method="post">
+            <div class="login-intro-icon">
+                <i class="bi bi-recycle"></i>
+            </div>
 
-                    <div asp-validation-summary="ModelOnly"
-                         class="text-danger mb-3">
-                    </div>
+            <h2>QLThuGomRac</h2>
 
-                    <div class="mb-3">
-                        <label asp-for="TenDangNhap"
-                               class="form-label">
-                        </label>
+            <p>
+                Hệ thống quản lý thu gom rác tái chế,
+                hỗ trợ người dân đăng ký và theo dõi quá trình thu gom.
+            </p>
+
+            <div class="login-feature">
+                <i class="bi bi-check-circle-fill"></i>
+                <span>Đăng ký lịch thu gom thuận tiện</span>
+            </div>
+
+            <div class="login-feature">
+                <i class="bi bi-check-circle-fill"></i>
+                <span>Theo dõi trạng thái yêu cầu</span>
+            </div>
+
+            <div class="login-feature">
+                <i class="bi bi-check-circle-fill"></i>
+                <span>Quản lý thông tin tập trung</span>
+            </div>
+
+        </div>
+
+
+        <!-- FORM ĐĂNG NHẬP -->
+        <div class="login-form-area">
+
+            <div class="login-form-header">
+                <h1>Đăng nhập</h1>
+                <p>Vui lòng nhập thông tin tài khoản để tiếp tục.</p>
+            </div>
+
+            <form asp-controller="Account"
+                  asp-action="Login"
+                  method="post">
+
+                <div asp-validation-summary="ModelOnly"
+                     class="text-danger mb-3">
+                </div>
+
+                <!-- TÊN ĐĂNG NHẬP -->
+                <div class="mb-3">
+
+                    <label asp-for="TenDangNhap"
+                           class="form-label">
+                        Tên đăng nhập
+                    </label>
+
+                    <div class="input-icon-group">
+
+                        <i class="bi bi-person"></i>
 
                         <input asp-for="TenDangNhap"
                                class="form-control"
-                               placeholder="Nhập tên đăng nhập" />
+                               placeholder="Nhập tên đăng nhập"
+                               autocomplete="username" />
 
-                        <span asp-validation-for="TenDangNhap"
-                              class="text-danger">
-                        </span>
                     </div>
 
-                    <div class="mb-3">
-                        <label asp-for="MatKhau"
-                               class="form-label">
-                        </label>
+                    <span asp-validation-for="TenDangNhap"
+                          class="text-danger">
+                    </span>
+
+                </div>
+
+
+                <!-- MẬT KHẨU -->
+                <div class="mb-4">
+
+                    <label asp-for="MatKhau"
+                           class="form-label">
+                        Mật khẩu
+                    </label>
+
+                    <div class="input-icon-group">
+
+                        <i class="bi bi-lock"></i>
 
                         <input asp-for="MatKhau"
                                class="form-control"
-                               placeholder="Nhập mật khẩu" />
+                               placeholder="Nhập mật khẩu"
+                               autocomplete="current-password" />
 
-                        <span asp-validation-for="MatKhau"
-                              class="text-danger">
-                        </span>
                     </div>
 
-                    <button type="submit"
-                            class="btn btn-primary w-100">
-                        Đăng nhập
-                    </button>
+                    <span asp-validation-for="MatKhau"
+                          class="text-danger">
+                    </span>
 
-                </form>
+                </div>
+
+
+                <!-- NÚT ĐĂNG NHẬP -->
+                <button type="submit"
+                        class="btn btn-success login-submit">
+
+                    <i class="bi bi-box-arrow-in-right"></i>
+                    Đăng nhập
+
+                </button>
+
+            </form>
+
+
+            <div class="login-back">
+
+                <a asp-controller="Home"
+                   asp-action="Index">
+
+                    <i class="bi bi-arrow-left"></i>
+                    Quay lại trang chủ
+
+                </a>
 
             </div>
+
         </div>
+
     </div>
+
 </div>
 
 @section Scripts {
