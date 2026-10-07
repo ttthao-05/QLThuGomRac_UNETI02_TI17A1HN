@@ -1,56 +1,201 @@
-@* // Họ và tên: Trần Thị Thảo
-   // Mã sinh viên: 23103100025
-   // Nội dung thực hiện: Module 1 – Quản lý tài khoản (§5.1 Quản lý tài khoản) *@
+﻿@*
+    Họ và tên: Trần Thị Thảo
+    Mã sinh viên: 23103100025
+    Nội dung thực hiện: Module 1 – Quản lý tài khoản (§5.1 Quản lý tài khoản)
+*@
+
 @using QLThuGomRac_UNETI02_TI17A1HN.Models.Entities
 @using QLThuGomRac_UNETI02_TI17A1HN.Models.Enums
 @model TaiKhoan
+
 @{
     ViewData["Title"] = "Chi tiết tài khoản";
 }
 
-<h1 class="mb-3">Chi tiết tài khoản</h1>
+<div class="page-header-section">
+
+    <div>
+        <div class="page-title-icon">
+            <i class="bi bi-person-vcard-fill"></i>
+        </div>
+
+        <div>
+            <h1>
+                Chi tiết tài khoản
+                <span class="edit-account-id">#@Model.MaTaiKhoan</span>
+            </h1>
+
+            <p>Xem đầy đủ thông tin tài khoản trong hệ thống.</p>
+        </div>
+    </div>
+
+    <a asp-controller="TaiKhoan"
+       asp-action="Index"
+       class="btn btn-success">
+
+        <i class="bi bi-arrow-left"></i>
+        Quay lại
+    </a>
+
+</div>
+
 
 @if (TempData["ThongBao"] is string thongBao)
 {
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
+    <div class="alert alert-success alert-dismissible fade show"
+         role="alert">
+
+        <i class="bi bi-check-circle-fill me-1"></i>
         @thongBao
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+
+        <button type="button"
+                class="btn-close"
+                data-bs-dismiss="alert"
+                aria-label="Close">
+        </button>
+
     </div>
 }
 
-<dl class="row">
-    <dt class="col-sm-3">@Html.DisplayNameFor(m => m.MaTaiKhoan)</dt>
-    <dd class="col-sm-9">@Model.MaTaiKhoan</dd>
 
-    <dt class="col-sm-3">@Html.DisplayNameFor(m => m.TenDangNhap)</dt>
-    <dd class="col-sm-9">@Model.TenDangNhap</dd>
+<div class="detail-card">
 
-    <dt class="col-sm-3">@Html.DisplayNameFor(m => m.MatKhau)</dt>
-    <dd class="col-sm-9"><code>@Model.MatKhau</code></dd>
+    <!-- Header -->
+    <div class="detail-card-header">
 
-    <dt class="col-sm-3">@Html.DisplayNameFor(m => m.HoTen)</dt>
-    <dd class="col-sm-9">@Model.HoTen</dd>
+        <div class="detail-user">
 
-    <dt class="col-sm-3">@Html.DisplayNameFor(m => m.SoDienThoai)</dt>
-    <dd class="col-sm-9">@Model.SoDienThoai</dd>
+            <div class="detail-avatar">
+                <i class="bi bi-person-fill"></i>
+            </div>
 
-    <dt class="col-sm-3">@Html.DisplayNameFor(m => m.LoaiTaiKhoan)</dt>
-    <dd class="col-sm-9">@Model.LoaiTaiKhoan.GetDisplayName()</dd>
+            <div>
+                <h2>@Model.HoTen</h2>
+                <span>@Model.TenDangNhap</span>
+            </div>
 
-    <dt class="col-sm-3">@Html.DisplayNameFor(m => m.TrangThai)</dt>
-    <dd class="col-sm-9">
+        </div>
+
         @if (Model.TrangThai == TrangThaiTaiKhoan.DangHoatDong)
         {
-            <span class="badge bg-success">@Model.TrangThai.GetDisplayName()</span>
+            <span class="status-badge status-success">
+                <i class="bi bi-circle-fill"></i>
+                @Model.TrangThai.GetDisplayName()
+            </span>
         }
         else
         {
-            <span class="badge bg-danger">@Model.TrangThai.GetDisplayName()</span>
+            <span class="status-badge status-danger">
+                <i class="bi bi-circle-fill"></i>
+                @Model.TrangThai.GetDisplayName()
+            </span>
         }
-    </dd>
-</dl>
 
-<div class="mt-3">
-    <a asp-controller="TaiKhoan" asp-action="Edit" asp-route-id="@Model.MaTaiKhoan" class="btn btn-primary">Sửa</a>
-    <a asp-controller="TaiKhoan" asp-action="Index" class="btn btn-outline-secondary">Về danh sách</a>
+    </div>
+
+
+    <!-- Nội dung -->
+    <div class="detail-grid">
+
+        <div class="detail-item">
+
+            <div class="detail-item-icon">
+                <i class="bi bi-hash"></i>
+            </div>
+
+            <div>
+                <span>Mã tài khoản</span>
+                <strong>#@Model.MaTaiKhoan</strong>
+            </div>
+
+        </div>
+
+
+        <div class="detail-item">
+
+            <div class="detail-item-icon">
+                <i class="bi bi-person"></i>
+            </div>
+
+            <div>
+                <span>Tên đăng nhập</span>
+                <strong>@Model.TenDangNhap</strong>
+            </div>
+
+        </div>
+
+
+        <div class="detail-item">
+
+            <div class="detail-item-icon">
+                <i class="bi bi-person-badge"></i>
+            </div>
+
+            <div>
+                <span>Họ tên</span>
+                <strong>@Model.HoTen</strong>
+            </div>
+
+        </div>
+
+
+        <div class="detail-item">
+
+            <div class="detail-item-icon">
+                <i class="bi bi-telephone"></i>
+            </div>
+
+            <div>
+                <span>Số điện thoại</span>
+                <strong>@Model.SoDienThoai</strong>
+            </div>
+
+        </div>
+
+
+        <div class="detail-item">
+
+            <div class="detail-item-icon">
+                <i class="bi bi-shield-person"></i>
+            </div>
+
+            <div>
+                <span>Loại tài khoản</span>
+                <strong>@Model.LoaiTaiKhoan.GetDisplayName()</strong>
+            </div>
+
+        </div>
+
+
+        <div class="detail-item">
+
+            <div class="detail-item-icon">
+                <i class="bi bi-lock"></i>
+            </div>
+
+            <div>
+                <span>Mật khẩu</span>
+                <strong>••••••••</strong>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Actions -->
+    <div class="detail-actions">
+
+        <a asp-controller="TaiKhoan"
+           asp-action="Edit"
+           asp-route-id="@Model.MaTaiKhoan"
+           class="btn btn-success">
+
+            <i class="bi bi-pencil-square"></i>
+            Chỉnh sửa tài khoản
+
+        </a>
+
+    </div>
+
 </div>

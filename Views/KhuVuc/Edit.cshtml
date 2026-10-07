@@ -10,67 +10,148 @@
     ViewData["Title"] = "Sửa khu vực";
 }
 
-<h2>Sửa khu vực</h2>
+<div class="page-header-section">
 
-<form asp-action="Edit" method="post">
-    @Html.AntiForgeryToken()
+    <div>
+        <div class="page-title-icon">
+            <i class="bi bi-pencil-square"></i>
+        </div>
 
-    <input type="hidden"
-           asp-for="MaKhuVuc" />
+        <div>
+            <h1>
+                Sửa khu vực
+                <span class="edit-account-id">#@Model.MaKhuVuc</span>
+            </h1>
 
-    <div asp-validation-summary="ModelOnly"
-         class="text-danger">
+            <p>Cập nhật thông tin khu vực phục vụ thu gom.</p>
+        </div>
     </div>
-
-    <div class="mb-3">
-        <label asp-for="TenKhuVuc"
-               class="form-label">
-        </label>
-
-        <input asp-for="TenKhuVuc"
-               class="form-control" />
-
-        <span asp-validation-for="TenKhuVuc"
-              class="text-danger">
-        </span>
-    </div>
-
-    <div class="mb-3">
-        <label asp-for="DiaChiMoTa"
-               class="form-label">
-        </label>
-
-        <textarea asp-for="DiaChiMoTa"
-                  class="form-control"
-                  rows="3">
-        </textarea>
-
-        <span asp-validation-for="DiaChiMoTa"
-              class="text-danger">
-        </span>
-    </div>
-
-    <div class="mb-3">
-        <label asp-for="TrangThai"
-               class="form-label">
-        </label>
-
-        <select asp-for="TrangThai"
-                class="form-select"
-                asp-items="Html.GetEnumSelectList<QLThuGomRac_UNETI02_TI17A1HN.Models.Enums.TrangThaiKhuVuc>()">
-        </select>
-    </div>
-
-    <button type="submit"
-            class="btn btn-primary">
-        Lưu thay đổi
-    </button>
 
     <a asp-action="Index"
-       class="btn btn-secondary">
+       class="btn btn-success">
+
+        <i class="bi bi-arrow-left"></i>
         Quay lại
+
     </a>
-</form>
+
+</div>
+
+
+<div class="form-page-card">
+
+    <div class="form-card-header">
+
+        <div>
+            <h2>Thông tin khu vực</h2>
+            <p>Chỉnh sửa các thông tin cần thiết bên dưới.</p>
+        </div>
+
+        <div class="form-card-icon">
+            <i class="bi bi-map-fill"></i>
+        </div>
+
+    </div>
+
+
+    <form asp-action="Edit"
+          method="post">
+
+        @Html.AntiForgeryToken()
+
+        <input type="hidden"
+               asp-for="MaKhuVuc" />
+
+        <div asp-validation-summary="ModelOnly"
+             class="alert alert-danger validation-summary-errors">
+        </div>
+
+
+        <div class="row g-4">
+
+            <!-- Tên khu vực -->
+            <div class="col-md-6">
+
+                <label asp-for="TenKhuVuc"
+                       class="form-label">
+                    Tên khu vực
+                </label>
+
+                <div class="input-icon-group">
+
+                    <i class="bi bi-geo-alt"></i>
+
+                    <input asp-for="TenKhuVuc"
+                           class="form-control"
+                           placeholder="Nhập tên khu vực" />
+
+                </div>
+
+                <span asp-validation-for="TenKhuVuc"
+                      class="text-danger">
+                </span>
+
+            </div>
+
+
+            <!-- Trạng thái -->
+            <div class="col-md-6">
+
+                <label asp-for="TrangThai"
+                       class="form-label">
+                    Trạng thái
+                </label>
+
+                <select asp-for="TrangThai"
+                        class="form-select"
+                        asp-items="Html.GetEnumSelectList<QLThuGomRac_UNETI02_TI17A1HN.Models.Enums.TrangThaiKhuVuc>()">
+                </select>
+
+                <span asp-validation-for="TrangThai"
+                      class="text-danger">
+                </span>
+
+            </div>
+
+
+            <!-- Địa chỉ -->
+            <div class="col-12">
+
+                <label asp-for="DiaChiMoTa"
+                       class="form-label">
+                    Địa chỉ mô tả
+                </label>
+
+                <textarea asp-for="DiaChiMoTa"
+                          class="form-control"
+                          rows="4"
+                          placeholder="Ví dụ: Quận Cầu Giấy, Hà Nội"></textarea>
+
+                <span asp-validation-for="DiaChiMoTa"
+                      class="text-danger">
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <div class="form-actions">
+
+            <button type="submit"
+                    class="btn btn-success">
+
+                <i class="bi bi-check-circle-fill"></i>
+                Lưu thay đổi
+
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
+
 
 @section Scripts
 {
