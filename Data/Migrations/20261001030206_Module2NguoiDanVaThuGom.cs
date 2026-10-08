@@ -88,12 +88,6 @@ namespace QLThuGomRac_UNETI02_TI17A1HN.Data.Migrations
                     table.PrimaryKey("PK_ChiTietYeuCaus", x => x.MaChiTiet);
                     table.CheckConstraint("CK_ChiTietYeuCau_SoLuong", "[SoLuongDuKien] > 0");
                     table.ForeignKey(
-                        name: "FK_ChiTietYeuCaus_LoaiRacs_MaLoaiRac",
-                        column: x => x.MaLoaiRac,
-                        principalTable: "LoaiRacs",
-                        principalColumn: "MaLoaiRac",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
                         name: "FK_ChiTietYeuCaus_YeuCauThuGoms_MaYeuCau",
                         column: x => x.MaYeuCau,
                         principalTable: "YeuCauThuGoms",
