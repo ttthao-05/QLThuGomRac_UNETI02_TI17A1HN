@@ -28,8 +28,11 @@ public class ApplicationDbContext : DbContext
     // Module 2 – Chi tiết yêu cầu
     public DbSet<ChiTietYeuCau> ChiTietYeuCaus => Set<ChiTietYeuCau>();
 
-    // Nội dung: Module 3 – Quản lý nhân viên
+    // Nội dung: Module 3 – Quản lý nhân viên (7.1)
     public DbSet<NhanVien> NhanViens => Set<NhanVien>();
+
+    // Module 3 – Phân công thu gom (7.2)
+    public DbSet<PhanCongThuGom> PhanCongThuGoms => Set<PhanCongThuGom>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -195,7 +198,7 @@ public class ApplicationDbContext : DbContext
         });
         // Họ và tên: Nguyễn Tiến Đạt
         // Mã sinh viên: 23103100053
-        // Nội dung: Module 3 – Cấu hình nhân viên
+        // Nội dung: Module 3 – Cấu hình nhân viên (7.1)
         modelBuilder.Entity<NhanVien>(entity =>
         {
             entity.HasKey(x => x.MaNhanVien);
@@ -228,6 +231,35 @@ public class ApplicationDbContext : DbContext
             entity.HasOne(x => x.KhuVuc)
                 .WithMany()
                 .HasForeignKey(x => x.MaKhuVuc)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
+        // Nguyễn Tiến Đạt – 23103100053
+        // Module 3 – Cấu hình phân công thu gom (7.2)
+        modelBuilder.Entity<PhanCongThuGom>(entity =>
+        {
+            entity.HasKey(x => x.MaPhanCong);
+
+            entity.Property(x => x.NgayPhanCong)
+                .IsRequired();
+
+            entity.Property(x => x.GhiChu)
+                .HasMaxLength(1000);
+
+            entity.Property(x => x.TrangThai)
+                .HasConversion<int>();
+
+            // Một yêu cầu chỉ có một bản ghi phân công.
+            entity.HasIndex(x => x.MaYeuCau)
+                .IsUnique();
+
+            entity.HasOne(x => x.YeuCauThuGom)
+                .WithOne()
+                .HasForeignKey<PhanCongThuGom>(x => x.MaYeuCau)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(x => x.NhanVien)
+                .WithMany()
+                .HasForeignKey(x => x.MaNhanVien)
                 .OnDelete(DeleteBehavior.Restrict);
         });
     }
