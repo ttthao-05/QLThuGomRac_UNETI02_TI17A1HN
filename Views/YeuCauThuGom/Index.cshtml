@@ -1,14 +1,179 @@
-﻿@* Họ và tên: Phạm Văn Hào | Mã sinh viên: 23103100041 | Nội dung thực hiện: Module 2 – Tra cứu yêu cầu (§6.5) *@
+﻿@*
+    Họ và tên: Phạm Văn Hào
+    Mã sinh viên: 23103100041
+    Nội dung thực hiện: Module 2 – Tra cứu yêu cầu (§6.5)
+*@
+
 @model List<QLThuGomRac_UNETI02_TI17A1HN.Models.Entities.YeuCauThuGom>
 @using QLThuGomRac_UNETI02_TI17A1HN.Models.Enums
-@{ ViewData["Title"] = "Yêu cầu của tôi"; }
-<div class="d-flex justify-content-between align-items-center mb-3"><h1>Yêu cầu của tôi</h1><a asp-action="Create" class="btn btn-primary">Đăng ký thu gom</a></div>
-@if (TempData["ThongBao"] is string message) { <div class="alert alert-success" role="status">@message</div> }
-<div class="d-flex gap-3 flex-wrap mb-3"><a asp-action="Index">Toàn bộ lịch sử</a><a asp-action="Index" asp-route-trangThai="1">Chờ xác nhận</a><a asp-action="Index" asp-route-trangThai="2">Đã xác nhận</a><a asp-action="Index" asp-route-nhom="dang-xu-ly">Đang xử lý</a><a asp-action="Index" asp-route-trangThai="5">Hoàn thành</a><a asp-action="Index" asp-route-nhom="tu-choi-huy">Từ chối / Hủy</a></div>
-<form method="get" class="d-flex gap-2 mb-3"><label for="trangThai" class="align-self-center">Trạng thái</label><select id="trangThai" name="trangThai" class="form-select w-auto"><option value="">Tất cả</option>@foreach (var status in Enum.GetValues<TrangThaiYeuCau>()) { <option value="@((int)status)" selected="@(ViewBag.TrangThai == status)">@status.GetDisplayName()</option> }</select><button class="btn btn-outline-primary">Lọc</button></form>
-@if (ViewBag.Nhom == "dang-xu-ly") { <p>Đang xem: yêu cầu đã phân công hoặc đang thu gom.</p> }
-@if (ViewBag.Nhom == "tu-choi-huy") { <p>Đang xem: yêu cầu từ chối hoặc hủy.</p> }
-<div class="table-responsive"><table class="table table-striped"><thead><tr><th>Mã</th><th>Ngày đăng ký</th><th>Ngày thu gom</th><th>Khung giờ</th><th>Khu vực</th><th>Trạng thái</th><th></th></tr></thead><tbody>
-@foreach (var request in Model) { <tr><td>@request.MaYeuCau</td><td>@request.NgayDangKy.ToString("dd/MM/yyyy HH:mm")</td><td>@request.NgayMongMuonThuGom.ToString("dd/MM/yyyy")</td><td>@request.KhungGio</td><td>@request.KhuVuc.TenKhuVuc</td><td>@request.TrangThai.GetDisplayName()</td><td><a asp-action="Details" asp-route-id="@request.MaYeuCau">Chi tiết</a></td></tr> }
-</tbody></table></div>
-@if (Model.Count == 0) { <p class="text-muted">Chưa có yêu cầu phù hợp.</p> }
+
+@{
+    ViewData["Title"] = "Yêu cầu của tôi";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1>Yêu cầu của tôi</h1>
+
+    <a asp-action="Create"
+       class="btn btn-primary">
+        Đăng ký thu gom
+    </a>
+</div>
+
+
+<div class="request-filter-buttons">
+
+    <a asp-action="Index"
+       class="request-filter-btn">
+        Toàn bộ lịch sử
+    </a>
+
+    <a asp-action="Index"
+       asp-route-trangThai="ChoXacNhan"
+       class="request-filter-btn">
+        Chờ xác nhận
+    </a>
+
+    <a asp-action="Index"
+       asp-route-trangThai="DaXacNhan"
+       class="request-filter-btn">
+        Đã xác nhận
+    </a>
+
+    <a asp-action="Index"
+       asp-route-trangThai="DangXuLy"
+       class="request-filter-btn">
+        Đang xử lý
+    </a>
+
+    <a asp-action="Index"
+       asp-route-trangThai="HoanThanh"
+       class="request-filter-btn">
+        Hoàn thành
+    </a>
+
+    <a asp-action="Index"
+       asp-route-trangThai="TuChoi"
+       class="request-filter-btn">
+        Từ chối / Hủy
+    </a>
+
+</div>
+
+<form method="get"
+      asp-action="Index"
+      class="row g-2 align-items-end mb-3">
+
+    <div class="col-md-3">
+        <label for="maYeuCau" class="form-label">
+            Mã yêu cầu
+        </label>
+
+        <input type="number"
+               id="maYeuCau"
+               name="maYeuCau"
+               value="@ViewBag.MaYeuCau"
+               class="form-control"
+               placeholder="Nhập mã yêu cầu" />
+    </div>
+
+    <div class="col-md-3">
+        <label for="trangThai" class="form-label">
+            Trạng thái
+        </label>
+
+        <select id="trangThai"
+                name="trangThai"
+                class="form-select">
+
+            <option value="">Tất cả</option>
+
+            @foreach (var status in Enum.GetValues<TrangThaiYeuCau>())
+            {
+                <option value="@((int)status)"
+                        selected="@(ViewBag.TrangThai == status)">
+                    @status.GetDisplayName()
+                </option>
+            }
+        </select>
+    </div>
+
+    @if (ViewBag.Nhom != null)
+    {
+        <input type="hidden"
+               name="nhom"
+               value="@ViewBag.Nhom" />
+    }
+
+    <div class="col-auto">
+        <button type="submit"
+                class="btn btn-primary">
+            Tìm kiếm
+        </button>
+    </div>
+
+    <div class="col-auto">
+        <a asp-action="Index"
+           class="btn btn-secondary">
+            Làm mới
+        </a>
+    </div>
+</form>
+
+@if (ViewBag.Nhom == "dang-xu-ly")
+{
+    <p>
+        Đang xem: yêu cầu đã phân công hoặc đang thu gom.
+    </p>
+}
+
+@if (ViewBag.Nhom == "tu-choi-huy")
+{
+    <p>
+        Đang xem: yêu cầu từ chối hoặc hủy.
+    </p>
+}
+
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Mã</th>
+                <th>Ngày đăng ký</th>
+                <th>Ngày thu gom</th>
+                <th>Khung giờ</th>
+                <th>Khu vực</th>
+                <th>Trạng thái</th>
+                <th>Chức năng</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var request in Model)
+            {
+                <tr>
+                    <td>@request.MaYeuCau</td>
+                    <td>@request.NgayDangKy.ToString("dd/MM/yyyy HH:mm")</td>
+                    <td>@request.NgayMongMuonThuGom.ToString("dd/MM/yyyy")</td>
+                    <td>@request.KhungGio</td>
+                    <td>@request.KhuVuc.TenKhuVuc</td>
+                    <td>@request.TrangThai.GetDisplayName()</td>
+                    <td>
+                        <a asp-action="Details"
+                           asp-route-id="@request.MaYeuCau"
+                           class="btn btn-sm btn-info">
+                            Chi tiết
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@if (Model.Count == 0)
+{
+    <p class="text-muted">
+        Chưa có yêu cầu phù hợp.
+    </p>
+}
