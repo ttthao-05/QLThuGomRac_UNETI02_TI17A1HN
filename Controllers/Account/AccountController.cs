@@ -79,7 +79,7 @@ public class AccountController : Controller
             taiKhoan.LoaiTaiKhoan.ToString());
 
         TempData["ThongBao"] =
-            $"Đăng nhập thành công. Xin chào {taiKhoan.HoTen}!";
+            $"Bạn đã đăng nhập thành công. Xin chào {taiKhoan.HoTen}!";
 
         // Admin vào quản lý tài khoản.
         if (taiKhoan.LoaiTaiKhoan == LoaiTaiKhoan.Admin)
