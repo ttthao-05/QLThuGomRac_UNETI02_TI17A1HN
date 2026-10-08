@@ -1,22 +1,228 @@
-﻿@* Họ và tên: Phạm Văn Hào | Mã sinh viên: 23103100041 | Nội dung thực hiện: Module 2 – Chi tiết người dân (§6.1) *@
+﻿@*
+    Họ và tên: Phạm Văn Hào
+    Mã sinh viên: 23103100041
+    Nội dung thực hiện: Module 2 – Chi tiết người dân (§6.1)
+*@
+
 @model QLThuGomRac_UNETI02_TI17A1HN.Models.Entities.NguoiDan
+
 @using QLThuGomRac_UNETI02_TI17A1HN.Models.Enums
-@{ ViewData["Title"] = "Chi tiết người dân"; }
-<h1>Chi tiết người dân #@Model.MaNguoiDan</h1>
-@if (TempData["ThongBao"] is string message) { <div class="alert alert-success" role="status">@message</div> }
-<dl class="row">
-    <dt class="col-sm-3">Tài khoản</dt><dd class="col-sm-9">@Model.TaiKhoan.TenDangNhap (#@Model.MaTaiKhoan)</dd>
-    <dt class="col-sm-3">Họ tên</dt><dd class="col-sm-9">@Model.HoTen</dd>
-    <dt class="col-sm-3">Ngày sinh</dt><dd class="col-sm-9">@(Model.NgaySinh?.ToString("dd/MM/yyyy") ?? "Chưa cung cấp")</dd>
-    <dt class="col-sm-3">Giới tính</dt><dd class="col-sm-9">@(Model.GioiTinh?.GetDisplayName() ?? "Chưa cung cấp")</dd>
-    <dt class="col-sm-3">Điện thoại</dt><dd class="col-sm-9">@Model.SoDienThoai</dd>
-    <dt class="col-sm-3">Email</dt><dd class="col-sm-9">@Model.Email</dd>
-    <dt class="col-sm-3">Địa chỉ</dt><dd class="col-sm-9">@Model.DiaChi</dd>
-    <dt class="col-sm-3">Ngày đăng ký</dt><dd class="col-sm-9">@Model.NgayDangKy.ToString("dd/MM/yyyy HH:mm")</dd>
-    <dt class="col-sm-3">Trạng thái</dt><dd class="col-sm-9">@Model.TrangThai.GetDisplayName()</dd>
-</dl>
-<form asp-action="CapNhatTrangThai" asp-route-id="@Model.MaNguoiDan" method="post" class="d-flex gap-2 mb-3">
-    <label for="trangThai" class="visually-hidden">Trạng thái</label><select id="trangThai" name="trangThai" class="form-select w-auto">@foreach (var status in Enum.GetValues<TrangThaiNguoiDan>()) { <option value="@((int)status)" selected="@(Model.TrangThai == status)">@status.GetDisplayName()</option> }</select>
-    <button class="btn btn-primary">Cập nhật trạng thái</button>
-</form>
-<a asp-action="Index">Về danh sách</a>
+
+@{
+    ViewData["Title"] = "Chi tiết người dân";
+}
+
+<div class="page-header-section">
+
+    <div>
+        <div class="page-title-icon">
+            <i class="bi bi-person-vcard-fill"></i>
+        </div>
+
+        <div>
+            <h1>Chi tiết người dân</h1>
+            <p>Mã người dân: #@Model.MaNguoiDan</p>
+        </div>
+    </div>
+
+    <a asp-action="Index"
+       class="btn btn-success">
+        <i class="bi bi-arrow-left"></i>
+        Quay lại
+    </a>
+
+</div>
+
+
+<div class="detail-card">
+
+    <div class="detail-card-header">
+
+        <div class="detail-user">
+
+            <div class="detail-avatar">
+                <i class="bi bi-person-fill"></i>
+            </div>
+
+            <div>
+                <h2>@Model.HoTen</h2>
+
+                <span>
+                    Tài khoản: @Model.TaiKhoan.TenDangNhap
+                    (#@Model.MaTaiKhoan)
+                </span>
+            </div>
+
+        </div>
+
+        <span class="status-badge
+            @(Model.TrangThai == TrangThaiNguoiDan.DangHoatDong
+                ? "status-success"
+                : "status-danger")">
+
+            <i class="bi bi-circle-fill"></i>
+
+            @Model.TrangThai.GetDisplayName()
+
+        </span>
+
+    </div>
+
+
+    <div class="detail-grid">
+
+        <div class="detail-item">
+
+            <div class="detail-item-icon">
+                <i class="bi bi-person-badge"></i>
+            </div>
+
+            <div>
+                <span>Họ tên</span>
+                <strong>@Model.HoTen</strong>
+            </div>
+
+        </div>
+
+
+        <div class="detail-item">
+
+            <div class="detail-item-icon">
+                <i class="bi bi-calendar-event"></i>
+            </div>
+
+            <div>
+                <span>Ngày sinh</span>
+                <strong>
+                    @(Model.NgaySinh?.ToString("dd/MM/yyyy")
+                        ?? "Chưa cung cấp")
+                </strong>
+            </div>
+
+        </div>
+
+
+        <div class="detail-item">
+
+            <div class="detail-item-icon">
+                <i class="bi bi-gender-ambiguous"></i>
+            </div>
+
+            <div>
+                <span>Giới tính</span>
+                <strong>
+                    @(Model.GioiTinh?.GetDisplayName()
+                        ?? "Chưa cung cấp")
+                </strong>
+            </div>
+
+        </div>
+
+
+        <div class="detail-item">
+
+            <div class="detail-item-icon">
+                <i class="bi bi-telephone-fill"></i>
+            </div>
+
+            <div>
+                <span>Điện thoại</span>
+                <strong>
+                    @(string.IsNullOrWhiteSpace(Model.SoDienThoai)
+                        ? "Chưa cung cấp"
+                        : Model.SoDienThoai)
+                </strong>
+            </div>
+
+        </div>
+
+
+        <div class="detail-item">
+
+            <div class="detail-item-icon">
+                <i class="bi bi-envelope-fill"></i>
+            </div>
+
+            <div>
+                <span>Email</span>
+                <strong>
+                    @(string.IsNullOrWhiteSpace(Model.Email)
+                        ? "Chưa cung cấp"
+                        : Model.Email)
+                </strong>
+            </div>
+
+        </div>
+
+
+        <div class="detail-item">
+
+            <div class="detail-item-icon">
+                <i class="bi bi-calendar-check-fill"></i>
+            </div>
+
+            <div>
+                <span>Ngày đăng ký</span>
+                <strong>
+                    @Model.NgayDangKy.ToString("dd/MM/yyyy HH:mm")
+                </strong>
+            </div>
+
+        </div>
+
+
+        <div class="detail-item detail-item-full">
+
+            <div class="detail-item-icon">
+                <i class="bi bi-geo-alt-fill"></i>
+            </div>
+
+            <div>
+                <span>Địa chỉ</span>
+                <strong>
+                    @(string.IsNullOrWhiteSpace(Model.DiaChi)
+                        ? "Chưa cung cấp"
+                        : Model.DiaChi)
+                </strong>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="detail-actions">
+
+        <form asp-action="CapNhatTrangThai"
+              asp-route-id="@Model.MaNguoiDan"
+              method="post"
+              class="d-flex gap-2 align-items-center">
+
+            @Html.AntiForgeryToken()
+
+            <select name="trangThai"
+                    class="form-select w-auto">
+
+                @foreach (var status in Enum.GetValues<TrangThaiNguoiDan>())
+                {
+                    <option value="@((int)status)"
+                            selected="@(Model.TrangThai == status)">
+                        @status.GetDisplayName()
+                    </option>
+                }
+
+            </select>
+
+            <button type="submit"
+                    class="btn btn-primary">
+
+                <i class="bi bi-arrow-repeat"></i>
+                Cập nhật trạng thái
+
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
