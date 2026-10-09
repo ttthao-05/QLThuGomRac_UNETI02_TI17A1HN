@@ -25,6 +25,7 @@ public class YeuCauThuGomController(ApplicationDbContext db) : Controller
     [HttpGet]
     public async Task<IActionResult> Index(TrangThaiYeuCau? trangThai, string? nhom)
     {
+        // §6.5: danh sách chỉ truy xuất các yêu cầu thuộc tài khoản đang đăng nhập.
         var query = MyRequests.Include(x => x.KhuVuc).AsQueryable();
         if (trangThai.HasValue) query = query.Where(x => x.TrangThai == trangThai);
         if (nhom == "dang-xu-ly") query = query.Where(x => x.TrangThai == TrangThaiYeuCau.DaPhanCong || x.TrangThai == TrangThaiYeuCau.DangThuGom);
