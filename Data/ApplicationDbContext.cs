@@ -249,6 +249,9 @@ public class ApplicationDbContext : DbContext
 
             entity.Property(x => x.GhiChu)
                 .HasMaxLength(1000);
+            // Module 3 – Xử lý yêu cầu thu gom (7.3)
+            entity.Property(x => x.LyDoKhongThucHien)
+                .HasMaxLength(1000);
 
             entity.Property(x => x.TrangThai)
                 .HasConversion<int>();

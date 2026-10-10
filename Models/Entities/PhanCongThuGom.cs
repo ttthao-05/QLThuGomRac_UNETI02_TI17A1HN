@@ -36,5 +36,17 @@ public class PhanCongThuGom
     public YeuCauThuGom? YeuCauThuGom { get; set; }
 
     public NhanVien? NhanVien { get; set; }
-   
+
+    // Module 3 – Xử lý yêu cầu thu gom (7.3)
+
+    [StringLength(1000, ErrorMessage = "Lý do tối đa 1000 ký tự.")]
+    [Display(Name = "Lý do không thực hiện được")]
+    public string? LyDoKhongThucHien { get; set; }
+
+    [Display(Name = "Thời gian bắt đầu")]
+    public DateTime? NgayBatDau { get; set; }
+
+    [Display(Name = "Thời gian kết thúc")]
+    public DateTime? NgayKetThuc { get; set; }
+
 }
