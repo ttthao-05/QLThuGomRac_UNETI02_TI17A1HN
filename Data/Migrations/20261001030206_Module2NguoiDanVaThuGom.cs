@@ -97,17 +97,6 @@ namespace QLThuGomRac_UNETI02_TI17A1HN.Data.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_ChiTietYeuCaus_MaLoaiRac",
-                table: "ChiTietYeuCaus",
-                column: "MaLoaiRac");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ChiTietYeuCaus_MaYeuCau_MaLoaiRac",
-                table: "ChiTietYeuCaus",
-                columns: new[] { "MaYeuCau", "MaLoaiRac" },
-                unique: true);
-
-            migrationBuilder.CreateIndex(
                 name: "IX_NguoiDans_MaTaiKhoan",
                 table: "NguoiDans",
                 column: "MaTaiKhoan",
@@ -132,12 +121,8 @@ namespace QLThuGomRac_UNETI02_TI17A1HN.Data.Migrations
 
         }
 
-        /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "ChiTietYeuCaus");
-
             migrationBuilder.DropTable(
                 name: "YeuCauThuGoms");
 

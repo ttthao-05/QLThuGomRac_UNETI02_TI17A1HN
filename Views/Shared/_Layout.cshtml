@@ -1,50 +1,61 @@
-﻿<!DOCTYPE html>
+﻿@*
+    Họ và tên: Trần Thị Thảo
+    Mã sinh viên: 23103100025
+    Nội dung thực hiện: Module 1 – Tích hợp menu đăng nhập, phân quyền và chức năng quản trị
+
+    Họ và tên: Phạm Văn Hào
+    Mã sinh viên: 23103100041
+    Nội dung thực hiện: Module 2 – Tích hợp menu chức năng người dân
+*@
+
+<!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Hệ thống quản lý thu gom rác tái chế</title>
 
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/QLThuGomRac_UNETI02_TI17A1HN.styles.css" asp-append-version="true" />
+    <title>@ViewData["Title"] - QLThuGomRac</title>
+
+    <link rel="stylesheet"
+          href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+
+    <link rel="stylesheet"
+          href="~/lib/bootstrap-icons/font/bootstrap-icons.css"
+          asp-append-version="true" />
+
+    <link rel="stylesheet"
+          href="~/css/site.css"
+          asp-append-version="true" />
+
+    <link rel="stylesheet"
+          href="~/QLThuGomRac_UNETI02_TI17A1HN.styles.css"
+          asp-append-version="true" />
 </head>
 
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
 
-                <a class="navbar-brand"
-                   asp-area=""
-                   asp-controller="Home"
-                   asp-action="Index">
-                    Hệ thống thu gom rác tái chế
-                </a>
+    @{
+    var maTaiKhoan = Context.Session.GetInt32("MaTaiKhoan");
+    var hoTen = Context.Session.GetString("HoTen");
+    var vaiTro = Context.Session.GetString("VaiTro");
 
-                <button class="navbar-toggler"
-                        type="button"
-                        data-bs-toggle="collapse"
-                        data-bs-target=".navbar-collapse"
-                        aria-controls="navbarSupportedContent"
-                        aria-expanded="false"
-                        aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
+    var currentAction =
+        ViewContext.RouteData.Values["action"]?.ToString();
+}
 
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+    <div class="app-wrapper">
 
-                    <ul class="navbar-nav flex-grow-1">
+        <!-- =========================
+             SIDEBAR
+             ========================= -->
+        <aside class="app-sidebar">
 
-                        <li class="nav-item">
-                            <a class="nav-link text-dark"
-                               asp-area=""
-                               asp-controller="Home"
-                               asp-action="Index">
-                                Trang chủ
-                            </a>
-                        </li>
+            <div class="sidebar-brand">
+                <div class="brand-icon">
+                    <i class="bi bi-recycle"></i>
+                </div>
 
+<<<<<<< HEAD
                         @* =========================
                            ĐĂNG NHẬP / ĐĂNG XUẤT
                            ========================= *@
@@ -163,27 +174,294 @@
                         }
 
                     </ul>
+=======
+                <div>
+                    <div class="brand-name">QLThuGomRac</div>
+                    <div class="brand-subtitle">Tái chế & môi trường</div>
+>>>>>>> origin/main
                 </div>
             </div>
-        </nav>
-    </header>
 
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
+            <nav class="sidebar-menu">
+                @{
+                  var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+                }
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2026 - QLThuGomRac_UNETI02_TI17A1HN
+                <a class="sidebar-link @(currentController == "Home" ? "active" : "")"
+                   asp-controller="Home"
+                   asp-action="Index">
+                    <i class="bi bi-house-door-fill"></i>
+                    <span>Trang chủ</span>
+                </a>
+
+                @* =========================
+                   ADMIN
+                   ========================= *@
+                @if (vaiTro == "Admin")
+                {
+                    <div class="sidebar-title">
+                        QUẢN TRỊ HỆ THỐNG
+                    </div>
+
+                    <a class="sidebar-link @(currentController == "TaiKhoan" ? "active" : "")"
+                       asp-controller="TaiKhoan"
+                       asp-action="Index">
+                        <i class="bi bi-person-circle"></i>
+                        <span>Tài khoản</span>
+                    </a>
+
+                    <a class="sidebar-link @(currentController == "KhuVuc" ? "active" : "")"
+                       asp-controller="KhuVuc"
+                       asp-action="Index">
+                        <i class="bi bi-geo-alt-fill"></i>
+                        <span>Khu vực</span>
+                    </a>
+
+                     <a class="sidebar-link @(currentController == "LoaiRac" ? "active" : "")"
+                       asp-controller="LoaiRac"
+                       asp-action="Index">
+                        <i class="bi bi-trash3-fill"></i>
+                        <span>Loại rác</span>
+                    </a>
+
+                    
+                     <a class="sidebar-link @(currentController == "NguoiDan" ? "active" : "")"
+                       asp-controller="NguoiDan"
+                       asp-action="Index">
+                        <i class="bi bi-people-fill"></i>
+                        <span>Người dân</span>
+                    </a>
+
+                    @*
+                        Điểm tập kết, Nhân viên, Phân công,
+                        Dashboard, Thống kê sẽ bổ sung
+                        khi Module 3 và Module 4 hoàn thiện.
+                    *@
+					@* Module 3 – Theo dõi xử lý yêu cầu (7.3) *@
+					<a class="sidebar-link"
+						asp-controller="CongViec"
+						asp-action="TheoDoi">
+							<i class="bi bi-list-check"></i>
+							<span>Theo dõi công việc</span>
+					</a>
+                }
+
+                @* =========================
+                   NGƯỜI DÂN
+                   ========================= *@
+                @if (vaiTro == "NguoiDan")
+                {
+                    <div class="sidebar-title">
+                        THÔNG TIN THU GOM
+                    </div>
+
+                    <a class="sidebar-link"
+                       asp-controller="ThongTinThuGom"
+                       asp-action="LoaiRac">
+                        <i class="bi bi-recycle"></i>
+                        <span>Loại rác phục vụ</span>
+                    </a>
+
+                    <a class="sidebar-link"
+                       asp-controller="ThongTinThuGom"
+                       asp-action="KhuVuc">
+                        <i class="bi bi-map-fill"></i>
+                        <span>Khu vực phục vụ</span>
+                    </a>
+
+                    <div class="sidebar-title">
+                        YÊU CẦU THU GOM
+                    </div>
+
+                    <a class="sidebar-link"
+                       asp-controller="YeuCauThuGom"
+                       asp-action="Create">
+                        <i class="bi bi-calendar-plus-fill"></i>
+                        <span>Đăng ký thu gom</span>
+                    </a>
+
+                    <a class="sidebar-link"
+                       asp-controller="YeuCauThuGom"
+                       asp-action="Index">
+                        <i class="bi bi-list-check"></i>
+                        <span>Yêu cầu của tôi</span>
+                    </a>
+
+                    <div class="sidebar-title">
+                        TÀI KHOẢN
+                    </div>
+
+                    <a class="sidebar-link"
+                       asp-controller="HoSo"
+                       asp-action="Index">
+                        <i class="bi bi-person-vcard-fill"></i>
+                        <span>Thông tin cá nhân</span>
+                    </a>
+                }
+
+            </nav>
+			@* Module 3 – Công việc của nhân viên (7.3) *@
+			@if (vaiTro == "NhanVien")
+			{
+				<div class="sidebar-title"> CÔNG VIỆC NHÂN VIÊN</div>
+					<a class="sidebar-link"
+						asp-controller="CongViec"
+						asp-action="Index">
+						<i class="bi bi-list-task"></i>
+						<span>Công việc của tôi</span>
+					</a>
+			}
+
+        </aside>
+
+        <!-- =========================
+             MAIN
+             ========================= -->
+        <div class="app-main">
+
+            <!-- TOPBAR -->
+            <header class="app-topbar">
+
+                <div class="topbar-left">
+                    <button type="button"
+                            class="sidebar-toggle"
+                            id="sidebarToggle">
+                        <i class="bi bi-list"></i>
+                    </button>
+
+                    <div class="topbar-title">
+                        HỆ THỐNG QUẢN LÝ THU GOM RÁC TÁI CHẾ
+                    </div>
+                </div>
+
+                <div class="topbar-right">
+
+                    @if (maTaiKhoan != null)
+                    {
+                        <div class="user-info">
+                            <div class="user-avatar">
+                                <i class="bi bi-person-fill"></i>
+                            </div>
+
+                            <div class="user-text">
+                                <strong>@hoTen</strong>
+
+                                <small>
+                                    @if (vaiTro == "Admin")
+                                    {
+                                        <text>Admin</text>
+                                    }
+                                    else if (vaiTro == "NguoiDan")
+                                    {
+                                        <text>Người dân</text>
+                                    }
+                                    else
+                                    {
+                                        @vaiTro
+                                    }
+                                </small>
+                            </div>
+                        </div>
+
+                        <a class="logout-button"
+                           asp-controller="Account"
+                           asp-action="Logout"
+                           title="Đăng xuất">
+                            <i class="bi bi-box-arrow-right"></i>
+                        </a>
+                    }
+                    else
+                    {
+                        <a class="btn btn-success top-login-button"
+                           asp-controller="Account"
+                           asp-action="Login">
+                            <i class="bi bi-box-arrow-in-right"></i>
+                               Đăng nhập
+                        </a>
+                    }
+
+                </div>
+
+            </header>
+
+            <!-- PAGE CONTENT -->
+            <main class="app-content">
+
+                @if (TempData["ThongBao"] is string thongBao)
+{
+    <div class="system-message-overlay">
+        <div class="system-message system-message-success">
+
+            <div class="system-message-icon">
+                <i class="bi bi-check-circle-fill"></i>
+            </div>
+
+            <div class="system-message-content">
+                <strong>Thành công</strong>
+                <span>@thongBao</span>
+            </div>
+
+            <button type="button"
+                    class="system-message-close"
+                    onclick="this.closest('.system-message-overlay').remove()">
+                <i class="bi bi-x-lg"></i>
+            </button>
+
         </div>
-    </footer>
+    </div>
+}
+
+@if (TempData["Loi"] is string loi)
+{
+    <div class="system-message-overlay">
+        <div class="system-message system-message-error">
+
+            <div class="system-message-icon">
+                <i class="bi bi-exclamation-circle-fill"></i>
+            </div>
+
+            <div class="system-message-content">
+                <strong>Thông báo</strong>
+                <span>@loi</span>
+            </div>
+
+            <button type="button"
+                    class="system-message-close"
+                    onclick="this.closest('.system-message-overlay').remove()">
+                <i class="bi bi-x-lg"></i>
+            </button>
+
+        </div>
+    </div>
+}
+
+                @RenderBody()
+
+            </main>
+
+            <footer class="app-footer">
+                © 2026 - Hệ thống quản lý thu gom rác tái chế
+            </footer>
+
+        </div>
+
+    </div>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
 
+    <script>
+            const toggleButton = document.getElementById("sidebarToggle");
+
+            if (toggleButton) {
+                toggleButton.addEventListener("click", function () {
+                    document.body.classList.toggle("sidebar-collapsed");
+                });
+            }
+    </script>
+
     @await RenderSectionAsync("Scripts", required: false)
+
 </body>
 </html>

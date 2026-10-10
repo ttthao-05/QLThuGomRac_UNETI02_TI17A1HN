@@ -1,102 +1,251 @@
-﻿@model IEnumerable<QLThuGomRac_UNETI02_TI17A1HN.Models.Entities.KhuVuc>
+﻿@*
+    Họ và tên: Trần Thị Thảo
+    Mã sinh viên: 23103100025
+    Nội dung thực hiện: Module 1 – Quản lý khu vực (§5.5)
+*@
+
+@using QLThuGomRac_UNETI02_TI17A1HN.Models.Enums
+@model IEnumerable<QLThuGomRac_UNETI02_TI17A1HN.Models.Entities.KhuVuc>
 
 @{
     ViewData["Title"] = "Quản lý khu vực";
 }
 
-<h2>Quản lý khu vực</h2>
+<div class="page-header-section">
+
+    <div>
+        <div class="page-title-icon">
+            <i class="bi bi-geo-alt-fill"></i>
+        </div>
+
+        <div>
+            <h1>Quản lý khu vực</h1>
+            <p>Quản lý danh sách khu vực phục vụ thu gom rác tái chế.</p>
+        </div>
+    </div>
+
+    <a asp-action="Create"
+       class="btn btn-success">
+
+        <i class="bi bi-plus-circle-fill"></i>
+        Thêm khu vực
+
+    </a>
+
+</div>
+
 
 @if (TempData["ThongBao"] != null)
 {
-    <div class="alert alert-success">
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+
+        <i class="bi bi-check-circle-fill me-1"></i>
         @TempData["ThongBao"]
+
+        <button type="button"
+                class="btn-close"
+                data-bs-dismiss="alert">
+        </button>
+
     </div>
 }
 
 @if (TempData["Loi"] != null)
 {
-    <div class="alert alert-danger">
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+
+        <i class="bi bi-exclamation-triangle-fill me-1"></i>
         @TempData["Loi"]
+
+        <button type="button"
+                class="btn-close"
+                data-bs-dismiss="alert">
+        </button>
+
     </div>
 }
 
-<p>
-    <a asp-action="Create" class="btn btn-primary">
-        Thêm khu vực
-    </a>
-</p>
 
-<table class="table table-bordered table-striped">
-    <thead>
-        <tr>
-            <th>Mã khu vực</th>
-            <th>Tên khu vực</th>
-            <th>Địa chỉ mô tả</th>
-            <th>Trạng thái</th>
-            <th>Chức năng</th>
-        </tr>
-    </thead>
+<div class="page-card">
 
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>@item.MaKhuVuc</td>
-                <td>@item.TenKhuVuc</td>
-                <td>@item.DiaChiMoTa</td>
+    <div class="table-header">
+        <div>
+            <h2>Danh sách khu vực</h2>
+            <span>Tổng số: <strong>@Model.Count()</strong> khu vực</span>
+        </div>
+    </div>
 
-                <td>
-                    @if (item.TrangThai ==
-                        QLThuGomRac_UNETI02_TI17A1HN.Models.Enums.TrangThaiKhuVuc.DangHoatDong)
+
+    @if (!Model.Any())
+    {
+        <div class="empty-state">
+
+            <div class="empty-state-icon">
+                <i class="bi bi-geo-alt"></i>
+            </div>
+
+            <h3>Chưa có khu vực</h3>
+
+            <p>
+                Hiện tại chưa có khu vực nào trong hệ thống.
+            </p>
+
+            <a asp-action="Create"
+               class="btn btn-success">
+
+                <i class="bi bi-plus-circle"></i>
+                Thêm khu vực đầu tiên
+
+            </a>
+
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive">
+
+            <table class="table admin-table mb-0">
+
+                <thead>
+                    <tr>
+                        <th>Mã</th>
+                        <th>Tên khu vực</th>
+                        <th>Địa chỉ mô tả</th>
+                        <th>Trạng thái</th>
+                        <th class="text-center">Thao tác</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    @foreach (var item in Model)
                     {
-                        <span>Đang hoạt động</span>
+                        <tr>
+
+                            <td>
+                                <span class="table-id">
+                                    #@item.MaKhuVuc
+                                </span>
+                            </td>
+
+
+                            <td>
+                                <div class="area-name-cell">
+
+                                    <div class="area-icon">
+                                        <i class="bi bi-geo-alt-fill"></i>
+                                    </div>
+
+                                    <strong>
+                                        @item.TenKhuVuc
+                                    </strong>
+
+                                </div>
+                            </td>
+
+
+                            <td>
+                                @item.DiaChiMoTa
+                            </td>
+
+
+                            <td>
+
+                                @if (item.TrangThai == TrangThaiKhuVuc.DangHoatDong)
+                                {
+                                    <span class="status-badge status-success">
+
+                                        <i class="bi bi-circle-fill"></i>
+                                        Đang hoạt động
+
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="status-badge status-danger">
+
+                                        <i class="bi bi-circle-fill"></i>
+                                        Ngừng hoạt động
+
+                                    </span>
+                                }
+
+                            </td>
+
+
+                            <td>
+
+                                <div class="table-actions">
+
+                                    <a asp-action="Details"
+                                       asp-route-id="@item.MaKhuVuc"
+                                       class="action-button action-view"
+                                       title="Xem chi tiết">
+
+                                        <i class="bi bi-eye"></i>
+
+                                    </a>
+
+
+                                    <a asp-action="Edit"
+                                       asp-route-id="@item.MaKhuVuc"
+                                       class="action-button action-edit"
+                                       title="Chỉnh sửa">
+
+                                        <i class="bi bi-pencil-square"></i>
+
+                                    </a>
+
+
+                                    <form asp-action="CapNhatTrangThai"
+                                          asp-route-id="@item.MaKhuVuc"
+                                          method="post"
+                                          class="d-inline">
+
+                                        @Html.AntiForgeryToken()
+
+                                        <button type="submit"
+                                                class="action-button action-status"
+                                                title="Đổi trạng thái"
+                                                onclick="return confirm('Bạn có chắc muốn đổi trạng thái khu vực này không?');">
+
+                                            <i class="bi bi-arrow-repeat"></i>
+
+                                        </button>
+
+                                    </form>
+
+
+                                    <form asp-action="Delete"
+                                          asp-route-id="@item.MaKhuVuc"
+                                          method="post"
+                                          class="d-inline"
+                                          onsubmit="return confirm('Bạn có chắc muốn xóa khu vực này không?');">
+
+                                        @Html.AntiForgeryToken()
+
+                                        <button type="submit"
+                                                class="action-button action-delete"
+                                                title="Xóa">
+
+                                            <i class="bi bi-trash3"></i>
+
+                                        </button>
+
+                                    </form>
+
+                                </div>
+
+                            </td>
+
+                        </tr>
                     }
-                    else
-                    {
-                        <span>Ngừng hoạt động</span>
-                    }
-                </td>
 
-                <td>
-                    <a asp-action="Details"
-                       asp-route-id="@item.MaKhuVuc"
-                       class="btn btn-info btn-sm">
-                        Chi tiết
-                    </a>
+                </tbody>
 
-                    <a asp-action="Edit"
-                       asp-route-id="@item.MaKhuVuc"
-                       class="btn btn-warning btn-sm">
-                        Sửa
-                    </a>
+            </table>
 
-                    <form asp-action="CapNhatTrangThai"
-                          asp-route-id="@item.MaKhuVuc"
-                          method="post"
-                          style="display:inline">
-                        @Html.AntiForgeryToken()
+        </div>
+    }
 
-                        <button type="submit"
-                                class="btn btn-secondary btn-sm">
-                            Đổi trạng thái
-                        </button>
-                    </form>
-
-                    <form asp-action="Delete"
-                          asp-route-id="@item.MaKhuVuc"
-                          method="post"
-                          style="display:inline"
-                          onsubmit="return confirm('Bạn có chắc muốn xóa khu vực này không?');">
-
-                        @Html.AntiForgeryToken()
-
-                        <button type="submit"
-                                class="btn btn-danger btn-sm">
-                            Xóa
-                        </button>
-                    </form>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+</div>

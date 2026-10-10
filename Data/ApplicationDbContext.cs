@@ -1,4 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿// Họ và tên: Trần Thị Thảo
+// Mã sinh viên: 23103100025
+// Nội dung thực hiện: Module 1 – Cấu hình TaiKhoan, KhuVuc, LoaiRac trong DbContext
+
+// Họ và tên: Phạm Văn Hào
+// Mã sinh viên: 23103100041
+// Nội dung thực hiện: Module 2 – Cấu hình NguoiDan, YeuCauThuGom, ChiTietYeuCau trong DbContext
+
+using Microsoft.EntityFrameworkCore;
 using QLThuGomRac_UNETI02_TI17A1HN.Models.Entities;
 
 namespace QLThuGomRac_UNETI02_TI17A1HN.Data;
@@ -245,6 +253,15 @@ public class ApplicationDbContext : DbContext
             entity.Property(x => x.GhiChu)
                 .HasMaxLength(1000);
 
+            // Module 3 – Xử lý yêu cầu thu gom (7.3)
+            entity.Property(x => x.LyDoKhongThucHien)
+                .HasMaxLength(1000);
+
+            entity.Property(x => x.NgayBatDau)
+                .HasColumnType("datetime2");
+
+            entity.Property(x => x.NgayKetThuc)
+                .HasColumnType("datetime2");
             entity.Property(x => x.TrangThai)
                 .HasConversion<int>();
 

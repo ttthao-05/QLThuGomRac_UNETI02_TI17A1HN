@@ -219,11 +219,21 @@ namespace QLThuGomRac_UNETI02_TI17A1HN.Data.Migrations
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
 
+                    b.Property<string>("LyDoKhongThucHien")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
                     b.Property<int>("MaNhanVien")
                         .HasColumnType("int");
 
                     b.Property<int>("MaYeuCau")
                         .HasColumnType("int");
+
+                    b.Property<DateTime?>("NgayBatDau")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("NgayKetThuc")
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime>("NgayPhanCong")
                         .HasColumnType("datetime2");

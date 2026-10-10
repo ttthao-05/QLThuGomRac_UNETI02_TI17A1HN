@@ -1,0 +1,180 @@
+﻿@* Nguyễn Tiến Đạt – 23103100053
+   Module 3 – Xử lý yêu cầu thu gom (7.3) *@
+
+@using QLThuGomRac_UNETI02_TI17A1HN.Models.Enums
+@model QLThuGomRac_UNETI02_TI17A1HN.Models.Entities.PhanCongThuGom
+
+@{
+    ViewData["Title"] = "Chi tiết công việc";
+    var yeuCau = Model.YeuCauThuGom;
+}
+
+<h2 class="mb-3">Chi tiết công việc</h2>
+
+@if (TempData["ThongBao"] is string thongBao)
+{
+    <div class="alert alert-success">@thongBao</div>
+}
+
+@if (TempData["Loi"] is string loi)
+{
+    <div class="alert alert-danger">@loi</div>
+}
+
+<div class="card mb-3">
+    <div class="card-header">
+        <strong>Yêu cầu #@Model.MaYeuCau</strong>
+    </div>
+
+    <div class="card-body">
+        <dl class="row mb-0">
+            <dt class="col-sm-4">Địa chỉ thu gom</dt>
+            <dd class="col-sm-8">@yeuCau?.DiaChiThuGom</dd>
+
+            <dt class="col-sm-4">Khu vực</dt>
+            <dd class="col-sm-8">@yeuCau?.KhuVuc?.TenKhuVuc</dd>
+
+            <dt class="col-sm-4">Số điện thoại liên hệ</dt>
+            <dd class="col-sm-8">@yeuCau?.SoDienThoaiLienHe</dd>
+
+            <dt class="col-sm-4">Ngày mong muốn thu gom</dt>
+            <dd class="col-sm-8">
+                @(yeuCau?.NgayMongMuonThuGom.ToString("dd/MM/yyyy"))
+            </dd>
+
+            <dt class="col-sm-4">Khung giờ</dt>
+            <dd class="col-sm-8">@yeuCau?.KhungGio</dd>
+
+            <dt class="col-sm-4">Ghi chú của người dân</dt>
+            <dd class="col-sm-8">
+                @(string.IsNullOrWhiteSpace(yeuCau?.GhiChu)
+                    ? "Không có"
+                    : yeuCau?.GhiChu)
+            </dd>
+
+            <dt class="col-sm-4">Ghi chú phân công</dt>
+            <dd class="col-sm-8">
+                @(string.IsNullOrWhiteSpace(Model.GhiChu)
+                    ? "Không có"
+                    : Model.GhiChu)
+            </dd>
+
+            <dt class="col-sm-4">Trạng thái công việc</dt>
+            <dd class="col-sm-8">
+                <strong>@Model.TrangThai.GetDisplayName()</strong>
+            </dd>
+
+            <dt class="col-sm-4">Thời gian phân công</dt>
+            <dd class="col-sm-8">
+                @Model.NgayPhanCong.ToString("dd/MM/yyyy HH:mm")
+            </dd>
+
+            <dt class="col-sm-4">Thời gian bắt đầu</dt>
+            <dd class="col-sm-8">
+                @(Model.NgayBatDau?.ToString("dd/MM/yyyy HH:mm")
+                    ?? "Chưa bắt đầu")
+            </dd>
+
+            <dt class="col-sm-4">Thời gian kết thúc</dt>
+            <dd class="col-sm-8">
+                @(Model.NgayKetThuc?.ToString("dd/MM/yyyy HH:mm")
+                    ?? "Chưa kết thúc")
+            </dd>
+        </dl>
+    </div>
+</div>
+
+@if (!string.IsNullOrWhiteSpace(Model.LyDoKhongThucHien))
+{
+    <div class="alert alert-warning">
+        <strong>Lý do không thực hiện được:</strong>
+        <div style="white-space: pre-wrap;">@Model.LyDoKhongThucHien</div>
+    </div>
+}
+
+<h4>Loại rác đăng ký thu gom</h4>
+
+@if (yeuCau != null && yeuCau.ChiTietYeuCaus.Any())
+{
+    <div class="table-responsive mb-3">
+        <table class="table table-bordered">
+            <thead class="table-light">
+                <tr>
+                    <th>Loại rác</th>
+                    <th>Số lượng dự kiến</th>
+                    <th>Đơn vị tính</th>
+                    <th>Ghi chú</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var chiTiet in yeuCau.ChiTietYeuCaus)
+                {
+                    <tr>
+                        <td>@chiTiet.LoaiRac?.TenLoaiRac</td>
+                        <td>@chiTiet.SoLuongDuKien.ToString("0.###")</td>
+                        <td>@chiTiet.LoaiRac?.DonViTinh</td>
+                        <td>@chiTiet.GhiChu</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <div class="alert alert-info">
+        Yêu cầu chưa có thông tin chi tiết loại rác.
+    </div>
+}
+
+<div class="d-flex flex-wrap gap-2 mt-3">
+    @if (Model.TrangThai == TrangThaiYeuCau.DaPhanCong
+        && yeuCau?.TrangThai == TrangThaiYeuCau.DaPhanCong)
+    {
+        <form asp-controller="CongViec"
+              asp-action="BatDau"
+              method="post">
+            @Html.AntiForgeryToken()
+
+            <input type="hidden"
+                   name="id"
+                   value="@Model.MaPhanCong" />
+
+            <button type="submit" class="btn btn-primary">
+                Bắt đầu thu gom
+            </button>
+        </form>
+
+        <a asp-controller="CongViec"
+           asp-action="KhongThucHien"
+           asp-route-id="@Model.MaPhanCong"
+           class="btn btn-warning">
+            Không thực hiện được
+        </a>
+    }
+
+    @if (Model.TrangThai == TrangThaiYeuCau.DangThuGom
+        && yeuCau?.TrangThai == TrangThaiYeuCau.DangThuGom)
+    {
+        <form asp-controller="CongViec"
+              asp-action="HoanThanh"
+              method="post"
+              onsubmit="return confirm('Bạn xác nhận đã hoàn thành công việc?');">
+            @Html.AntiForgeryToken()
+
+            <input type="hidden"
+                   name="id"
+                   value="@Model.MaPhanCong" />
+
+            <button type="submit" class="btn btn-success">
+                Hoàn thành
+            </button>
+        </form>
+    }
+
+    <a asp-controller="CongViec"
+       asp-action="Index"
+       class="btn btn-secondary">
+        Quay lại danh sách
+    </a>
+</div>

@@ -1,0 +1,71 @@
+﻿@* Nguyễn Tiến Đạt – 23103100053
+   Module 3 – Xử lý yêu cầu thu gom (7.3) *@
+
+@using QLThuGomRac_UNETI02_TI17A1HN.Models.Enums
+@model List<QLThuGomRac_UNETI02_TI17A1HN.Models.Entities.PhanCongThuGom>
+
+@{
+    ViewData["Title"] = "Công việc của tôi";
+}
+
+<h2 class="mb-3">Công việc của tôi</h2>
+
+@if (TempData["ThongBao"] is string thongBao)
+{
+    <div class="alert alert-success">@thongBao</div>
+}
+
+@if (TempData["Loi"] is string loi)
+{
+    <div class="alert alert-danger">@loi</div>
+}
+
+@if (Model.Count == 0)
+{
+    <div class="alert alert-info">
+        Bạn chưa có công việc được phân công.
+        Công việc sẽ xuất hiện sau khi Admin phân công cho bạn.
+    </div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>Mã yêu cầu</th>
+                    <th>Địa chỉ thu gom</th>
+                    <th>Khu vực</th>
+                    <th>Ngày thu gom</th>
+                    <th>Khung giờ</th>
+                    <th>Trạng thái</th>
+                    <th>Thao tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.MaYeuCau</td>
+                        <td>@item.YeuCauThuGom?.DiaChiThuGom</td>
+                        <td>@item.YeuCauThuGom?.KhuVuc?.TenKhuVuc</td>
+                        <td>
+                            @(item.YeuCauThuGom?.NgayMongMuonThuGom
+                                .ToString("dd/MM/yyyy"))
+                        </td>
+                        <td>@item.YeuCauThuGom?.KhungGio</td>
+                        <td>@item.TrangThai.GetDisplayName()</td>
+                        <td>
+                            <a asp-controller="CongViec"
+                               asp-action="Details"
+                               asp-route-id="@item.MaPhanCong"
+                               class="btn btn-primary btn-sm">
+                                Xem chi tiết
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

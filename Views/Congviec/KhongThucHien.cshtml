@@ -1,0 +1,62 @@
+﻿@* Nguyễn Tiến Đạt – 23103100053
+   Module 3 – Xử lý yêu cầu thu gom (7.3) *@
+
+@model QLThuGomRac_UNETI02_TI17A1HN.Models.ViewModels.Module3.KhongThucHienViewModel
+
+@{
+    ViewData["Title"] = "Không thực hiện được";
+}
+
+<h2 class="mb-3">Báo không thực hiện được</h2>
+
+<div class="alert alert-info">
+    Vui lòng ghi rõ lý do không thể thực hiện công việc.
+    Admin sẽ xem được lý do này khi theo dõi công việc.
+</div>
+
+<form asp-controller="CongViec"
+      asp-action="KhongThucHien"
+      method="post">
+
+    @Html.AntiForgeryToken()
+
+    <input asp-for="MaPhanCong" type="hidden" />
+
+    <div asp-validation-summary="All"
+         class="text-danger mb-3"></div>
+
+    <div class="mb-3">
+        <label asp-for="LyDoKhongThucHien"
+               class="form-label"></label>
+
+        <textarea asp-for="LyDoKhongThucHien"
+                  class="form-control"
+                  rows="5"
+                  maxlength="1000"
+                  placeholder="Ví dụ: Đã liên hệ nhưng người dân vắng nhà, không thể thu gom theo lịch."></textarea>
+
+        <span asp-validation-for="LyDoKhongThucHien"
+              class="text-danger"></span>
+
+        <div class="form-text">
+            Lý do bắt buộc nhập, tối đa 1.000 ký tự.
+        </div>
+    </div>
+
+    <div class="d-flex gap-2">
+        <button type="submit" class="btn btn-warning">
+            Gửi lý do
+        </button>
+
+        <a asp-controller="CongViec"
+           asp-action="Details"
+           asp-route-id="@Model.MaPhanCong"
+           class="btn btn-secondary">
+            Quay lại
+        </a>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

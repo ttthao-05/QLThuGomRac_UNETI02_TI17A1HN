@@ -15,4 +15,6 @@
 </dl>
 <h2 class="h4">Chi tiết loại rác</h2>
 <table class="table"><thead><tr><th>Loại rác</th><th>Số lượng dự kiến</th><th>Đơn vị</th><th>Ghi chú</th></tr></thead><tbody>@foreach (var item in Model.ChiTietYeuCaus) { <tr><td>@item.LoaiRac.TenLoaiRac</td><td>@item.SoLuongDuKien</td><td>@item.LoaiRac.DonViTinh</td><td>@item.GhiChu</td></tr> }</tbody></table>
-<a asp-action="Index">Về lịch sử yêu cầu</a>
+<a asp-action="Index" class="btn btn-primary">
+    Về lịch sử yêu cầu
+</a>
