@@ -35,7 +35,14 @@ public class ApplicationDbContext : DbContext
 
     // Module 2 – Chi tiết yêu cầu
     public DbSet<ChiTietYeuCau> ChiTietYeuCaus => Set<ChiTietYeuCau>();
-
+    // Họ và tên: Nguyễn Tiến Đạt
+    // Mã sinh viên: 23103100053
+    // Nội dung thực hiện: Module 3 – Quản lý nhân viên
+    public DbSet<NhanVien> NhanViens => Set<NhanVien>();
+    // Họ và tên: Nguyễn Tiến Đạt
+    // Mã sinh viên: 23103100053
+    // Nội dung thực hiện: Module 3 – §7.2 Phân công thu gom
+    public DbSet<PhanCongThuGom> PhanCongThuGoms => Set<PhanCongThuGom>();
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -198,5 +205,67 @@ public class ApplicationDbContext : DbContext
                     "CK_ChiTietYeuCau_SoLuong",
                     "[SoLuongDuKien] > 0"));
         });
+        // Họ và tên: Nguyễn Tiến Đạt
+        // Mã sinh viên: 23103100053
+        // Nội dung thực hiện: Module 3 – Cấu hình nhân viên
+        modelBuilder.Entity<NhanVien>(entity =>
+        {
+            entity.HasKey(x => x.MaNhanVien);
+
+            entity.Property(x => x.NgayVaoLam)
+                  .HasColumnType("date");
+            entity.Property(x => x.HoTen)
+                .HasMaxLength(100)
+                .IsRequired();
+
+            entity.Property(x => x.SoDienThoai)
+                .HasMaxLength(15)
+                .IsRequired();
+
+            entity.Property(x => x.TrangThai)
+                .HasConversion<int>();
+
+            entity.HasIndex(x => x.MaTaiKhoan)
+                .IsUnique();
+
+            entity.HasOne(x => x.TaiKhoan)
+                .WithOne()
+                .HasForeignKey<NhanVien>(x => x.MaTaiKhoan)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(x => x.KhuVuc)
+                .WithMany()
+                .HasForeignKey(x => x.MaKhuVuc)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        modelBuilder.Entity<PhanCongThuGom>(entity =>
+        {
+            entity.HasKey(x => x.MaPhanCong);
+
+            // Một yêu cầu chỉ có một nhân viên phụ trách chính
+            entity.HasIndex(x => x.MaYeuCau)
+                .IsUnique();
+
+            entity.Property(x => x.GhiChu)
+                .HasMaxLength(1000);
+            // Module 3 – Xử lý yêu cầu thu gom (7.3)
+            entity.Property(x => x.LyDoKhongThucHien)
+                .HasMaxLength(1000);
+
+            entity.Property(x => x.TrangThai)
+                .HasConversion<int>();
+
+            entity.HasOne(x => x.YeuCauThuGom)
+                .WithMany()
+                .HasForeignKey(x => x.MaYeuCau)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(x => x.NhanVien)
+                .WithMany()
+                .HasForeignKey(x => x.MaNhanVien)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
+
     }
 }

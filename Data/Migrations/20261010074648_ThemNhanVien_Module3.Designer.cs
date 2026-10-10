@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using QLThuGomRac_UNETI02_TI17A1HN.Data;
 
@@ -11,9 +12,11 @@ using QLThuGomRac_UNETI02_TI17A1HN.Data;
 namespace QLThuGomRac_UNETI02_TI17A1HN.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20261010074648_ThemNhanVien_Module3")]
+    partial class ThemNhanVien_Module3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -207,50 +210,6 @@ namespace QLThuGomRac_UNETI02_TI17A1HN.Data.Migrations
                     b.ToTable("NhanViens");
                 });
 
-            modelBuilder.Entity("QLThuGomRac_UNETI02_TI17A1HN.Models.Entities.PhanCongThuGom", b =>
-                {
-                    b.Property<int>("MaPhanCong")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MaPhanCong"));
-
-                    b.Property<string>("GhiChu")
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
-                    b.Property<string>("LyDoKhongThucHien")
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
-                    b.Property<int>("MaNhanVien")
-                        .HasColumnType("int");
-
-                    b.Property<int>("MaYeuCau")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("NgayBatDau")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("NgayKetThuc")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("NgayPhanCong")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("TrangThai")
-                        .HasColumnType("int");
-
-                    b.HasKey("MaPhanCong");
-
-                    b.HasIndex("MaNhanVien");
-
-                    b.HasIndex("MaYeuCau")
-                        .IsUnique();
-
-                    b.ToTable("PhanCongThuGoms");
-                });
-
             modelBuilder.Entity("QLThuGomRac_UNETI02_TI17A1HN.Models.Entities.TaiKhoan", b =>
                 {
                     b.Property<int>("MaTaiKhoan")
@@ -400,25 +359,6 @@ namespace QLThuGomRac_UNETI02_TI17A1HN.Data.Migrations
                     b.Navigation("KhuVuc");
 
                     b.Navigation("TaiKhoan");
-                });
-
-            modelBuilder.Entity("QLThuGomRac_UNETI02_TI17A1HN.Models.Entities.PhanCongThuGom", b =>
-                {
-                    b.HasOne("QLThuGomRac_UNETI02_TI17A1HN.Models.Entities.NhanVien", "NhanVien")
-                        .WithMany()
-                        .HasForeignKey("MaNhanVien")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("QLThuGomRac_UNETI02_TI17A1HN.Models.Entities.YeuCauThuGom", "YeuCauThuGom")
-                        .WithMany()
-                        .HasForeignKey("MaYeuCau")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("NhanVien");
-
-                    b.Navigation("YeuCauThuGom");
                 });
 
             modelBuilder.Entity("QLThuGomRac_UNETI02_TI17A1HN.Models.Entities.YeuCauThuGom", b =>

@@ -1,0 +1,109 @@
+﻿@*
+    Họ và tên: Nguyễn Tiến Đạt
+    Mã sinh viên: 23103100053
+    Nội dung thực hiện: Module 3 – §7.1 Xem chi tiết nhân viên
+*@
+
+@model QLThuGomRac_UNETI02_TI17A1HN.Models.Entities.NhanVien
+@using QLThuGomRac_UNETI02_TI17A1HN.Models.Enums
+
+@{
+	ViewData["Title"] = "Chi tiết nhân viên";
+}
+
+<div class="container-fluid py-3">
+
+	<div class="d-flex justify-content-between align-items-center mb-3">
+		<div>
+			<h2 class="mb-1">Chi tiết nhân viên</h2>
+			<p class="text-muted mb-0">
+				Thông tin hồ sơ nhân viên trong hệ thống.
+			</p>
+		</div>
+
+		<a asp-action="Index"
+		   class="btn btn-secondary">
+			Quay lại
+		</a>
+	</div>
+
+	<div class="card shadow-sm">
+		<div class="card-body">
+
+			<div class="row mb-3">
+				<div class="col-md-4 fw-bold">
+					Mã nhân viên
+				</div>
+				<div class="col-md-8">
+					@Model.MaNhanVien
+				</div>
+			</div>
+
+			<div class="row mb-3">
+				<div class="col-md-4 fw-bold">
+					Tài khoản
+				</div>
+				<div class="col-md-8">
+					@Model.TaiKhoan?.TenDangNhap
+				</div>
+			</div>
+
+			<div class="row mb-3">
+				<div class="col-md-4 fw-bold">
+					Họ tên
+				</div>
+				<div class="col-md-8">
+					@Model.HoTen
+				</div>
+			</div>
+
+			<div class="row mb-3">
+				<div class="col-md-4 fw-bold">
+					Số điện thoại
+				</div>
+				<div class="col-md-8">
+					@Model.SoDienThoai
+				</div>
+			</div>
+
+			<div class="row mb-3">
+				<div class="col-md-4 fw-bold">
+					Khu vực phụ trách
+				</div>
+				<div class="col-md-8">
+					@Model.KhuVuc?.TenKhuVuc
+				</div>
+			</div>
+
+			<div class="row mb-3">
+				<div class="col-md-4 fw-bold">
+					Ngày vào làm
+				</div>
+				<div class="col-md-8">
+					@Model.NgayVaoLam.ToString("dd/MM/yyyy")
+				</div>
+			</div>
+
+			<div class="row mb-3">
+				<div class="col-md-4 fw-bold">
+					Trạng thái
+				</div>
+				<div class="col-md-8">
+					@if (Model.TrangThai == TrangThaiNhanVien.DangHoatDong)
+					{
+						<span class="badge bg-success">
+							Đang hoạt động
+						</span>
+					}
+					else
+					{
+						<span class="badge bg-secondary">
+							Tạm nghỉ
+						</span>
+					}
+				</div>
+			</div>
+
+		</div>
+	</div>
+</div>

@@ -1592,3 +1592,16 @@ body {
         border-color: #13afd0;
         color: #ffffff;
     }
+
+
+.btn-view {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+    color: #fff;
+}
+
+    .btn-view:hover {
+        background-color: #0b5ed7;
+        border-color: #0a58ca;
+        color: #fff;
+    }

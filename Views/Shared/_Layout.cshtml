@@ -111,6 +111,28 @@
                         <span>Người dân</span>
                     </a>
 
+					<a asp-controller="NhanVien"
+						 asp-action="Index"
+						class="sidebar-link @(currentController == "NhanVien" ? "active" : "")">
+						 <i class="bi bi-person-badge"></i>
+						 <span>Nhân viên</span>
+					</a>
+					@* Module 3 – Phân công thu gom (7.2) *@
+					<a class="sidebar-link @(currentController == "PhanCong" ? "active" : "")"
+					asp-controller="PhanCong"
+					asp-action="Index">
+					 <i class="bi bi-person-workspace"></i>
+					  <span>Phân công</span>
+					</a>
+					@* Module 3 – Theo dõi xử lý yêu cầu (7.3) *@
+						<a class="sidebar-link @(currentController == "CongViec" ? "active" : "")"
+						  asp-controller="CongViec"
+						  asp-action="TheoDoi">
+						   <i class="bi bi-list-check"></i>
+					  <span>Theo dõi công việc</span>
+					</a>
+
+
                     @*
                         Điểm tập kết, Nhân viên, Phân công,
                         Dashboard, Thống kê sẽ bổ sung
@@ -170,6 +192,18 @@
                         <span>Thông tin cá nhân</span>
                     </a>
                 }
+				@* Module 3 – Công việc của nhân viên (7.3) *@
+				@if (Context.Session.GetString("VaiTro") == "NhanVien")
+				{
+			  <div class="sidebar-title">CÔNG VIỆC NHÂN VIÊN</div>
+
+			 <a class="sidebar-link @(currentController == "CongViec" && currentAction == "Index" ? "active" : "")"
+			 asp-controller="CongViec"
+			 asp-action="Index">
+			   <i class="bi bi-list-task"></i>
+		   <span>Công việc của tôi</span>
+			 </a>
+}
 
             </nav>
 

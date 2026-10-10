@@ -27,5 +27,9 @@ public enum TrangThaiYeuCau
     [Display(Name = "Đang thu gom")] DangThuGom = 4,
     [Display(Name = "Hoàn thành")] HoanThanh = 5,
     [Display(Name = "Từ chối")] TuChoi = 6,
-    [Display(Name = "Hủy")] Huy = 7
+    [Display(Name = "Hủy")] Huy = 7,
+
+    // Module 3 – Xử lý yêu cầu thu gom (7.3)
+    [Display(Name = "Không thực hiện được")]
+    KhongThucHienDuoc = 8
 }

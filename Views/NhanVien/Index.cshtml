@@ -1,0 +1,145 @@
+﻿@* Họ và tên: Nguyễn Tiến Đạt
+   Mã sinh viên: 23103100053
+   Nội dung: Module 3 – Giao diện danh sách nhân viên *@
+
+@model List<QLThuGomRac_UNETI02_TI17A1HN.Models.ViewModels.Module3.NhanVienDanhSachViewModel>
+@using QLThuGomRac_UNETI02_TI17A1HN.Models.Enums
+
+@{
+    ViewData["Title"] = "Quản lý nhân viên";
+    var tuKhoa = ViewData["TuKhoa"] as string;
+}
+@if (TempData["ThongBao"] is string thongBao)
+{
+    <div class="alert alert-success">
+        @thongBao
+    </div>
+}
+<h1 class="mb-3">Quản lý nhân viên</h1>
+<a asp-controller="NhanVien"
+   asp-action="Create"
+   class="btn btn-success mb-3">
+    + Thêm nhân viên
+</a>
+<form asp-controller="NhanVien"
+      asp-action="Index"
+      method="get"
+      class="row g-2 mb-3">
+
+    <div class="col-md-8">
+        <input type="text"
+               name="tuKhoa"
+               value="@tuKhoa"
+               class="form-control"
+               aria-label="Tìm kiếm nhân viên"
+               placeholder="Tìm họ tên, số điện thoại, tài khoản hoặc khu vực" />
+    </div>
+
+    <div class="col-md-4">
+        <button type="submit" class="btn btn-primary">
+            Tìm kiếm
+        </button>
+
+        <a asp-controller="NhanVien"
+           asp-action="Index"
+           class="btn btn-secondary">
+            Xóa bộ lọc
+        </a>
+    </div>
+</form>
+
+<p>Số nhân viên tìm thấy: <strong>@Model.Count</strong></p>
+
+<div class="table-responsive">
+    <table class="table table-bordered table-striped align-middle">
+        <thead>
+            <tr>
+                <th>Mã</th>
+                <th>Tài khoản</th>
+                <th>Họ tên</th>
+                <th>Số điện thoại</th>
+                <th>Khu vực phụ trách</th>
+                <th>Ngày vào làm</th>
+                <th>Trạng thái</th>
+				<th>Thao tác</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @if (Model.Count == 0)
+            {
+                <tr>
+                    <td colspan="8" class="text-center text-muted">
+                        Chưa có nhân viên hoặc không có kết quả phù hợp.
+                    </td>
+                </tr>
+            }
+            else
+            {
+                foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.MaNhanVien</td>
+                        <td>@item.TenDangNhap</td>
+                        <td>@item.HoTen</td>
+                        <td>@item.SoDienThoai</td>
+                        <td>@item.TenKhuVuc</td>
+                        <td>@item.NgayVaoLam.ToString("dd/MM/yyyy")</td>
+                        <td>
+                            @if (item.TrangThai == TrangThaiNhanVien.DangHoatDong)
+                            {
+                                <span class="badge bg-success">
+                                    Đang hoạt động
+                                </span>
+                            }
+                            else if (item.TrangThai == TrangThaiNhanVien.TamNghi)
+                            {
+                                <span class="badge bg-secondary">
+                                    Tạm nghỉ
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-warning text-dark">
+                                    Không xác định
+                                </span>
+                            }
+                        </td>
+						<td>
+							<div class="d-flex gap-2 flex-wrap">
+
+								<a asp-action="Details"
+								   asp-route-id="@item.MaNhanVien"
+								   class="btn btn-sm btn-view">
+									Xem
+								</a>
+
+								<a asp-action="Edit"
+								   asp-route-id="@item.MaNhanVien"
+								   class="btn btn-sm btn-warning text-dark">
+									Sửa
+								</a>
+
+								<form asp-action="Delete"
+									  asp-route-id="@item.MaNhanVien"
+									  method="post"
+									  class="d-inline"
+									  onsubmit="return confirm('Bạn có chắc muốn xóa nhân viên này?');">
+
+									@Html.AntiForgeryToken()
+
+									<button type="submit"
+											class="btn btn-sm btn-danger">
+										Xóa
+									</button>
+								</form>
+
+							</div>
+						</td>
+
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,101 @@
+﻿@* Họ và tên: Nguyễn Tiến Đạt
+   Mã sinh viên: 23103100053
+   Nội dung: Module 3 – Giao diện thêm nhân viên *@
+
+@model QLThuGomRac_UNETI02_TI17A1HN.Models.ViewModels.Module3.NhanVienCreateViewModel
+@using QLThuGomRac_UNETI02_TI17A1HN.Models.Enums
+
+@{
+    ViewData["Title"] = "Thêm nhân viên";
+}
+
+<h1 class="mb-3">Thêm nhân viên</h1>
+
+@if (Model.TaiKhoans.Count == 0)
+{
+    <div class="alert alert-warning">
+        Không có tài khoản nhân viên đang hoạt động chưa có hồ sơ.
+        Hãy kiểm tra tại trang Quản lý tài khoản.
+    </div>
+}
+
+@if (Model.KhuVucs.Count == 0)
+{
+    <div class="alert alert-warning">
+        Chưa có khu vực đang hoạt động.
+        Hãy bổ sung tại trang Quản lý khu vực.
+    </div>
+}
+
+<form asp-controller="NhanVien" asp-action="Create" method="post">
+    <div asp-validation-summary="All" class="text-danger"></div>
+
+    <div class="mb-3">
+        <label asp-for="MaTaiKhoan" class="form-label"></label>
+        <select asp-for="MaTaiKhoan"
+                asp-items="Model.TaiKhoans"
+                class="form-select">
+            <option value="">-- Chọn tài khoản nhân viên --</option>
+        </select>
+        <span asp-validation-for="MaTaiKhoan"
+              class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="HoTen" class="form-label"></label>
+        <input asp-for="HoTen" class="form-control" />
+        <span asp-validation-for="HoTen"
+              class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="SoDienThoai" class="form-label"></label>
+        <input asp-for="SoDienThoai"
+               type="tel"
+               class="form-control" />
+        <span asp-validation-for="SoDienThoai"
+              class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="MaKhuVuc" class="form-label"></label>
+        <select asp-for="MaKhuVuc"
+                asp-items="Model.KhuVucs"
+                class="form-select">
+            <option value="">-- Chọn khu vực --</option>
+        </select>
+        <span asp-validation-for="MaKhuVuc"
+              class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="NgayVaoLam" class="form-label"></label>
+        <input asp-for="NgayVaoLam"
+               type="date"
+               class="form-control" />
+        <span asp-validation-for="NgayVaoLam"
+              class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="TrangThai" class="form-label"></label>
+        <select asp-for="TrangThai"
+                asp-items="Html.GetEnumSelectList<TrangThaiNhanVien>()"
+                class="form-select">
+        </select>
+        <span asp-validation-for="TrangThai"
+              class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-success">
+        Lưu nhân viên
+    </button>
+
+    <a asp-action="Index" class="btn btn-secondary">
+        Quay lại
+    </a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
