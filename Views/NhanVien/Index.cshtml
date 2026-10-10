@@ -120,29 +120,6 @@
 									Sửa
 								</a>
 
-								<form asp-action="CapNhatTrangThai"
-									  asp-route-id="@item.MaNhanVien"
-									  method="post"
-									  class="d-inline">
-
-									@Html.AntiForgeryToken()
-
-									@if (item.TrangThai == TrangThaiNhanVien.DangHoatDong)
-									{
-										<button type="submit"
-												class="btn btn-sm btn-secondary">
-											Tạm nghỉ
-										</button>
-									}
-									else
-									{
-										<button type="submit"
-												class="btn btn-sm btn-success">
-											Hoạt động
-										</button>
-									}
-								</form>
-
 								<form asp-action="Delete"
 									  asp-route-id="@item.MaNhanVien"
 									  method="post"
