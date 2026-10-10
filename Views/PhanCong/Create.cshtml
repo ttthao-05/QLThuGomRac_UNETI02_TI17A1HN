@@ -1,0 +1,75 @@
+﻿@* Họ và tên: Nguyễn Tiến Đạt
+   Mã sinh viên: 23103100053
+   Nội dung: Module 3 – Form phân công nhân viên (7.2) *@
+
+@model QLThuGomRac_UNETI02_TI17A1HN.Models.ViewModels.Module3.PhanCongCreateViewModel
+
+@{
+    ViewData["Title"] = "Phân công nhân viên";
+}
+
+<h2>Phân công nhân viên</h2>
+
+<div class="card mb-3">
+    <div class="card-body">
+        <p><strong>Mã yêu cầu:</strong> @Model.MaYeuCau</p>
+        <p><strong>Khu vực:</strong> @Model.TenKhuVuc</p>
+        <p class="mb-0">
+            <strong>Địa chỉ thu gom:</strong> @Model.DiaChiThuGom
+        </p>
+    </div>
+</div>
+
+@if (Model.NhanViens.Count == 0)
+{
+    <div class="alert alert-warning">
+        Khu vực này chưa có nhân viên đủ điều kiện.
+        Hãy kiểm tra khu vực phụ trách, trạng thái nhân viên
+        và trạng thái tài khoản nhân viên.
+    </div>
+}
+
+<form asp-controller="PhanCong" asp-action="Create" method="post">
+    @Html.AntiForgeryToken()
+
+    <input asp-for="MaYeuCau" type="hidden" />
+
+    <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+    <div class="mb-3">
+        <label asp-for="MaNhanVien" class="form-label"></label>
+
+        <select asp-for="MaNhanVien"
+                asp-items="Model.NhanViens"
+                class="form-select">
+            <option value="">-- Chọn nhân viên --</option>
+        </select>
+
+        <span asp-validation-for="MaNhanVien"
+              class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="GhiChu" class="form-label"></label>
+        <textarea asp-for="GhiChu"
+                  class="form-control"
+                  rows="3"></textarea>
+        <span asp-validation-for="GhiChu"
+              class="text-danger"></span>
+    </div>
+
+    @if (Model.NhanViens.Count > 0)
+    {
+        <button type="submit" class="btn btn-primary">
+            Lưu phân công
+        </button>
+    }
+
+    <a asp-action="Index" class="btn btn-secondary">
+        Quay lại
+    </a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

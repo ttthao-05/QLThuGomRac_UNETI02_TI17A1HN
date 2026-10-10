@@ -39,8 +39,10 @@ public class ApplicationDbContext : DbContext
     // Mã sinh viên: 23103100053
     // Nội dung thực hiện: Module 3 – Quản lý nhân viên
     public DbSet<NhanVien> NhanViens => Set<NhanVien>();
-
-    // Module 3 – Phân công và xử lý yêu cầu (7.2–7.3)
+    // Họ và tên: Nguyễn Tiến Đạt
+    // Mã sinh viên: 23103100053
+    // Nội dung thực hiện: Module 3 – §7.2 Phân công thu gom
+    public DbSet<PhanCongThuGom> PhanCongThuGoms => Set<PhanCongThuGom>();
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -236,6 +238,31 @@ public class ApplicationDbContext : DbContext
                 .HasForeignKey(x => x.MaKhuVuc)
                 .OnDelete(DeleteBehavior.Restrict);
         });
-      
+
+        modelBuilder.Entity<PhanCongThuGom>(entity =>
+        {
+            entity.HasKey(x => x.MaPhanCong);
+
+            // Một yêu cầu chỉ có một nhân viên phụ trách chính
+            entity.HasIndex(x => x.MaYeuCau)
+                .IsUnique();
+
+            entity.Property(x => x.GhiChu)
+                .HasMaxLength(1000);
+
+            entity.Property(x => x.TrangThai)
+                .HasConversion<int>();
+
+            entity.HasOne(x => x.YeuCauThuGom)
+                .WithMany()
+                .HasForeignKey(x => x.MaYeuCau)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(x => x.NhanVien)
+                .WithMany()
+                .HasForeignKey(x => x.MaNhanVien)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
+
     }
 }
