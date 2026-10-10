@@ -111,6 +111,13 @@
                         <span>Người dân</span>
                     </a>
 
+					<a asp-controller="NhanVien"
+   asp-action="Index"
+   class="sidebar-link @(currentController == "NhanVien" ? "active" : "")">
+    <i class="bi bi-person-badge"></i>
+    <span>Nhân viên</span>
+</a>
+
                     @*
                         Điểm tập kết, Nhân viên, Phân công,
                         Dashboard, Thống kê sẽ bổ sung
