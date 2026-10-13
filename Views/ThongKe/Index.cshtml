@@ -1,0 +1,28 @@
+﻿@* Họ và tên: [Vũ Đức Hải]
+   Mã sinh viên: [23103100008]
+   Nội dung thực hiện: Module 4 - Trang thống kê (số lượng yêu cầu) *@
+@model QLThuGomRac_UNETI02_TI17A1HN.ViewModels.ThongKeVM
+@{ ViewData["Title"] = "Thống kê"; }
+
+<h2 class="mb-3">Thống kê thu gom rác tái chế</h2>
+<div class="row g-3">
+    @{
+        var bang = new (string Tieu, List<QLThuGomRac_UNETI02_TI17A1HN.ViewModels.NhomSoLuongVM> Ds)[] {
+            ("Số yêu cầu theo trạng thái", Model.TheoTrangThai),
+            ("Số yêu cầu theo khu vực", Model.TheoKhuVuc),
+            ("Số yêu cầu theo tháng", Model.TheoThang),
+            ("Số yêu cầu theo nhân viên", Model.TheoNhanVien)
+        };
+    }
+    @foreach (var b in bang)
+    {
+        <div class="col-md-6">
+            <div class="card h-100"><div class="card-header">@b.Tieu</div>
+                <table class="table table-sm mb-0">
+                    @foreach (var x in b.Ds) { <tr><td>@x.Ten</td><td class="text-end">@x.SoLuong</td></tr> }
+                    @if (!b.Ds.Any()) { <tr><td class="text-muted">Chưa có dữ liệu</td></tr> }
+                </table>
+            </div>
+        </div>
+    }
+</div>
