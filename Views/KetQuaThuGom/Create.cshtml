@@ -1,0 +1,125 @@
+﻿@* Nguyễn Tiến Đạt – 23103100053
+   Module 3 – Kết quả thu gom (7.4) *@
+
+@model QLThuGomRac_UNETI02_TI17A1HN.Models.ViewModels.Module3.KetQuaThuGomCreateViewModel
+
+@{
+	ViewData["Title"] = "Nhập kết quả thu gom";
+}
+
+<h2 class="mb-4">Nhập kết quả thu gom</h2>
+
+<div class="card mb-4">
+	<div class="card-header">
+		Thông tin công việc
+	</div>
+
+	<div class="card-body">
+		<p>
+			<strong>Mã phân công:</strong>
+			@Model.MaPhanCong
+		</p>
+
+		<p>
+			<strong>Địa chỉ thu gom:</strong>
+			@Model.DiaChiThuGom
+		</p>
+
+		<p class="mb-0">
+			<strong>Khu vực:</strong>
+			@Model.TenKhuVuc
+		</p>
+	</div>
+</div>
+
+<form asp-controller="KetQuaThuGom"
+	  asp-action="Create"
+	  method="post">
+
+	@Html.AntiForgeryToken()
+
+	<input type="hidden" asp-for="MaPhanCong" />
+
+	<div asp-validation-summary="All"
+		 class="text-danger mb-3">
+	</div>
+
+	<div class="alert alert-info">
+		Nhập khối lượng thực tế theo kg, tối đa 3 chữ số
+		sau dấu thập phân. Nhập 0 nếu không thu được loại rác đó.
+		Ít nhất một loại rác phải có khối lượng lớn hơn 0.
+	</div>
+
+	<div class="table-responsive">
+		<table class="table table-bordered align-middle">
+			<thead class="table-light">
+				<tr>
+					<th style="width: 70px;">STT</th>
+					<th>Loại rác</th>
+					<th>Khối lượng thực tế (kg)</th>
+				</tr>
+			</thead>
+
+			<tbody>
+				@for (int i = 0; i < Model.ChiTiets.Count; i++)
+				{
+					<tr>
+						<td>@(i + 1)</td>
+
+						<td>
+							@Model.ChiTiets[i].TenLoaiRac
+
+							<input type="hidden"
+								   asp-for="ChiTiets[i].MaLoaiRac" />
+						</td>
+
+						<td>
+							<input asp-for="ChiTiets[i].KhoiLuongThucTe"
+								   type="number"
+								   class="form-control"
+								   min="0"
+								   max="999999999.999"
+								   step="0.001"
+								   required />
+
+							<span asp-validation-for="ChiTiets[i].KhoiLuongThucTe"
+								  class="text-danger">
+							</span>
+						</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+	</div>
+
+	<div class="mb-3">
+		<label asp-for="GhiChu" class="form-label"></label>
+
+		<textarea asp-for="GhiChu"
+				  class="form-control"
+				  rows="3"
+				  maxlength="1000"
+				  placeholder="Ghi chú về kết quả thu gom..."></textarea>
+
+		<span asp-validation-for="GhiChu"
+			  class="text-danger">
+		</span>
+	</div>
+
+	<div class="d-flex gap-2">
+		<button type="submit" class="btn btn-success">
+			Lưu kết quả và hoàn thành
+		</button>
+
+		<a asp-controller="CongViec"
+		   asp-action="Details"
+		   asp-route-id="@Model.MaPhanCong"
+		   class="btn btn-secondary">
+			Quay lại công việc
+		</a>
+	</div>
+</form>
+
+@section Scripts {
+	<partial name="_ValidationScriptsPartial" />
+}

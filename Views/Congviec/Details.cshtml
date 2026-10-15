@@ -1,12 +1,15 @@
-﻿@* Nguyễn Tiến Đạt – 23103100053
+﻿@using QLThuGomRac_UNETI02_TI17A1HN.Models.Enums
+@using QLThuGomRac_UNETI02_TI17A1HN.Models.Entities
+@* Nguyễn Tiến Đạt – 23103100053
    Module 3 – Xử lý yêu cầu thu gom (7.3) *@
 
 @using QLThuGomRac_UNETI02_TI17A1HN.Models.Enums
 @model QLThuGomRac_UNETI02_TI17A1HN.Models.Entities.PhanCongThuGom
 
 @{
-    ViewData["Title"] = "Chi tiết công việc";
-    var yeuCau = Model.YeuCauThuGom;
+	ViewData["Title"] = "Chi tiết công việc";
+	var yeuCau = Model.YeuCauThuGom;
+	var ketQua = ViewBag.KetQuaThuGom as KetQuaThuGom;
 }
 
 <h2 class="mb-3">Chi tiết công việc</h2>
@@ -128,53 +131,112 @@ else
 }
 
 <div class="d-flex flex-wrap gap-2 mt-3">
-    @if (Model.TrangThai == TrangThaiYeuCau.DaPhanCong
-        && yeuCau?.TrangThai == TrangThaiYeuCau.DaPhanCong)
-    {
-        <form asp-controller="CongViec"
-              asp-action="BatDau"
-              method="post">
-            @Html.AntiForgeryToken()
+	@if (ketQua != null)
+	{
+		<div class="card mt-4 mb-3">
+			<div class="card-header bg-success text-white">
+				<strong>Kết quả thu gom thực tế</strong>
+			</div>
 
-            <input type="hidden"
-                   name="id"
-                   value="@Model.MaPhanCong" />
+			<div class="card-body">
+				<p>
+					<strong>Mã kết quả:</strong>
+					@ketQua.MaKetQua
+				</p>
 
-            <button type="submit" class="btn btn-primary">
-                Bắt đầu thu gom
-            </button>
-        </form>
+				<p>
+					<strong>Thời gian ghi nhận:</strong>
+					@ketQua.NgayGhiNhan.ToString("dd/MM/yyyy HH:mm")
+				</p>
 
-        <a asp-controller="CongViec"
-           asp-action="KhongThucHien"
-           asp-route-id="@Model.MaPhanCong"
-           class="btn btn-warning">
-            Không thực hiện được
-        </a>
-    }
+				<div class="table-responsive">
+					<table class="table table-bordered">
+						<thead class="table-light">
+							<tr>
+								<th>Loại rác</th>
+								<th>Khối lượng thực tế (kg)</th>
+							</tr>
+						</thead>
 
-    @if (Model.TrangThai == TrangThaiYeuCau.DangThuGom
-        && yeuCau?.TrangThai == TrangThaiYeuCau.DangThuGom)
-    {
-        <form asp-controller="CongViec"
-              asp-action="HoanThanh"
-              method="post"
-              onsubmit="return confirm('Bạn xác nhận đã hoàn thành công việc?');">
-            @Html.AntiForgeryToken()
+						<tbody>
+							@foreach (var dong in ketQua.ChiTietKetQuas
+								.OrderBy(c => c.MaLoaiRac))
+							{
+								<tr>
+									<td>@dong.LoaiRac.TenLoaiRac</td>
+									<td>
+										@dong.KhoiLuongThucTe.ToString("0.###")
+									</td>
+								</tr>
+							}
+						</tbody>
 
-            <input type="hidden"
-                   name="id"
-                   value="@Model.MaPhanCong" />
+						<tfoot>
+							<tr>
+								<th>Tổng khối lượng</th>
+								<th>
+									@(ketQua.ChiTietKetQuas
+										.Sum(c => c.KhoiLuongThucTe)
+										.ToString("0.###")) kg
+								</th>
+							</tr>
+						</tfoot>
+					</table>
+				</div>
 
-            <button type="submit" class="btn btn-success">
-                Hoàn thành
-            </button>
-        </form>
-    }
+				@if (!string.IsNullOrWhiteSpace(ketQua.GhiChu))
+				{
+					<p class="mb-0">
+						<strong>Ghi chú kết quả:</strong>
+						@ketQua.GhiChu
+					</p>
+				}
+			</div>
+		</div>
+	}
 
-    <a asp-controller="CongViec"
-       asp-action="Index"
-       class="btn btn-secondary">
-        Quay lại danh sách
-    </a>
+	<div class="d-flex flex-wrap gap-2 mt-3">
+		@if (Model.TrangThai == TrangThaiYeuCau.DaPhanCong
+			&& yeuCau?.TrangThai == TrangThaiYeuCau.DaPhanCong)
+		{
+			<form asp-controller="CongViec"
+				  asp-action="BatDau"
+				  method="post">
+
+				@Html.AntiForgeryToken()
+
+				<input type="hidden"
+					   name="id"
+					   value="@Model.MaPhanCong" />
+
+				<button type="submit" class="btn btn-primary">
+					Bắt đầu thu gom
+				</button>
+			</form>
+
+			<a asp-controller="CongViec"
+			   asp-action="KhongThucHien"
+			   asp-route-id="@Model.MaPhanCong"
+			   class="btn btn-warning">
+				Không thực hiện được
+			</a>
+		}
+
+		@if (Model.TrangThai == TrangThaiYeuCau.DangThuGom
+			&& yeuCau?.TrangThai == TrangThaiYeuCau.DangThuGom)
+		{
+			<a asp-controller="KetQuaThuGom"
+			   asp-action="Create"
+			   asp-route-id="@Model.MaPhanCong"
+			   class="btn btn-success">
+				Nhập kết quả thu gom
+			</a>
+		}
+
+		<a asp-controller="CongViec"
+		   asp-action="Index"
+		   class="btn btn-secondary">
+			Quay lại danh sách
+		</a>
+	</div>
 </div>

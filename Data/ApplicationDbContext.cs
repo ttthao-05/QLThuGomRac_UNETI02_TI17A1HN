@@ -41,16 +41,19 @@ public class ApplicationDbContext : DbContext
     public DbSet<NhanVien> NhanViens => Set<NhanVien>();
     // Họ và tên: Nguyễn Tiến Đạt
     // Mã sinh viên: 23103100053
-    // Nội dung thực hiện: Module 3 – §7.2 Phân công thu gom
+    // Nội dung thực hiện: Module 3 – 7.2 Phân công thu gom
+    // Nội dung: Module 3 – Kết quả thu gom (7.4)
+    public DbSet<KetQuaThuGom> KetQuaThuGoms => Set<KetQuaThuGom>();
+    public DbSet<ChiTietKetQuaThuGom> ChiTietKetQuaThuGoms => Set<ChiTietKetQuaThuGom>();
     public DbSet<PhanCongThuGom> PhanCongThuGoms => Set<PhanCongThuGom>();
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-
-        // =========================
-        // MODULE 1 - TÀI KHOẢN
-        // =========================
-        modelBuilder.Entity<TaiKhoan>(entity =>
+        
+    // =========================
+    // MODULE 1 - TÀI KHOẢN
+    // =========================
+    modelBuilder.Entity<TaiKhoan>(entity =>
         {
             entity.HasKey(x => x.MaTaiKhoan);
 
@@ -265,6 +268,55 @@ public class ApplicationDbContext : DbContext
                 .WithMany()
                 .HasForeignKey(x => x.MaNhanVien)
                 .OnDelete(DeleteBehavior.Restrict);
+        });
+        // Module 3 – Kết quả thu gom (7.4)
+        modelBuilder.Entity<KetQuaThuGom>(entity =>
+        {
+            entity.HasKey(x => x.MaKetQua);
+
+            // Mỗi phân công chỉ ghi nhận một kết quả.
+            entity.HasIndex(x => x.MaPhanCong)
+                .IsUnique();
+
+            entity.Property(x => x.GhiChu)
+                .HasMaxLength(1000);
+
+            entity.HasOne(x => x.PhanCongThuGom)
+                .WithOne()
+                .HasForeignKey<KetQuaThuGom>(x => x.MaPhanCong)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        // Module 3 – Chi tiết kết quả thu gom (7.4)
+        modelBuilder.Entity<ChiTietKetQuaThuGom>(entity =>
+        {
+            entity.HasKey(x => x.MaChiTietKetQua);
+
+            entity.Property(x => x.KhoiLuongThucTe)
+                .HasPrecision(12, 3);
+
+            // Một loại rác chỉ xuất hiện một lần trong mỗi kết quả.
+            entity.HasIndex(x => new
+            {
+                x.MaKetQua,
+                x.MaLoaiRac
+            })
+            .IsUnique();
+
+            entity.HasOne(x => x.KetQuaThuGom)
+                .WithMany(x => x.ChiTietKetQuas)
+                .HasForeignKey(x => x.MaKetQua)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(x => x.LoaiRac)
+                .WithMany()
+                .HasForeignKey(x => x.MaLoaiRac)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.ToTable(t =>
+                t.HasCheckConstraint(
+                    "CK_ChiTietKetQuaThuGom_KhoiLuong",
+                    "[KhoiLuongThucTe] >= 0"));
         });
 
     }

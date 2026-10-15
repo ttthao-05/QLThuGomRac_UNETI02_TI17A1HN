@@ -127,6 +127,14 @@ public class CongViecController : Controller
         if (congViec == null)
             return NotFound();
 
+        // Lấy kết quả của công việc đã kiểm tra quyền nhân viên.
+        ViewBag.KetQuaThuGom = await _context.KetQuaThuGoms
+            .AsNoTracking()
+            .Include(k => k.ChiTietKetQuas)
+                .ThenInclude(c => c.LoaiRac)
+            .SingleOrDefaultAsync(k =>
+                k.MaPhanCong == congViec.MaPhanCong);
+
         return View(congViec);
     }
 
@@ -142,16 +150,28 @@ public class CongViecController : Controller
             null);
     }
 
-    // Đang thu gom → Hoàn thành.
+    // Chuyển sang nhập kết quả trước khi hoàn thành.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public Task<IActionResult> HoanThanh(int id)
+    public async Task<IActionResult> HoanThanh(int id)
     {
-        return ChuyenTrangThaiAsync(
-            id,
-            TrangThaiYeuCau.DangThuGom,
-            TrangThaiYeuCau.HoanThanh,
-            null);
+        var maNhanVien = await MaNhanVienAsync();
+
+        if (maNhanVien == null)
+            return TuChoiTruyCap();
+
+        bool laCongViecCuaMinh = await _context.PhanCongThuGoms
+            .AnyAsync(p =>
+                p.MaPhanCong == id
+                && p.MaNhanVien == maNhanVien.Value);
+
+        if (!laCongViecCuaMinh)
+            return NotFound();
+
+        return RedirectToAction(
+            "Create",
+            "KetQuaThuGom",
+            new { id });
     }
 
     // Mở form nhập lý do không thực hiện được.

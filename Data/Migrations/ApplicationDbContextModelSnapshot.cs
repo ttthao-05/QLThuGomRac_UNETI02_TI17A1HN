@@ -22,6 +22,37 @@ namespace QLThuGomRac_UNETI02_TI17A1HN.Data.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("QLThuGomRac_UNETI02_TI17A1HN.Models.Entities.ChiTietKetQuaThuGom", b =>
+                {
+                    b.Property<int>("MaChiTietKetQua")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MaChiTietKetQua"));
+
+                    b.Property<decimal>("KhoiLuongThucTe")
+                        .HasPrecision(12, 3)
+                        .HasColumnType("decimal(12,3)");
+
+                    b.Property<int>("MaKetQua")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MaLoaiRac")
+                        .HasColumnType("int");
+
+                    b.HasKey("MaChiTietKetQua");
+
+                    b.HasIndex("MaLoaiRac");
+
+                    b.HasIndex("MaKetQua", "MaLoaiRac")
+                        .IsUnique();
+
+                    b.ToTable("ChiTietKetQuaThuGoms", t =>
+                        {
+                            t.HasCheckConstraint("CK_ChiTietKetQuaThuGom_KhoiLuong", "[KhoiLuongThucTe] >= 0");
+                        });
+                });
+
             modelBuilder.Entity("QLThuGomRac_UNETI02_TI17A1HN.Models.Entities.ChiTietYeuCau", b =>
                 {
                     b.Property<int>("MaChiTiet")
@@ -55,6 +86,32 @@ namespace QLThuGomRac_UNETI02_TI17A1HN.Data.Migrations
                         {
                             t.HasCheckConstraint("CK_ChiTietYeuCau_SoLuong", "[SoLuongDuKien] > 0");
                         });
+                });
+
+            modelBuilder.Entity("QLThuGomRac_UNETI02_TI17A1HN.Models.Entities.KetQuaThuGom", b =>
+                {
+                    b.Property<int>("MaKetQua")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MaKetQua"));
+
+                    b.Property<string>("GhiChu")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<int>("MaPhanCong")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("NgayGhiNhan")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("MaKetQua");
+
+                    b.HasIndex("MaPhanCong")
+                        .IsUnique();
+
+                    b.ToTable("KetQuaThuGoms");
                 });
 
             modelBuilder.Entity("QLThuGomRac_UNETI02_TI17A1HN.Models.Entities.KhuVuc", b =>
@@ -353,6 +410,25 @@ namespace QLThuGomRac_UNETI02_TI17A1HN.Data.Migrations
                     b.ToTable("YeuCauThuGoms");
                 });
 
+            modelBuilder.Entity("QLThuGomRac_UNETI02_TI17A1HN.Models.Entities.ChiTietKetQuaThuGom", b =>
+                {
+                    b.HasOne("QLThuGomRac_UNETI02_TI17A1HN.Models.Entities.KetQuaThuGom", "KetQuaThuGom")
+                        .WithMany("ChiTietKetQuas")
+                        .HasForeignKey("MaKetQua")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("QLThuGomRac_UNETI02_TI17A1HN.Models.Entities.LoaiRac", "LoaiRac")
+                        .WithMany()
+                        .HasForeignKey("MaLoaiRac")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("KetQuaThuGom");
+
+                    b.Navigation("LoaiRac");
+                });
+
             modelBuilder.Entity("QLThuGomRac_UNETI02_TI17A1HN.Models.Entities.ChiTietYeuCau", b =>
                 {
                     b.HasOne("QLThuGomRac_UNETI02_TI17A1HN.Models.Entities.LoaiRac", "LoaiRac")
@@ -370,6 +446,17 @@ namespace QLThuGomRac_UNETI02_TI17A1HN.Data.Migrations
                     b.Navigation("LoaiRac");
 
                     b.Navigation("YeuCauThuGom");
+                });
+
+            modelBuilder.Entity("QLThuGomRac_UNETI02_TI17A1HN.Models.Entities.KetQuaThuGom", b =>
+                {
+                    b.HasOne("QLThuGomRac_UNETI02_TI17A1HN.Models.Entities.PhanCongThuGom", "PhanCongThuGom")
+                        .WithOne()
+                        .HasForeignKey("QLThuGomRac_UNETI02_TI17A1HN.Models.Entities.KetQuaThuGom", "MaPhanCong")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("PhanCongThuGom");
                 });
 
             modelBuilder.Entity("QLThuGomRac_UNETI02_TI17A1HN.Models.Entities.NguoiDan", b =>
@@ -438,6 +525,11 @@ namespace QLThuGomRac_UNETI02_TI17A1HN.Data.Migrations
                     b.Navigation("KhuVuc");
 
                     b.Navigation("NguoiDan");
+                });
+
+            modelBuilder.Entity("QLThuGomRac_UNETI02_TI17A1HN.Models.Entities.KetQuaThuGom", b =>
+                {
+                    b.Navigation("ChiTietKetQuas");
                 });
 
             modelBuilder.Entity("QLThuGomRac_UNETI02_TI17A1HN.Models.Entities.YeuCauThuGom", b =>
