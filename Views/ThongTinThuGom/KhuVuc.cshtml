@@ -1,0 +1,73 @@
+﻿@*
+    Họ và tên: Trần Thị Thảo
+    Mã sinh viên: 23103100025
+    Nội dung thực hiện: Module 1 – Người dân xem khu vực phục vụ
+*@
+
+@model IEnumerable<QLThuGomRac_UNETI02_TI17A1HN.Models.Entities.KhuVuc>
+
+@{
+    ViewData["Title"] = "Khu vực phục vụ";
+}
+
+<div class="page-header-section">
+    <div>
+        <div class="page-title-icon">
+            <i class="bi bi-map-fill"></i>
+        </div>
+
+        <div>
+            <h1>Khu vực phục vụ</h1>
+            <p>Các khu vực hiện đang được hệ thống hỗ trợ thu gom.</p>
+        </div>
+    </div>
+</div>
+
+<div class="page-card">
+
+    @if (!Model.Any())
+    {
+        <div class="empty-state">
+            <div class="empty-state-icon">
+                <i class="bi bi-map"></i>
+            </div>
+
+            <h3>Chưa có khu vực đang phục vụ</h3>
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive">
+
+            <table class="table admin-table mb-0">
+
+                <thead>
+                    <tr>
+                        <th>Tên khu vực</th>
+                        <th>Thông tin khu vực</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                <strong>@item.TenKhuVuc</strong>
+                            </td>
+
+                            <td>
+                                @(string.IsNullOrWhiteSpace(item.DiaChiMoTa)
+                                    ? "Chưa cập nhật"
+                                    : item.DiaChiMoTa)
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+
+            </table>
+
+        </div>
+    }
+
+</div>

@@ -1,0 +1,133 @@
+﻿@*
+    Họ và tên: Trần Thị Thảo
+    Mã sinh viên: 23103100025
+    Nội dung thực hiện: Module 1 – Quản lý điểm tập kết
+*@
+
+@using QLThuGomRac_UNETI02_TI17A1HN.Models.Enums
+@model QLThuGomRac_UNETI02_TI17A1HN.Models.Entities.DiemTapKet
+
+@{
+    ViewData["Title"] = "Chi tiết điểm tập kết";
+}
+
+<div class="page-header-section">
+
+    <div>
+
+        <div class="page-title-icon">
+            <i class="bi bi-pin-map-fill"></i>
+        </div>
+
+        <div>
+
+            <h1>
+                Chi tiết điểm tập kết
+                <span class="edit-account-id">
+                    #@Model.MaDiemTapKet
+                </span>
+            </h1>
+
+            <p>Xem thông tin chi tiết điểm tập kết.</p>
+
+        </div>
+
+    </div>
+
+    <a asp-action="Index"
+       class="btn btn-success">
+
+        <i class="bi bi-arrow-left"></i>
+        Quay lại
+
+    </a>
+
+</div>
+
+<div class="detail-card">
+
+    <div class="detail-grid">
+
+        <div class="detail-item">
+
+            <div>
+                <span>Tên điểm tập kết</span>
+                <strong>@Model.TenDiemTapKet</strong>
+            </div>
+
+        </div>
+
+        <div class="detail-item">
+
+            <div>
+                <span>Khu vực</span>
+
+                <strong>
+                    @Model.KhuVuc?.TenKhuVuc
+                </strong>
+            </div>
+
+        </div>
+
+        <div class="detail-item detail-item-full">
+
+            <div>
+                <span>Địa chỉ</span>
+                <strong>@Model.DiaChi</strong>
+            </div>
+
+        </div>
+
+        <div class="detail-item detail-item-full">
+
+            <div>
+                <span>Mô tả</span>
+
+                <strong>
+                    @(string.IsNullOrWhiteSpace(Model.MoTa)
+                        ? "Chưa cập nhật"
+                        : Model.MoTa)
+                </strong>
+            </div>
+
+        </div>
+
+        <div class="detail-item">
+
+            <div>
+                <span>Trạng thái</span>
+
+                @if (Model.TrangThai ==
+                     TrangThaiDiemTapKet.DangHoatDong)
+                {
+                    <strong class="text-success">
+                        Đang hoạt động
+                    </strong>
+                }
+                else
+                {
+                    <strong class="text-danger">
+                        Ngừng hoạt động
+                    </strong>
+                }
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="detail-actions">
+
+        <a asp-action="Edit"
+           asp-route-id="@Model.MaDiemTapKet"
+           class="btn btn-success">
+
+            <i class="bi bi-pencil-square"></i>
+            Chỉnh sửa
+
+        </a>
+
+    </div>
+
+</div>

@@ -26,6 +26,8 @@ public class ApplicationDbContext : DbContext
 
     // Module 1 – Quản lý loại rác (5.6)
     public DbSet<LoaiRac> LoaiRacs => Set<LoaiRac>();
+    // Module 1 – Quản lý điểm tập kết
+    public DbSet<DiemTapKet> DiemTapKets => Set<DiemTapKet>();
 
     // Module 2 – Quản lý người dân
     public DbSet<NguoiDan> NguoiDans => Set<NguoiDan>();
@@ -127,6 +129,38 @@ public class ApplicationDbContext : DbContext
             // 5.6: Tên loại rác không được trùng.
             entity.HasIndex(x => x.TenLoaiRac)
                 .IsUnique();
+        });
+
+        // =========================
+        // MODULE 1 - ĐIỂM TẬP KẾT
+        // =========================
+        modelBuilder.Entity<DiemTapKet>(entity =>
+        {
+            entity.HasKey(x => x.MaDiemTapKet);
+
+            entity.Property(x => x.TenDiemTapKet)
+                .HasMaxLength(100)
+                .IsRequired();
+
+            entity.Property(x => x.DiaChi)
+                .HasMaxLength(255)
+                .IsRequired();
+
+            entity.Property(x => x.MoTa)
+                .HasMaxLength(500);
+
+            entity.Property(x => x.TrangThai)
+                .HasConversion<int>();
+
+            // Tên điểm tập kết không trùng.
+            entity.HasIndex(x => x.TenDiemTapKet)
+                .IsUnique();
+
+            // Một khu vực có thể có nhiều điểm tập kết.
+            entity.HasOne(x => x.KhuVuc)
+                .WithMany()
+                .HasForeignKey(x => x.MaKhuVuc)
+                .OnDelete(DeleteBehavior.Restrict);
         });
 
         // =========================
