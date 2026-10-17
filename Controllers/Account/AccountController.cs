@@ -86,11 +86,11 @@ public class AccountController : Controller
         {
             return RedirectToAction(
                 "Index",
-                "TaiKhoan");
+                "QuanTri");
         }
 
         if (taiKhoan.LoaiTaiKhoan == LoaiTaiKhoan.NguoiDan)
-            return RedirectToAction("Index", "YeuCauThuGom");
+            return RedirectToAction("Index", "Home");
 
         // Nhân viên vào ds công việc được phân công
         return RedirectToAction(

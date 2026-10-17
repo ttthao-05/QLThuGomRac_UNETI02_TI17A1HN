@@ -1,0 +1,221 @@
+﻿@*
+    Họ và tên: Trần Thị Thảo
+    Mã sinh viên: 23103100025
+    Nội dung thực hiện: Module 1 – Quản lý điểm tập kết
+*@
+
+@using QLThuGomRac_UNETI02_TI17A1HN.Models.Enums
+@model IEnumerable<QLThuGomRac_UNETI02_TI17A1HN.Models.Entities.DiemTapKet>
+
+@{
+    ViewData["Title"] = "Quản lý điểm tập kết";
+}
+
+<div class="page-header-section">
+
+    <div>
+        <div class="page-title-icon">
+            <i class="bi bi-pin-map-fill"></i>
+        </div>
+
+        <div>
+            <h1>Quản lý điểm tập kết</h1>
+            <p>Quản lý các điểm tập kết rác tái chế.</p>
+        </div>
+    </div>
+
+    <a asp-action="Create"
+       class="btn btn-success">
+
+        <i class="bi bi-plus-circle-fill"></i>
+        Thêm điểm tập kết
+
+    </a>
+
+</div>
+
+@if (TempData["ThongBao"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show">
+
+        @TempData["ThongBao"]
+
+        <button type="button"
+                class="btn-close"
+                data-bs-dismiss="alert">
+        </button>
+
+    </div>
+}
+
+<div class="page-card">
+
+    <div class="table-header">
+
+        <div>
+            <h2>Danh sách điểm tập kết</h2>
+
+            <span>
+                Tổng số:
+                <strong>@Model.Count()</strong>
+                điểm tập kết
+            </span>
+        </div>
+
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="empty-state">
+
+            <div class="empty-state-icon">
+                <i class="bi bi-pin-map"></i>
+            </div>
+
+            <h3>Chưa có điểm tập kết</h3>
+
+            <p>
+                Hiện tại chưa có điểm tập kết nào.
+            </p>
+
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive">
+
+            <table class="table admin-table mb-0">
+
+                <thead>
+                    <tr>
+                        <th>Mã</th>
+                        <th>Tên điểm tập kết</th>
+                        <th>Khu vực</th>
+                        <th>Địa chỉ</th>
+                        <th>Trạng thái</th>
+                        <th class="text-center">Thao tác</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+
+                            <td>
+                                <span class="table-id">
+                                    #@item.MaDiemTapKet
+                                </span>
+                            </td>
+
+                            <td>
+                                <strong>
+                                    @item.TenDiemTapKet
+                                </strong>
+                            </td>
+
+                            <td>
+                                @item.KhuVuc?.TenKhuVuc
+                            </td>
+
+                            <td>
+                                @item.DiaChi
+                            </td>
+
+                            <td>
+
+                                @if (item.TrangThai ==
+                                    TrangThaiDiemTapKet.DangHoatDong)
+                                {
+                                    <span class="status-badge status-success">
+
+                                        <i class="bi bi-circle-fill"></i>
+                                        Đang hoạt động
+
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="status-badge status-danger">
+
+                                        <i class="bi bi-circle-fill"></i>
+                                        Ngừng hoạt động
+
+                                    </span>
+                                }
+
+                            </td>
+
+                            <td>
+
+                                <div class="table-actions">
+
+                                    <a asp-action="Details"
+                                       asp-route-id="@item.MaDiemTapKet"
+                                       class="action-button action-view"
+                                       title="Chi tiết">
+
+                                        <i class="bi bi-eye"></i>
+
+                                    </a>
+
+                                    <a asp-action="Edit"
+                                       asp-route-id="@item.MaDiemTapKet"
+                                       class="action-button action-edit"
+                                       title="Sửa">
+
+                                        <i class="bi bi-pencil-square"></i>
+
+                                    </a>
+
+                                    <form asp-action="CapNhatTrangThai"
+                                          asp-route-id="@item.MaDiemTapKet"
+                                          method="post"
+                                          class="d-inline">
+
+                                        @Html.AntiForgeryToken()
+
+                                        <button type="submit"
+                                                class="action-button action-status"
+                                                title="Đổi trạng thái">
+
+                                            <i class="bi bi-arrow-repeat"></i>
+
+                                        </button>
+
+                                    </form>
+
+                                    <form asp-action="Delete"
+                                          asp-route-id="@item.MaDiemTapKet"
+                                          method="post"
+                                          class="d-inline"
+                                          onsubmit="return confirm('Bạn có chắc muốn xóa điểm tập kết này không?');">
+
+                                        @Html.AntiForgeryToken()
+
+                                        <button type="submit"
+                                                class="action-button action-delete"
+                                                title="Xóa">
+
+                                            <i class="bi bi-trash3"></i>
+
+                                        </button>
+
+                                    </form>
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+                    }
+
+                </tbody>
+
+            </table>
+
+        </div>
+    }
+
+</div>

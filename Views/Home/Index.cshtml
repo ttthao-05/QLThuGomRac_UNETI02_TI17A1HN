@@ -1,164 +1,103 @@
-﻿@{
-    ViewData["Title"] = "Trang chủ";
+﻿@*
+    Họ và tên: Trần Thị Thảo
+    Mã sinh viên: 23103100025
+    Nội dung thực hiện: Module 1 – Trang chủ phía người dân
+*@
 
-    var maTaiKhoan = Context.Session.GetInt32("MaTaiKhoan");
-    var vaiTro = Context.Session.GetString("VaiTro");
+@{
+    ViewData["Title"] = "Trang chủ";
+    var hoTen = Context.Session.GetString("HoTen");
 }
 
-<div class="home-page">
-
-    <!--HERO-->
-    <section class="hero-panel">
-
-        <div class="hero-content">
-
-            <h1>Vì một môi trường xanh – sạch – đẹp</h1>
-
-            <p>
-                Quản lý thu gom rác tái chế hiệu quả,
-                chung tay xây dựng cộng đồng bền vững.
-            </p>
-
-            @if (vaiTro == "NguoiDan")
-            {
-                <a asp-controller="YeuCauThuGom"
-                   asp-action="Create"
-                   class="btn btn-success hero-action-button">
-
-                    <i class="bi bi-calendar-check"></i>
-                    Đăng ký lịch thu gom
-
-                </a>
-            }
-
+<div class="page-header-section">
+    <div>
+        <div class="page-title-icon">
+            <i class="bi bi-house-door-fill"></i>
         </div>
 
-    </section>
-
-    <!-- TIÊU ĐỀ -->
-    <div class="home-section-header">
         <div>
-            <h2>Chức năng hệ thống</h2>
-            <p>Các nhóm chức năng chính của hệ thống thu gom rác tái chế.</p>
+            <h1>Trang chủ</h1>
+            <p>Xin chào @hoTen! Chào mừng bạn đến với hệ thống thu gom rác tái chế.</p>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+
+    <div class="col-md-6">
+        <div class="page-card h-100">
+            <h4>
+                <i class="bi bi-recycle me-2"></i>
+                Loại rác phục vụ
+            </h4>
+
+            <p>
+                Xem các loại rác tái chế hiện đang được hệ thống tiếp nhận.
+            </p>
+
+            <a asp-controller="ThongTinThuGom"
+               asp-action="LoaiRac"
+               class="btn btn-success">
+                Xem loại rác
+            </a>
         </div>
     </div>
 
+    <div class="col-md-6">
+        <div class="page-card h-100">
+            <h4>
+                <i class="bi bi-map-fill me-2"></i>
+                Khu vực phục vụ
+            </h4>
 
-    <!-- CHỨC NĂNG -->
-    <div class="row g-4">
+            <p>
+                Xem các khu vực hiện đang hỗ trợ dịch vụ thu gom.
+            </p>
 
-        <div class="row g-4">
-
-            <!-- NGƯỜI DÂN -->
-            <div class="col-12 col-md-6 col-xl-3">
-                <div class="quick-card">
-                    <div class="quick-card-title">
-                        <div class="quick-card-icon">
-                            <i class="bi bi-person-fill"></i>
-                        </div>
-                        <h3>Người dân</h3>
-                    </div>
-                    <p>
-                        Xem thông tin thu gom, đăng ký lịch và theo dõi yêu cầu.
-                    </p>
-                </div>
-            </div>
-
-
-            <!-- NHÂN VIÊN -->
-            <div class="col-12 col-md-6 col-xl-3">
-                <div class="quick-card">
-                    <div class="quick-card-title">
-                        <div class="quick-card-icon">
-                            <i class="bi bi-person-workspace"></i>
-                        </div>
-                        <h3>Nhân viên</h3>
-                    </div>
-                    <p>
-                        Tiếp nhận công việc được phân công và cập nhật kết quả thu gom.
-                    </p>
-                </div>
-            </div>
-
-
-            <!-- QUẢN TRỊ -->
-            <div class="col-12 col-md-6 col-xl-3">
-                <div class="quick-card">
-                    <div class="quick-card-title">
-                        <div class="quick-card-icon">
-                            <i class="bi bi-shield-lock-fill"></i>
-                        </div>
-                        <h3>Quản trị</h3>
-                    </div>
-                    <p>
-                        Quản lý tài khoản, khu vực, loại rác và người dân.
-                    </p>
-                    @if (vaiTro == "Admin")
-                    {
-                        <a asp-controller="TaiKhoan"
-                           asp-action="Index"
-                           class="quick-link">
-                            Mở quản trị
-                            <i class="bi bi-arrow-right"></i>
-                        </a>
-                    }
-                </div>
-            </div>
-
-
-            <!-- THỐNG KÊ -->
-            <div class="col-12 col-md-6 col-xl-3">
-                <div class="quick-card">
-                    <div class="quick-card-title">
-                        <div class="quick-card-icon">
-                            <i class="bi bi-bar-chart-fill"></i>
-                        </div>
-                        <h3>Thống kê</h3>
-                    </div>
-                    <p>
-                        Theo dõi yêu cầu, kết quả thu gom và tổng hợp số liệu.
-                    </p>
-                </div>
-            </div>
+            <a asp-controller="ThongTinThuGom"
+               asp-action="KhuVuc"
+               class="btn btn-success">
+                Xem khu vực
+            </a>
         </div>
+    </div>
 
+    <div class="col-md-6">
+        <div class="page-card h-100">
+            <h4>
+                <i class="bi bi-calendar-plus-fill me-2"></i>
+                Đăng ký thu gom
+            </h4>
 
-    <!-- THÔNG TIN BỔ SUNG -->
-    <section class="home-info-section">
+            <p>
+                Tạo yêu cầu thu gom rác tái chế tại địa chỉ của bạn.
+            </p>
 
-        <div class="home-info-item">
-            <div class="home-info-icon">
-                <i class="bi bi-calendar-check-fill"></i>
-            </div>
-
-            <div>
-                <strong>Đăng ký thuận tiện</strong>
-                <span>Người dân chủ động lựa chọn lịch thu gom phù hợp.</span>
-            </div>
+            <a asp-controller="YeuCauThuGom"
+               asp-action="Create"
+               class="btn btn-success">
+                Đăng ký ngay
+            </a>
         </div>
+    </div>
 
-        <div class="home-info-item">
-            <div class="home-info-icon">
-                <i class="bi bi-geo-alt-fill"></i>
-            </div>
+    <div class="col-md-6">
+        <div class="page-card h-100">
+            <h4>
+                <i class="bi bi-list-check me-2"></i>
+                Yêu cầu của tôi
+            </h4>
 
-            <div>
-                <strong>Quản lý theo khu vực</strong>
-                <span>Thông tin thu gom được tổ chức rõ ràng theo từng khu vực.</span>
-            </div>
+            <p>
+                Theo dõi trạng thái và lịch sử các yêu cầu đã đăng ký.
+            </p>
+
+            <a asp-controller="YeuCauThuGom"
+               asp-action="Index"
+               class="btn btn-success">
+                Xem yêu cầu
+            </a>
         </div>
-
-        <div class="home-info-item">
-            <div class="home-info-icon">
-                <i class="bi bi-arrow-repeat"></i>
-            </div>
-
-            <div>
-                <strong>Theo dõi trạng thái</strong>
-                <span>Cập nhật và theo dõi quá trình xử lý yêu cầu thu gom.</span>
-            </div>
-        </div>
-
-    </section>
+    </div>
 
 </div>

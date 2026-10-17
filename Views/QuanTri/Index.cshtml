@@ -1,0 +1,129 @@
+﻿@*
+    Họ và tên: Trần Thị Thảo
+    Mã sinh viên: 23103100025
+    Nội dung thực hiện: Module 1 – Trang quản trị Admin
+*@
+
+@{
+    ViewData["Title"] = "Trang quản trị";
+    var hoTen = Context.Session.GetString("HoTen");
+}
+
+<div class="page-header-section">
+    <div>
+        <div class="page-title-icon">
+            <i class="bi bi-shield-lock-fill"></i>
+        </div>
+
+        <div>
+            <h1>Trang quản trị</h1>
+            <p>Xin chào @hoTen! Quản lý các chức năng chính của hệ thống.</p>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+
+    <div class="col-md-4">
+        <div class="page-card h-100">
+            <h4>
+                <i class="bi bi-person-circle me-2"></i>
+                Tài khoản
+            </h4>
+
+            <p>Quản lý tài khoản người dùng trong hệ thống.</p>
+
+            <a asp-controller="TaiKhoan"
+               asp-action="Index"
+               class="btn btn-success">
+                Quản lý tài khoản
+            </a>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="page-card h-100">
+            <h4>
+                <i class="bi bi-geo-alt-fill me-2"></i>
+                Khu vực
+            </h4>
+
+            <p>Quản lý các khu vực phục vụ thu gom.</p>
+
+            <a asp-controller="KhuVuc"
+               asp-action="Index"
+               class="btn btn-success">
+                Quản lý khu vực
+            </a>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="page-card h-100">
+            <h4>
+                <i class="bi bi-recycle me-2"></i>
+                Loại rác
+            </h4>
+
+            <p>Quản lý danh mục các loại rác tái chế.</p>
+
+            <a asp-controller="LoaiRac"
+               asp-action="Index"
+               class="btn btn-success">
+                Quản lý loại rác
+            </a>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="page-card h-100">
+            <h4>
+                <i class="bi bi-pin-map-fill me-2"></i>
+                Điểm tập kết
+            </h4>
+
+            <p>Quản lý các điểm tập kết rác tái chế.</p>
+
+            <a asp-controller="DiemTapKet"
+               asp-action="Index"
+               class="btn btn-success">
+                Quản lý điểm tập kết
+            </a>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="page-card h-100">
+            <h4>
+                <i class="bi bi-people-fill me-2"></i>
+                Người dân
+            </h4>
+
+            <p>Xem và quản lý thông tin người dân.</p>
+
+            <a asp-controller="NguoiDan"
+               asp-action="Index"
+               class="btn btn-success">
+                Quản lý người dân
+            </a>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="page-card h-100">
+            <h4>
+                <i class="bi bi-person-badge-fill me-2"></i>
+                Nhân viên
+            </h4>
+
+            <p>Quản lý nhân viên thu gom.</p>
+
+            <a asp-controller="NhanVien"
+               asp-action="Index"
+               class="btn btn-success">
+                Quản lý nhân viên
+            </a>
+        </div>
+    </div>
+
+</div>

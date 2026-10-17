@@ -1,0 +1,76 @@
+﻿@*
+    Họ và tên: Trần Thị Thảo
+    Mã sinh viên: 23103100025
+    Nội dung thực hiện: Module 1 – Người dân xem loại rác phục vụ
+*@
+
+@model IEnumerable<QLThuGomRac_UNETI02_TI17A1HN.Models.Entities.LoaiRac>
+
+@{
+    ViewData["Title"] = "Loại rác phục vụ";
+}
+
+<div class="page-header-section">
+    <div>
+        <div class="page-title-icon">
+            <i class="bi bi-recycle"></i>
+        </div>
+
+        <div>
+            <h1>Loại rác phục vụ</h1>
+            <p>Các loại rác tái chế hiện đang được hệ thống tiếp nhận.</p>
+        </div>
+    </div>
+</div>
+
+<div class="page-card">
+
+    @if (!Model.Any())
+    {
+        <div class="empty-state">
+            <div class="empty-state-icon">
+                <i class="bi bi-recycle"></i>
+            </div>
+
+            <h3>Chưa có loại rác đang phục vụ</h3>
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive">
+
+            <table class="table admin-table mb-0">
+
+                <thead>
+                    <tr>
+                        <th>Tên loại rác</th>
+                        <th>Đơn vị tính</th>
+                        <th>Mô tả</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                <strong>@item.TenLoaiRac</strong>
+                            </td>
+
+                            <td>@item.DonViTinh</td>
+
+                            <td>
+                                @(string.IsNullOrWhiteSpace(item.MoTa)
+                                    ? "Chưa có mô tả"
+                                    : item.MoTa)
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+
+            </table>
+
+        </div>
+    }
+
+</div>

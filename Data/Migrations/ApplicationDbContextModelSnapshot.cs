@@ -57,6 +57,44 @@ namespace QLThuGomRac_UNETI02_TI17A1HN.Data.Migrations
                         });
                 });
 
+            modelBuilder.Entity("QLThuGomRac_UNETI02_TI17A1HN.Models.Entities.DiemTapKet", b =>
+                {
+                    b.Property<int>("MaDiemTapKet")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MaDiemTapKet"));
+
+                    b.Property<string>("DiaChi")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<int>("MaKhuVuc")
+                        .HasColumnType("int");
+
+                    b.Property<string>("MoTa")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("TenDiemTapKet")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<int>("TrangThai")
+                        .HasColumnType("int");
+
+                    b.HasKey("MaDiemTapKet");
+
+                    b.HasIndex("MaKhuVuc");
+
+                    b.HasIndex("TenDiemTapKet")
+                        .IsUnique();
+
+                    b.ToTable("DiemTapKets");
+                });
+
             modelBuilder.Entity("QLThuGomRac_UNETI02_TI17A1HN.Models.Entities.KhuVuc", b =>
                 {
                     b.Property<int>("MaKhuVuc")
@@ -370,6 +408,17 @@ namespace QLThuGomRac_UNETI02_TI17A1HN.Data.Migrations
                     b.Navigation("LoaiRac");
 
                     b.Navigation("YeuCauThuGom");
+                });
+
+            modelBuilder.Entity("QLThuGomRac_UNETI02_TI17A1HN.Models.Entities.DiemTapKet", b =>
+                {
+                    b.HasOne("QLThuGomRac_UNETI02_TI17A1HN.Models.Entities.KhuVuc", "KhuVuc")
+                        .WithMany()
+                        .HasForeignKey("MaKhuVuc")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("KhuVuc");
                 });
 
             modelBuilder.Entity("QLThuGomRac_UNETI02_TI17A1HN.Models.Entities.NguoiDan", b =>

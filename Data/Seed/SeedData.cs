@@ -1,11 +1,12 @@
 ﻿// Họ và tên: Trần Thị Thảo
 // Mã sinh viên: 23103100025
-// Nội dung thực hiện: Module 1 – Dữ liệu mẫu tài khoản, khu vực, loại rác (§5.1, §5.5, §5.6)
+// Nội dung thực hiện: Module 1 – Dữ liệu mẫu tài khoản, khu vực, loại rác và điểm tập kết
 
 // Họ và tên: Phạm Văn Hào
 // Mã sinh viên: 23103100041
 // Nội dung thực hiện: Module 2 – Khởi tạo hồ sơ người dân từ tài khoản người dân
 
+using Microsoft.EntityFrameworkCore;
 using QLThuGomRac_UNETI02_TI17A1HN.Models.Entities;
 using QLThuGomRac_UNETI02_TI17A1HN.Models.Enums;
 
@@ -152,5 +153,65 @@ public static class SeedData
             context.LoaiRacs.AddRange(danhSachLoaiRac);
             context.SaveChanges();
         }
+
+        // =========================
+        // MODULE 1 - Seed điểm tập kết
+        // Trần Thị Thảo - 23103100025
+        // =========================
+
+        var khuVucCauGiay = context.KhuVucs
+            .FirstOrDefault(x => x.TenKhuVuc == "Khu vực Cầu Giấy");
+
+        var khuVucNamTuLiem = context.KhuVucs
+            .FirstOrDefault(x => x.TenKhuVuc == "Khu vực Nam Từ Liêm");
+
+        var khuVucBacTuLiem = context.KhuVucs
+            .FirstOrDefault(x => x.TenKhuVuc == "Khu vực Bắc Từ Liêm");
+
+        if (khuVucCauGiay != null &&
+            !context.DiemTapKets.Any(x =>
+                x.TenDiemTapKet == "Điểm tập kết Cầu Giấy"))
+        {
+            context.DiemTapKets.Add(new DiemTapKet
+            {
+                TenDiemTapKet = "Điểm tập kết Cầu Giấy",
+                MaKhuVuc = khuVucCauGiay.MaKhuVuc,
+                DiaChi = "Quận Cầu Giấy, Hà Nội",
+                MoTa = "Điểm tiếp nhận rác tái chế khu vực Cầu Giấy.",
+                TrangThai = TrangThaiDiemTapKet.DangHoatDong
+            });
+        }
+
+        if (khuVucNamTuLiem != null &&
+            !context.DiemTapKets.Any(x =>
+                x.TenDiemTapKet == "Điểm tập kết Nam Từ Liêm"))
+        {
+            context.DiemTapKets.Add(new DiemTapKet
+            {
+                TenDiemTapKet = "Điểm tập kết Nam Từ Liêm",
+                MaKhuVuc = khuVucNamTuLiem.MaKhuVuc,
+                DiaChi = "Quận Nam Từ Liêm, Hà Nội",
+                MoTa = "Điểm tiếp nhận rác tái chế khu vực Nam Từ Liêm.",
+                TrangThai = TrangThaiDiemTapKet.DangHoatDong
+            });
+        }
+
+        if (khuVucBacTuLiem != null &&
+            !context.DiemTapKets.Any(x =>
+                x.TenDiemTapKet == "Điểm tập kết Bắc Từ Liêm"))
+        {
+            context.DiemTapKets.Add(new DiemTapKet
+            {
+                TenDiemTapKet = "Điểm tập kết Bắc Từ Liêm",
+                MaKhuVuc = khuVucBacTuLiem.MaKhuVuc,
+                DiaChi = "Quận Bắc Từ Liêm, Hà Nội",
+                MoTa = "Điểm tiếp nhận rác tái chế khu vực Bắc Từ Liêm.",
+                TrangThai = TrangThaiDiemTapKet.DangHoatDong
+            });
+        }
+
+        context.SaveChanges();
     }
 }
+
+

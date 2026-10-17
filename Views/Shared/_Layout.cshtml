@@ -79,6 +79,13 @@
                         QUẢN TRỊ HỆ THỐNG
                     </div>
 
+                    <a class="sidebar-link @(currentController == "QuanTri" ? "active" : "")"
+                        asp-controller="QuanTri"
+                        asp-action="Index">
+                      <i class="bi bi-grid-fill"></i>
+                    <span>Trang quản trị</span>
+                    </a>
+
                     <a class="sidebar-link @(currentController == "TaiKhoan" ? "active" : "")"
                        asp-controller="TaiKhoan"
                        asp-action="Index">
@@ -100,6 +107,12 @@
                         <span>Loại rác</span>
                     </a>
 
+                    <a class="sidebar-link @(currentController == "DiemTapKet" ? "active" : "")"
+                        asp-controller="DiemTapKet"
+                         asp-action="Index">
+                          <i class="bi bi-pin-map-fill"></i>
+                        <span>Điểm tập kết</span>
+                    </a>
                     
                      <a class="sidebar-link @(currentController == "NguoiDan" ? "active" : "")"
                        asp-controller="NguoiDan"
@@ -128,13 +141,6 @@
 						   <i class="bi bi-list-check"></i>
 					  <span>Theo dõi công việc</span>
 					</a>
-
-
-                    @*
-                        Điểm tập kết, Nhân viên, Phân công,
-                        Dashboard, Thống kê sẽ bổ sung
-                        khi Module 3 và Module 4 hoàn thiện.
-                    *@
                 }
 
                 @* =========================
@@ -142,6 +148,31 @@
                    ========================= *@
                 @if (vaiTro == "NguoiDan")
                 {
+                    <a class="sidebar-link @(currentController == "Home" ? "active" : "")"
+                        asp-controller="Home"
+                        asp-action="Index">
+                      <i class="bi bi-house-door-fill"></i>
+                    <span>Trang chủ</span>
+                    </a>
+
+                    <div class="sidebar-title">
+                      THÔNG TIN THU GOM
+                    </div>
+
+                <a class="sidebar-link"
+                 asp-controller="ThongTinThuGom"
+                 asp-action="LoaiRac">
+                 <i class="bi bi-recycle"></i>
+                 <span>Loại rác phục vụ</span>
+                </a>
+
+                <a class="sidebar-link"
+                  asp-controller="ThongTinThuGom"
+                 asp-action="KhuVuc">
+                 <i class="bi bi-map-fill"></i>
+                 <span>Khu vực phục vụ</span>
+                </a>
+
                     <div class="sidebar-title">
                         YÊU CẦU THU GOM
                     </div>
