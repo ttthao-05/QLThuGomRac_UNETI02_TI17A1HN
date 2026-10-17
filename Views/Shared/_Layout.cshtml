@@ -32,16 +32,23 @@
           asp-append-version="true" />
 </head>
 
-<body>
-
     @{
-    var maTaiKhoan = Context.Session.GetInt32("MaTaiKhoan");
-    var hoTen = Context.Session.GetString("HoTen");
-    var vaiTro = Context.Session.GetString("VaiTro");
+        var maTaiKhoan = Context.Session.GetInt32("MaTaiKhoan");
+        var hoTen = Context.Session.GetString("HoTen");
+        var vaiTro = Context.Session.GetString("VaiTro");
 
-    var currentAction =
-        ViewContext.RouteData.Values["action"]?.ToString();
-}
+        var currentController =
+            ViewContext.RouteData.Values["controller"]?.ToString();
+
+        var currentAction =
+            ViewContext.RouteData.Values["action"]?.ToString();
+
+        var isLoginPage =
+            currentController == "Account" &&
+            currentAction == "Login";
+    }
+
+    <body class="@(isLoginPage ? "login-only" : "")">
 
     <div class="app-wrapper">
 
@@ -62,16 +69,6 @@
             </div>
 
             <nav class="sidebar-menu">
-                @{
-                  var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
-                }
-
-                <a class="sidebar-link @(currentController == "Home" ? "active" : "")"
-                   asp-controller="Home"
-                   asp-action="Index">
-                    <i class="bi bi-house-door-fill"></i>
-                    <span>Trang chủ</span>
-                </a>
 
                 @* =========================
                    ADMIN
@@ -145,24 +142,6 @@
                    ========================= *@
                 @if (vaiTro == "NguoiDan")
                 {
-                    <div class="sidebar-title">
-                        THÔNG TIN THU GOM
-                    </div>
-
-                    <a class="sidebar-link"
-                       asp-controller="ThongTinThuGom"
-                       asp-action="LoaiRac">
-                        <i class="bi bi-recycle"></i>
-                        <span>Loại rác phục vụ</span>
-                    </a>
-
-                    <a class="sidebar-link"
-                       asp-controller="ThongTinThuGom"
-                       asp-action="KhuVuc">
-                        <i class="bi bi-map-fill"></i>
-                        <span>Khu vực phục vụ</span>
-                    </a>
-
                     <div class="sidebar-title">
                         YÊU CẦU THU GOM
                     </div>

@@ -1605,3 +1605,42 @@ body {
         border-color: #0a58ca;
         color: #fff;
     }
+
+/* =========================
+   LOGIN - ẨN MENU VÀ TOPBAR
+   ========================= */
+
+body.login-only .app-sidebar {
+    display: none;
+}
+
+body.login-only .app-main {
+    width: 100%;
+    margin-left: 0;
+}
+
+body.login-only .app-topbar {
+    display: none;
+}
+
+body.login-only .app-content {
+    padding: 0;
+}
+
+body.login-only .login-page {
+    min-height: calc(100vh - 50px);
+    padding: 30px 20px;
+}
+
+.login-container {
+    width: 100%;
+    max-width: 920px;
+}
+
+.login-system-title {
+    text-align: center;
+    font-size: 22px;
+    font-weight: 700;
+    color: #0a4f36;
+    margin-bottom: 22px;
+}

@@ -92,11 +92,10 @@ public class AccountController : Controller
         if (taiKhoan.LoaiTaiKhoan == LoaiTaiKhoan.NguoiDan)
             return RedirectToAction("Index", "YeuCauThuGom");
 
-        // Nhân viên tạm về trang chủ
-        // vì các module tương ứng chưa hoàn thiện.
+        // Nhân viên vào ds công việc được phân công
         return RedirectToAction(
             "Index",
-            "Home");
+            "CongViec");
     }
 
     [HttpGet]
