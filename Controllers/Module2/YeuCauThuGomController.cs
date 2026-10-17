@@ -23,16 +23,49 @@ public class YeuCauThuGomController(ApplicationDbContext db) : Controller
     private IQueryable<YeuCauThuGom> MyRequests => db.YeuCauThuGoms.AsNoTracking().Where(x => x.NguoiDan.MaTaiKhoan == AccountId);
 
     [HttpGet]
-    public async Task<IActionResult> Index(TrangThaiYeuCau? trangThai, string? nhom)
+    public async Task<IActionResult> Index(TrangThaiYeuCau? trangThai, string? nhom,
+        string? tuKhoa, int? maKhuVuc, DateTime? tuNgay, DateTime? denNgay,
+        string? sapXep, int trang = 1)
     {
         // §6.5: danh sách chỉ truy xuất các yêu cầu thuộc tài khoản đang đăng nhập.
         var query = MyRequests.Include(x => x.KhuVuc).AsQueryable();
+        if (!string.IsNullOrWhiteSpace(tuKhoa))
+        {
+            var keyword = tuKhoa.Trim();
+            var id = int.TryParse(keyword.TrimStart('#'), out var parsed) ? parsed : 0;
+            query = query.Where(x => x.MaYeuCau == id || x.DiaChiThuGom.Contains(keyword)
+                || x.SoDienThoaiLienHe.Contains(keyword));
+        }
+        if (maKhuVuc.HasValue) query = query.Where(x => x.MaKhuVuc == maKhuVuc);
+        if (tuNgay.HasValue && denNgay.HasValue && tuNgay.Value.Date > denNgay.Value.Date)
+            ModelState.AddModelError("", "Ngày bắt đầu không được sau ngày kết thúc.");
+        if (tuNgay.HasValue) query = query.Where(x => x.NgayMongMuonThuGom >= tuNgay.Value.Date);
+        if (denNgay.HasValue) query = query.Where(x => x.NgayMongMuonThuGom <= denNgay.Value.Date);
         if (trangThai.HasValue) query = query.Where(x => x.TrangThai == trangThai);
         if (nhom == "dang-xu-ly") query = query.Where(x => x.TrangThai == TrangThaiYeuCau.DaPhanCong || x.TrangThai == TrangThaiYeuCau.DangThuGom);
         if (nhom == "tu-choi-huy") query = query.Where(x => x.TrangThai == TrangThaiYeuCau.TuChoi || x.TrangThai == TrangThaiYeuCau.Huy);
         ViewBag.TrangThai = trangThai;
         ViewBag.Nhom = nhom;
-        return View(await query.OrderByDescending(x => x.NgayDangKy).ThenByDescending(x => x.MaYeuCau).ToListAsync());
+        ViewBag.TuKhoa = tuKhoa;
+        ViewBag.MaKhuVuc = maKhuVuc;
+        ViewBag.TuNgay = tuNgay?.ToString("yyyy-MM-dd");
+        ViewBag.DenNgay = denNgay?.ToString("yyyy-MM-dd");
+        ViewBag.SapXep = sapXep;
+        // Gồm cả khu vực đã ngừng hoạt động để vẫn tra cứu được lịch sử.
+        ViewBag.KhuVucs = await MyRequests.Select(x => new { x.MaKhuVuc, x.KhuVuc.TenKhuVuc })
+            .Distinct().OrderBy(x => x.TenKhuVuc)
+            .Select(x => new SelectListItem(x.TenKhuVuc, x.MaKhuVuc.ToString())).ToListAsync();
+        const int pageSize = 10;
+        var total = await query.CountAsync();
+        var pages = Math.Max(1, (int)Math.Ceiling(total / (double)pageSize));
+        trang = Math.Clamp(trang, 1, pages);
+        ViewBag.Trang = trang;
+        ViewBag.SoTrang = pages;
+        ViewBag.TongSo = total;
+        var ordered = sapXep == "ngay-thu-gom"
+            ? query.OrderBy(x => x.NgayMongMuonThuGom).ThenByDescending(x => x.MaYeuCau)
+            : query.OrderByDescending(x => x.NgayDangKy).ThenByDescending(x => x.MaYeuCau);
+        return View(await ordered.Skip((trang - 1) * pageSize).Take(pageSize).ToListAsync());
     }
 
     [HttpGet]

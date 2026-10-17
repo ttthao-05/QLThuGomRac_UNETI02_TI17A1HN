@@ -30,8 +30,8 @@ public class DangKyThuGomViewModel : IValidatableObject
 
     public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
     {
-        if (NgayMongMuonThuGom.Date <= DateTime.Today)
-            yield return new ValidationResult("Vui lòng chọn ngày thu gom từ ngày mai.", [nameof(NgayMongMuonThuGom)]);
+        if (NgayMongMuonThuGom.Date < DateTime.Today)
+            yield return new ValidationResult("Ngày thu gom không được trước ngày hiện tại.", [nameof(NgayMongMuonThuGom)]);
         if (!CacKhungGio.Contains(KhungGio))
             yield return new ValidationResult("Khung giờ không hợp lệ.", [nameof(KhungGio)]);
         if (ChiTiet == null || ChiTiet.Count == 0)

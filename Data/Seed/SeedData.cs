@@ -4,7 +4,7 @@
 
 // Họ và tên: Phạm Văn Hào
 // Mã sinh viên: 23103100041
-// Nội dung thực hiện: Module 2 – Khởi tạo hồ sơ người dân từ tài khoản người dân
+// Nội dung thực hiện: Module 2 – Khởi tạo hồ sơ người dân và gọi dữ liệu mẫu yêu cầu thu gom
 
 using Microsoft.EntityFrameworkCore;
 using QLThuGomRac_UNETI02_TI17A1HN.Models.Entities;
@@ -211,6 +211,7 @@ public static class SeedData
         }
 
         context.SaveChanges();
+        Module2SeedData.EnsureSeeded(context);
     }
 }
 
