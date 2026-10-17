@@ -3,7 +3,7 @@
 @using QLThuGomRac_UNETI02_TI17A1HN.Models.ViewModels.Module2
 @{ ViewData["Title"] = "Đăng ký lịch thu gom (§6.4)"; }
 <h1>Đăng ký lịch thu gom</h1>
-<p class="text-muted">Chọn ngày từ ngày mai và ít nhất một loại rác. Mỗi loại rác chỉ nhập một dòng.</p>
+<p class="text-muted">Chọn ngày từ hôm nay và ít nhất một loại rác. Mỗi loại rác chỉ nhập một dòng.</p>
 @if (Model.KhuVucItems.Count == 0 || Model.LoaiRacItems.Count == 0) { <div class="alert alert-warning">Hiện chưa có đủ khu vực hoặc loại rác đang hoạt động để đăng ký.</div> }
 <form asp-action="Create" method="post">
     <div asp-validation-summary="All" class="text-danger" role="alert"></div>
@@ -11,7 +11,7 @@
         <div class="col-md-6"><label asp-for="MaKhuVuc" class="form-label"></label><select asp-for="MaKhuVuc" asp-items="Model.KhuVucItems" class="form-select"><option value="">Chọn khu vực</option></select><span asp-validation-for="MaKhuVuc" class="text-danger"></span></div>
         <div class="col-md-6"><label asp-for="SoDienThoaiLienHe" class="form-label"></label><input asp-for="SoDienThoaiLienHe" class="form-control" /><span asp-validation-for="SoDienThoaiLienHe" class="text-danger"></span></div>
         <div class="col-12"><label asp-for="DiaChiThuGom" class="form-label"></label><input asp-for="DiaChiThuGom" class="form-control" /><span asp-validation-for="DiaChiThuGom" class="text-danger"></span></div>
-        <div class="col-md-6"><label asp-for="NgayMongMuonThuGom" class="form-label"></label><input asp-for="NgayMongMuonThuGom" min="@DateTime.Today.AddDays(1).ToString("yyyy-MM-dd")" class="form-control" /><span asp-validation-for="NgayMongMuonThuGom" class="text-danger"></span></div>
+        <div class="col-md-6"><label asp-for="NgayMongMuonThuGom" class="form-label"></label><input asp-for="NgayMongMuonThuGom" min="@DateTime.Today.ToString("yyyy-MM-dd")" class="form-control" /><span asp-validation-for="NgayMongMuonThuGom" class="text-danger"></span></div>
         <div class="col-md-6"><label asp-for="KhungGio" class="form-label"></label><select asp-for="KhungGio" class="form-select"><option value="">Chọn khung giờ</option>@foreach (var slot in DangKyThuGomViewModel.CacKhungGio) { <option value="@slot">@slot</option> }</select><span asp-validation-for="KhungGio" class="text-danger"></span></div>
         <div class="col-12"><label asp-for="GhiChu" class="form-label"></label><textarea asp-for="GhiChu" class="form-control"></textarea></div>
     </div>

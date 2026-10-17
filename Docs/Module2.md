@@ -4,22 +4,24 @@
 
 Chạy `dotnet run`. Ứng dụng tự áp dụng migration `Module2NguoiDanVaThuGom` và bổ sung hồ sơ cho tài khoản người dân hiện có. Tài khoản người dân tạo mới hoặc chuyển từ vai trò khác qua quản lý tài khoản cũng được tạo hồ sơ trong cùng lần lưu.
 
-- Admin: menu **Quản lý người dân** (`/NguoiDan`), tìm theo họ tên/điện thoại/email, lọc trạng thái, xem chi tiết và khóa/mở hồ sơ.
-- Người dân: **Thông tin cá nhân** (`/HoSo`), **Đăng ký thu gom** (`/YeuCauThuGom/Create`), **Yêu cầu của tôi** (`/YeuCauThuGom`).
-- Dữ liệu mẫu hiện có: `admin`, `nd01`, `nd02`; mật khẩu `123456`. Chỉ dùng các tài khoản mẫu trong môi trường phát triển.
-- Danh mục tối thiểu `LoaiRac` gồm giấy, nhựa, kim loại, thủy tinh; đơn vị kg. Cột `DangThuGom` quyết định có được đăng ký hay không. Giao diện quản trị loại rác và nghiệp vụ phân công/chuyển trạng thái yêu cầu thuộc module tiếp theo.
+- Admin: menu **Quản lý người dân** (`/NguoiDan/Index`), tìm theo họ tên/điện thoại/email, lọc trạng thái, xem chi tiết và khóa/mở hồ sơ.
+- Người dân: **Thông tin cá nhân** (`/HoSo/Index`), **Đăng ký thu gom** (`/YeuCauThuGom/Create`), **Yêu cầu của tôi** (`/YeuCauThuGom/Index`).
+- Tài khoản mẫu khi tạo CSDL mới: `admin` / `123456`, người dân `nd01`–`nd09` / `nd123456`; `nd10` bị khóa để kiểm tra phân quyền. Chỉ dùng các tài khoản mẫu trong môi trường phát triển. Seed không thay đổi mật khẩu tài khoản đã tồn tại.
+- Danh mục `LoaiRac` dùng `TrangThaiLoaiRac.DangPhucVu` để cho phép đăng ký; đơn vị hiển thị theo từng loại rác.
+- `Module2SeedData` bổ sung 20 yêu cầu, mỗi yêu cầu tối đa hai loại rác khác nhau (40 chi tiết khi có đủ danh mục). Có bốn trạng thái chờ xác nhận, đã xác nhận, từ chối, hủy. Nhãn `[M2-MAU-xx]` giúp khởi động lại không tạo bản sao hay ghi đè yêu cầu đã xử lý. Các trạng thái đã phân công, đang thu gom, hoàn thành cần phối hợp Module 3 với phân công/kết quả tương ứng; không chỉ đổi trạng thái trên dữ liệu mẫu.
+- Tra cứu kết hợp mã yêu cầu/địa chỉ/điện thoại, khu vực, trạng thái, khoảng ngày thu gom. Có sắp xếp, phân trang 10 dòng và giữ các điều kiện khi chuyển trang. Ngày lọc sai định dạng hoặc khoảng ngày đảo ngược được báo trên View.
 
 ## Quy tắc nghiệp vụ
 
 - Họ tên bắt buộc, tối đa 100 ký tự. Email tùy chọn nhưng phải đúng định dạng khi nhập. Số điện thoại dùng định dạng di động Việt Nam, bắt đầu bằng 0 hoặc +84. Ngày sinh tùy chọn, không vượt ngày hiện tại hoặc quá 120 năm trước. Giới tính tùy chọn.
-- Chọn ngày từ **ngày mai**; khung giờ 08–10, 10–12, 13–15 hoặc 15–17. Quy tắc này được kiểm tra trên máy chủ.
+- Chọn ngày từ **hôm nay**, đúng yêu cầu §12 là không trước ngày hiện tại; khung giờ 08–10, 10–12, 13–15 hoặc 15–17. Quy tắc này được kiểm tra trên máy chủ.
 - Ít nhất một loại rác, mỗi loại xuất hiện một lần; số lượng từ 0,001 đến 999.999.999,999, lưu với ba chữ số thập phân.
 - Tài khoản và hồ sơ phải tồn tại, đang hoạt động và đúng vai trò; khu vực hoạt động; loại rác đang thu gom.
 - Trùng không hợp lệ: cùng người dân, khu vực, địa chỉ (chuẩn hóa khoảng trắng và chữ hoa/thường), ngày, khung giờ với một yêu cầu chưa từ chối/hủy. Thay đổi loại rác không vượt qua quy tắc chống trùng. Yêu cầu từ chối/hủy cho phép đăng ký lại.
 - Mã người dân lấy từ Session, trạng thái ban đầu và ngày đăng ký do máy chủ tạo. Người dân không thể sửa mã tài khoản, vai trò, trạng thái hay xem chi tiết/lịch sử người khác qua tham số URL/form.
 - Lưu yêu cầu và toàn bộ chi tiết trong giao dịch Serializable; chỉ mục unique có điều kiện chống gửi trùng đồng thời. Khóa ngoại bảo vệ lịch sử; khu vực đã có yêu cầu không được xóa.
 - Khóa hồ sơ ngăn đăng ký/cập nhật cá nhân; người dân vẫn xem được lịch sử. Khóa tài khoản hoặc đổi vai trò chặn truy cập Module 2 ngay với Session cũ.
-- Có đủ bảy trạng thái: chờ xác nhận, đã xác nhận, đã phân công, đang thu gom, hoàn thành, từ chối, hủy. Nhóm đang xử lý gồm đã phân công/đang thu gom.
+- Hiển thị bảy trạng thái theo đề cùng trạng thái “Không thực hiện được” của Module 3. Nhóm đang xử lý gồm đã phân công/đang thu gom; bộ chọn trạng thái cho phép tra cứu từng trạng thái riêng.
 
 ## Kiểm thử tích hợp
 
@@ -37,6 +39,7 @@ Terminal PowerShell thứ nhất:
 
 ```powershell
 $env:ConnectionStrings__DefaultConnection='Server=(localdb)\MSSQLLocalDB;Database=QLThuGomRac_Module2_Test_20261001;Trusted_Connection=True;TrustServerCertificate=True'
+$env:ASPNETCORE_ENVIRONMENT='Development'
 dotnet run --no-launch-profile --urls http://127.0.0.1:5187
 ```
 
@@ -46,4 +49,4 @@ Terminal thứ hai:
 python Tests/module2_smoke.py
 ```
 
-Kiểm tra: quyền truy cập, chống CSRF, xác thực hồ sơ, nhiều loại rác, ngày/số lượng/điện thoại sai, danh mục ngừng hoạt động, không lưu dữ liệu sai, chống giả mạo chủ sở hữu/trạng thái, lọc đủ bảy trạng thái, bảo vệ khu vực có lịch sử, khóa tài khoản/hồ sơ, đăng ký trùng và gửi đồng thời.
+Kiểm tra: quyền truy cập, chống CSRF, xác thực hồ sơ, nhiều loại rác, ngày/số lượng/điện thoại sai, danh mục ngừng hoạt động, không lưu dữ liệu sai, chống giả mạo chủ sở hữu/trạng thái, lọc trạng thái, tìm kiếm và lọc kết hợp, đăng ký hôm nay, bảo vệ khu vực có lịch sử, khóa tài khoản/hồ sơ, đăng ký trùng và gửi đồng thời. Có thể đặt `MODULE2_TEST_SERVER` thành địa chỉ named pipe từ `sqllocaldb info MSSQLLocalDB` nếu sqlcmd không tự tìm được instance.
