@@ -153,28 +153,24 @@ else
         </a>
     }
 
-    @if (Model.TrangThai == TrangThaiYeuCau.DangThuGom
-        && yeuCau?.TrangThai == TrangThaiYeuCau.DangThuGom)
-    {
-        <form asp-controller="CongViec"
-              asp-action="HoanThanh"
-              method="post"
-              onsubmit="return confirm('Bạn xác nhận đã hoàn thành công việc?');">
-            @Html.AntiForgeryToken()
+	@if (Model.TrangThai == TrangThaiYeuCau.DangThuGom
+	&& yeuCau?.TrangThai == TrangThaiYeuCau.DangThuGom)
+	{
+		<a asp-controller="KetQuaThuGom"
+		   asp-action="Create"
+		   asp-route-id="@Model.MaPhanCong"
+		   class="btn btn-success">
+			Nhập kết quả và hoàn thành
+		</a>
+	}
 
-            <input type="hidden"
-                   name="id"
-                   value="@Model.MaPhanCong" />
-
-            <button type="submit" class="btn btn-success">
-                Hoàn thành
-            </button>
-        </form>
-    }
-
-    <a asp-controller="CongViec"
-       asp-action="Index"
-       class="btn btn-secondary">
-        Quay lại danh sách
-    </a>
+	@if (Model.TrangThai == TrangThaiYeuCau.HoanThanh)
+	{
+		<a asp-controller="KetQuaThuGom"
+		   asp-action="Details"
+		   asp-route-id="@Model.MaYeuCau"
+		   class="btn btn-outline-success">
+			Xem kết quả thu gom
+		</a>
+	}
 </div>

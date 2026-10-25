@@ -142,16 +142,15 @@ public class CongViecController : Controller
             null);
     }
 
-    // Đang thu gom → Hoàn thành.
+    // Module 3 – 7.4: chuyển sang nhập kết quả trước khi hoàn thành.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public Task<IActionResult> HoanThanh(int id)
+    public IActionResult HoanThanh(int id)
     {
-        return ChuyenTrangThaiAsync(
-            id,
-            TrangThaiYeuCau.DangThuGom,
-            TrangThaiYeuCau.HoanThanh,
-            null);
+        return RedirectToAction(
+            "Create",
+            "KetQuaThuGom",
+            new { id });
     }
 
     // Mở form nhập lý do không thực hiện được.

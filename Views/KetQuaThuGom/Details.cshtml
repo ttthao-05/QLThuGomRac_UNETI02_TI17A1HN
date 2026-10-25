@@ -1,0 +1,97 @@
+﻿@* Nguyễn Tiến Đạt – 23103100053
+   Module 3 – Chi tiết kết quả thu gom (7.4) *@
+
+@model QLThuGomRac_UNETI02_TI17A1HN.Models.Entities.KetQuaThuGom
+
+@{
+	ViewData["Title"] = "Kết quả thu gom";
+	bool laAdmin = ViewBag.LaAdmin == true;
+}
+
+<h2 class="mb-3">Kết quả thu gom</h2>
+
+@if (TempData["ThongBao"] is string thongBao)
+{
+	<div class="alert alert-success">
+		@thongBao
+	</div>
+}
+
+<div class="card mb-3">
+	<div class="card-header bg-success text-white">
+		<strong>Kết quả #@Model.MaKetQua</strong>
+	</div>
+
+	<div class="card-body">
+		<dl class="row mb-0">
+			<dt class="col-sm-4">Mã yêu cầu</dt>
+			<dd class="col-sm-8">@Model.MaYeuCau</dd>
+
+			<dt class="col-sm-4">Nhân viên thực hiện</dt>
+			<dd class="col-sm-8">@Model.NhanVien?.HoTen</dd>
+
+			<dt class="col-sm-4">Địa chỉ thu gom</dt>
+			<dd class="col-sm-8">
+				@Model.YeuCauThuGom?.DiaChiThuGom
+			</dd>
+
+			<dt class="col-sm-4">Thời gian hoàn thành</dt>
+			<dd class="col-sm-8">
+				@Model.ThoiGianHoanThanh.ToString("dd/MM/yyyy HH:mm")
+			</dd>
+		</dl>
+	</div>
+</div>
+
+<h4 class="mb-3">Khối lượng thu gom thực tế</h4>
+
+<div class="table-responsive">
+	<table class="table table-bordered align-middle">
+		<thead class="table-light">
+			<tr>
+				<th>Loại rác</th>
+				<th>Khối lượng thực tế (kg)</th>
+			</tr>
+		</thead>
+
+		<tbody>
+			@foreach (var dong in Model.ChiTietKetQuas
+				.OrderBy(x => x.MaLoaiRac))
+			{
+				<tr>
+					<td>@dong.LoaiRac?.TenLoaiRac</td>
+					<td>
+						@dong.KhoiLuongThucTe.ToString("0.###")
+					</td>
+				</tr>
+			}
+		</tbody>
+
+		<tfoot class="table-light">
+			<tr>
+				<th>Tổng khối lượng</th>
+				<th>
+					@(Model.ChiTietKetQuas
+						.Sum(x => x.KhoiLuongThucTe)
+						.ToString("0.###")) kg
+				</th>
+			</tr>
+		</tfoot>
+	</table>
+</div>
+
+<div class="mb-3">
+	<strong>Ghi chú:</strong>
+
+	<div style="white-space: pre-wrap;">
+		@(string.IsNullOrWhiteSpace(Model.GhiChu)
+		? "Không có"
+		: Model.GhiChu)
+	</div>
+</div>
+
+<a asp-controller="CongViec"
+   asp-action="@(laAdmin ? "TheoDoi" : "Index")"
+   class="btn btn-secondary">
+	Quay lại danh sách công việc
+</a>

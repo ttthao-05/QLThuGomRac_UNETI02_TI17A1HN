@@ -1,0 +1,114 @@
+﻿@* Nguyễn Tiến Đạt – 23103100053
+   Module 3 – Nhập kết quả thu gom (7.4) *@
+
+@model QLThuGomRac_UNETI02_TI17A1HN.Models.ViewModels.Module3.KetQuaThuGomCreateViewModel
+
+@{
+    ViewData["Title"] = "Nhập kết quả thu gom";
+}
+
+<h2 class="mb-3">Nhập kết quả thu gom</h2>
+
+<div class="alert alert-info">
+    <div>
+        <strong>Mã phân công:</strong>
+        @Model.MaPhanCong
+    </div>
+
+    <div>
+        <strong>Địa chỉ thu gom:</strong>
+        @Model.DiaChiThuGom
+    </div>
+</div>
+
+<p class="text-muted">
+    Nhập khối lượng cân thực tế bằng kg cho từng loại rác.
+    Khối lượng được phép bằng 0 và tối đa 3 chữ số thập phân.
+    Với loại rác đăng ký theo cái, vẫn nhập khối lượng cân được bằng kg.
+</p>
+
+<form asp-controller="KetQuaThuGom"
+      asp-action="Create"
+      method="post">
+
+    @Html.AntiForgeryToken()
+
+    <input asp-for="MaPhanCong" type="hidden" />
+
+    <div asp-validation-summary="All"
+         class="text-danger mb-3">
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-bordered align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>Loại rác</th>
+                    <th>Khối lượng thực tế (kg)</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @for (int i = 0; i < Model.ChiTiets.Count; i++)
+                {
+                    <tr>
+                        <td>
+                            @Model.ChiTiets[i].TenLoaiRac
+
+                            <input asp-for="ChiTiets[i].MaLoaiRac"
+                                   type="hidden" />
+                        </td>
+
+                        <td>
+                            <input asp-for="ChiTiets[i].KhoiLuongThucTe"
+                                   type="number"
+                                   min="0"
+                                   max="999999999.999"
+                                   step="0.001"
+                                   class="form-control"
+                                   placeholder="Ví dụ: 4.5"
+                                   required />
+
+                            <span asp-validation-for="ChiTiets[i].KhoiLuongThucTe"
+                                  class="text-danger">
+                            </span>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="GhiChu" class="form-label">
+            Ghi chú kết quả
+        </label>
+
+        <textarea asp-for="GhiChu"
+                  class="form-control"
+                  rows="3"
+                  maxlength="1000"
+                  placeholder="Ví dụ: Đã cân và thu gom đủ các loại rác."></textarea>
+
+        <span asp-validation-for="GhiChu"
+              class="text-danger">
+        </span>
+    </div>
+
+    <div class="d-flex flex-wrap gap-2">
+        <button type="submit" class="btn btn-success">
+            Lưu kết quả và hoàn thành
+        </button>
+
+        <a asp-controller="CongViec"
+           asp-action="Details"
+           asp-route-id="@Model.MaPhanCong"
+           class="btn btn-secondary">
+            Quay lại công việc
+        </a>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
