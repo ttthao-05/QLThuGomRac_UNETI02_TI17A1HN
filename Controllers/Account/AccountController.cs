@@ -38,14 +38,9 @@ public class AccountController : Controller
 
         string tenDangNhap = model.TenDangNhap.Trim();
 
-        // Dùng EF Core + LINQ để tìm tài khoản.
         var taiKhoan = await _context.TaiKhoans
-            .AsNoTracking()
-            .FirstOrDefaultAsync(x =>
-                x.TenDangNhap == tenDangNhap &&
-                x.MatKhau == model.MatKhau);
+            .FirstOrDefaultAsync(x => x.TenDangNhap == tenDangNhap);
 
-        // Sai tên đăng nhập hoặc mật khẩu.
         if (taiKhoan == null)
         {
             ModelState.AddModelError(
@@ -55,17 +50,76 @@ public class AccountController : Controller
             return View(model);
         }
 
-        // Tài khoản đã bị khóa.
+        // Admin khóa tài khoản thì vẫn không được đăng nhập
         if (taiKhoan.TrangThai != TrangThaiTaiKhoan.DangHoatDong)
         {
             ModelState.AddModelError(
                 string.Empty,
-                "Tài khoản đã bị khóa.");
+                "Tài khoản đang bị khóa.");
 
             return View(model);
         }
 
-        // Lưu thông tin đăng nhập vào Session.
+        // Đang trong thời gian khóa tạm
+        if (taiKhoan.KhoaDangNhapDen.HasValue &&
+            taiKhoan.KhoaDangNhapDen.Value > DateTime.Now)
+        {
+            int soGiayConLai = (int)Math.Ceiling(
+                (taiKhoan.KhoaDangNhapDen.Value - DateTime.Now).TotalSeconds);
+
+            ModelState.AddModelError(
+                string.Empty,
+                $"Bạn đã nhập sai quá 3 lần. Vui lòng thử lại sau {soGiayConLai} giây.");
+
+            return View(model);
+        }
+
+        // Hết 30 giây thì tự mở khóa
+        if (taiKhoan.KhoaDangNhapDen.HasValue &&
+            taiKhoan.KhoaDangNhapDen.Value <= DateTime.Now)
+        {
+            taiKhoan.KhoaDangNhapDen = null;
+            taiKhoan.SoLanDangNhapSai = 0;
+
+            await _context.SaveChangesAsync();
+        }
+
+        // Sai mật khẩu
+        if (taiKhoan.MatKhau != model.MatKhau)
+        {
+            taiKhoan.SoLanDangNhapSai++;
+
+            // Sai lần thứ 3
+            if (taiKhoan.SoLanDangNhapSai >= 3)
+            {
+                taiKhoan.KhoaDangNhapDen = DateTime.Now.AddSeconds(30);
+
+                await _context.SaveChangesAsync();
+
+                ModelState.AddModelError(
+                    string.Empty,
+                    "Bạn đã nhập sai mật khẩu 3 lần. Tài khoản tạm khóa trong 30 giây.");
+
+                return View(model);
+            }
+
+            await _context.SaveChangesAsync();
+
+            int soLanConLai = 3 - taiKhoan.SoLanDangNhapSai;
+
+            ModelState.AddModelError(
+                string.Empty,
+                $"Tên đăng nhập hoặc mật khẩu không đúng. Bạn còn {soLanConLai} lần thử.");
+
+            return View(model);
+        }
+
+        // Đăng nhập đúng thì reset bộ đếm
+        taiKhoan.SoLanDangNhapSai = 0;
+        taiKhoan.KhoaDangNhapDen = null;
+
+        await _context.SaveChangesAsync();
+
         HttpContext.Session.SetInt32(
             "MaTaiKhoan",
             taiKhoan.MaTaiKhoan);
@@ -81,21 +135,17 @@ public class AccountController : Controller
         TempData["ThongBao"] =
             $"Bạn đã đăng nhập thành công. Xin chào {taiKhoan.HoTen}!";
 
-        // Admin vào quản lý tài khoản.
         if (taiKhoan.LoaiTaiKhoan == LoaiTaiKhoan.Admin)
         {
-            return RedirectToAction(
-                "Index",
-                "QuanTri");
+            return RedirectToAction("Index", "QuanTri");
         }
 
         if (taiKhoan.LoaiTaiKhoan == LoaiTaiKhoan.NguoiDan)
+        {
             return RedirectToAction("Index", "Home");
+        }
 
-        // Nhân viên vào ds công việc được phân công
-        return RedirectToAction(
-            "Index",
-            "CongViec");
+        return RedirectToAction("Index", "CongViec");
     }
 
     [HttpGet]

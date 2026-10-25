@@ -364,6 +364,9 @@ namespace QLThuGomRac_UNETI02_TI17A1HN.Data.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<DateTime?>("KhoaDangNhapDen")
+                        .HasColumnType("datetime2");
+
                     b.Property<int>("LoaiTaiKhoan")
                         .HasColumnType("int");
 
@@ -376,6 +379,11 @@ namespace QLThuGomRac_UNETI02_TI17A1HN.Data.Migrations
                         .IsRequired()
                         .HasMaxLength(15)
                         .HasColumnType("nvarchar(15)");
+
+                    b.Property<int>("SoLanDangNhapSai")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
 
                     b.Property<string>("TenDangNhap")
                         .IsRequired()

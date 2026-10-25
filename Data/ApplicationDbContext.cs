@@ -84,6 +84,12 @@ public class ApplicationDbContext : DbContext
             entity.Property(x => x.TrangThai)
                 .HasConversion<int>();
 
+            entity.Property(x => x.SoLanDangNhapSai)
+                .HasDefaultValue(0);
+
+            entity.Property(x => x.SoLanDangNhapSai)
+                .HasDefaultValue(0);
+
             // 5.1: Tên đăng nhập không được trùng.
             entity.HasIndex(x => x.TenDangNhap)
                 .IsUnique();

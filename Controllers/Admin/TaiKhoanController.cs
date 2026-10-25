@@ -284,6 +284,7 @@ public class TaiKhoanController : Controller
         else
         {
             taiKhoan.TrangThai = TrangThaiTaiKhoan.DangHoatDong;
+            taiKhoan.SoLanDangNhapSai = 0;
             TempData["ThongBao"] = $"Đã mở khóa tài khoản \"{taiKhoan.TenDangNhap}\".";
         }
 

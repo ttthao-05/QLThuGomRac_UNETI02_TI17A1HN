@@ -38,4 +38,10 @@ public class TaiKhoan
 
     [Display(Name = "Trạng thái")]
     public TrangThaiTaiKhoan TrangThai { get; set; } = TrangThaiTaiKhoan.DangHoatDong;
+
+    [Display(Name = "Số lần đăng nhập sai")]
+    public int SoLanDangNhapSai { get; set; } = 0;
+
+    [Display(Name = "Khóa đăng nhập đến")]
+    public DateTime? KhoaDangNhapDen { get; set; }
 }
