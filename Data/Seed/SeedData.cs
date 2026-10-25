@@ -168,6 +168,59 @@ public static class SeedData
         var khuVucBacTuLiem = context.KhuVucs
             .FirstOrDefault(x => x.TenKhuVuc == "Khu vực Bắc Từ Liêm");
 
+        // =========================
+        // MODULE 3 - Tạo và đồng bộ hồ sơ nhân viên
+        // Nguyễn Tiến Đạt - 23103100053
+        // =========================
+
+        var danhSachNhanVienMau = new[]
+        {
+    new { TenDangNhap = "nv01", KhuVuc = khuVucCauGiay },
+    new { TenDangNhap = "nv02", KhuVuc = khuVucNamTuLiem },
+    new { TenDangNhap = "nv03", KhuVuc = khuVucBacTuLiem },
+    new { TenDangNhap = "nv04", KhuVuc = khuVucCauGiay },
+    new { TenDangNhap = "nv05", KhuVuc = khuVucBacTuLiem }
+};
+
+        foreach (var item in danhSachNhanVienMau)
+        {
+            if (item.KhuVuc == null)
+                continue;
+
+            var taiKhoanNhanVien = context.TaiKhoans
+                .FirstOrDefault(x =>
+                    x.TenDangNhap == item.TenDangNhap &&
+                    x.LoaiTaiKhoan == LoaiTaiKhoan.NhanVien);
+
+            if (taiKhoanNhanVien == null)
+                continue;
+
+            var nhanVien = context.NhanViens
+                .FirstOrDefault(x =>
+                    x.MaTaiKhoan == taiKhoanNhanVien.MaTaiKhoan);
+
+            if (nhanVien == null)
+            {
+                context.NhanViens.Add(new NhanVien
+                {
+                    MaTaiKhoan = taiKhoanNhanVien.MaTaiKhoan,
+                    HoTen = taiKhoanNhanVien.HoTen,
+                    SoDienThoai = taiKhoanNhanVien.SoDienThoai,
+                    MaKhuVuc = item.KhuVuc.MaKhuVuc,
+                    NgayVaoLam = new DateTime(2026, 10, 1),
+                    TrangThai = TrangThaiNhanVien.DangHoatDong
+                });
+            }
+            else
+            {
+                // Nếu đã có hồ sơ thì đồng bộ lại họ tên và số điện thoại
+                nhanVien.HoTen = taiKhoanNhanVien.HoTen;
+                nhanVien.SoDienThoai = taiKhoanNhanVien.SoDienThoai;
+            }
+        }
+
+        context.SaveChanges();
+
         if (khuVucCauGiay != null &&
             !context.DiemTapKets.Any(x =>
                 x.TenDiemTapKet == "Điểm tập kết Cầu Giấy"))
