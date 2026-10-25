@@ -1,4 +1,10 @@
 ﻿@* Nguyễn Tiến Đạt – 23103100053 – Module 3, mục 7.2 *@
+@*
+    Họ và tên: Trần Thị Thảo
+    Mã sinh viên: 23103100025
+    Nội dung thực hiện: Bổ sung giao diện nút Từ chối yêu cầu
+*@
+
 @model List<QLThuGomRac_UNETI02_TI17A1HN.Models.Entities.YeuCauThuGom>
 @using QLThuGomRac_UNETI02_TI17A1HN.Models.Entities
 
@@ -52,7 +58,7 @@ else
                         <td>@item.DiaChiThuGom</td>
                         <td>@item.NgayMongMuonThuGom.ToString("dd/MM/yyyy")</td>
                         <td>@item.KhungGio</td>
-                        <td>
+                        <td class="d-flex gap-2">
                             <form asp-controller="PhanCong"
                                   asp-action="XacNhan"
                                   method="post">
@@ -65,6 +71,22 @@ else
                                 <button type="submit"
                                         class="btn btn-success btn-sm">
                                     Xác nhận
+                                </button>
+                            </form>
+
+                            <form asp-controller="PhanCong"
+                                  asp-action="TuChoi"
+                                  method="post"
+                                  onsubmit="return confirm('Bạn có chắc muốn từ chối yêu cầu này không?');">
+                                @Html.AntiForgeryToken()
+
+                                <input type="hidden"
+                                       name="id"
+                                       value="@item.MaYeuCau" />
+
+                                <button type="submit"
+                                        class="btn btn-danger btn-sm">
+                                    Từ chối
                                 </button>
                             </form>
                         </td>

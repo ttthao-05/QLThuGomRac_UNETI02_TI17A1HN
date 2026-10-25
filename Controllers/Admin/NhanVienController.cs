@@ -1,6 +1,10 @@
 ﻿// Họ và tên: Nguyễn Tiến Đạt
 // Mã sinh viên: 23103100053
-// Nội dung: Module 3 – 7.1 Quản lý nhán viên
+// Nội dung: Module 3 – 7.1 Quản lý nhân viên
+
+// Họ và tên: Trần Thị Thảo
+// Mã sinh viên: 23103100025
+// Nội dung thực hiện: Bổ sung kiểm tra ràng buộc khi xóa nhân viên đã có phân công
 
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Data.SqlClient;
@@ -318,6 +322,17 @@ public class NhanVienController : Controller
 
         if (nhanVien == null)
             return NotFound();
+
+        var daCoPhanCong = await _context.PhanCongThuGoms
+            .AnyAsync(x => x.MaNhanVien == id);
+
+        if (daCoPhanCong)
+        {
+            TempData["Loi"] =
+                "Không thể xóa nhân viên vì nhân viên này đã có phân công thu gom.";
+
+            return RedirectToAction(nameof(Index));
+        }
 
         _context.NhanViens.Remove(nhanVien);
 

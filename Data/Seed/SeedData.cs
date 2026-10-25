@@ -1,6 +1,7 @@
 ﻿// Họ và tên: Trần Thị Thảo
 // Mã sinh viên: 23103100025
 // Nội dung thực hiện: Module 1 – Dữ liệu mẫu tài khoản, khu vực, loại rác và điểm tập kết
+// Tích hợp dữ liệu mẫu Module 3
 
 // Họ và tên: Phạm Văn Hào
 // Mã sinh viên: 23103100041
@@ -259,6 +260,7 @@ public static class SeedData
 
         context.SaveChanges();
         Module2SeedData.EnsureSeeded(context);
+        Module3SeedData.EnsureSeeded(context);
     }
 }
 

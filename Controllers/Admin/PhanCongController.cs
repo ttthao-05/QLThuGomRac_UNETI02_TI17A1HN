@@ -2,6 +2,10 @@
 // Mã sinh viên: 23103100053
 // Nội dung: Module 3 – Phân công thu gom (7.2)
 
+// Họ và tên: Trần Thị Thảo
+// Mã sinh viên: 23103100025
+// Nội dung thực hiện: Bổ sung chức năng từ chối yêu cầu chờ xác nhận
+
 using System.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -117,6 +121,39 @@ public class PhanCongController : Controller
         {
             TempData["ThongBao"] =
                 $"Đã xác nhận yêu cầu #{id}. Bạn có thể phân công nhân viên.";
+        }
+        else
+        {
+            TempData["Loi"] =
+                "Yêu cầu không tồn tại hoặc không còn chờ xác nhận.";
+        }
+
+        return RedirectToAction(nameof(Index));
+    }
+
+    // Từ chối yêu cầu đang chờ xác nhận.
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> TuChoi(int id)
+    {
+        if (!await LaAdminAsync())
+            return StatusCode(
+                403,
+                "Bạn cần đăng nhập bằng tài khoản Admin.");
+
+        int soDong = await _context.YeuCauThuGoms
+            .Where(x =>
+                x.MaYeuCau == id
+                && x.TrangThai == TrangThaiYeuCau.ChoXacNhan)
+            .ExecuteUpdateAsync(setters => setters
+                .SetProperty(
+                    x => x.TrangThai,
+                    TrangThaiYeuCau.TuChoi));
+
+        if (soDong == 1)
+        {
+            TempData["ThongBao"] =
+                $"Đã từ chối yêu cầu #{id}.";
         }
         else
         {
