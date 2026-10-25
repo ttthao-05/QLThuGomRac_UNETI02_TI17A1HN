@@ -169,7 +169,7 @@ public static class SeedData
             .FirstOrDefault(x => x.TenKhuVuc == "Khu vực Bắc Từ Liêm");
 
         // =========================
-        // MODULE 3 - Tạo và đồng bộ hồ sơ nhân viên
+        // MODULE 3 - Tạo hồ sơ nhân viên mẫu
         // Nguyễn Tiến Đạt - 23103100053
         // =========================
 
@@ -210,12 +210,6 @@ public static class SeedData
                     NgayVaoLam = new DateTime(2026, 10, 1),
                     TrangThai = TrangThaiNhanVien.DangHoatDong
                 });
-            }
-            else
-            {
-                // Nếu đã có hồ sơ thì đồng bộ lại họ tên và số điện thoại
-                nhanVien.HoTen = taiKhoanNhanVien.HoTen;
-                nhanVien.SoDienThoai = taiKhoanNhanVien.SoDienThoai;
             }
         }
 

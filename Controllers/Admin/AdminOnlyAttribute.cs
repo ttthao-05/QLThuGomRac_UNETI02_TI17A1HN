@@ -23,7 +23,7 @@ public sealed class AdminOnlyAttribute : Attribute, IAuthorizationFilter
     /// Nếu chưa đnhập thì chuyển về trang đăng nhập
     /// Nếu đã đnhập nhưng k phải Admin thì từ chối truy cập
     /// </summary>
-    public static bool ChoPhepChuaDangNhap { get; set; } = false;
+
 
     public void OnAuthorization(AuthorizationFilterContext context)
     {
@@ -32,11 +32,6 @@ public sealed class AdminOnlyAttribute : Attribute, IAuthorizationFilter
         if (string.IsNullOrWhiteSpace(vaiTro))
         {
             // Chưa có phiên đăng nhập thì chuyển về trang đăng nhập
-            if (ChoPhepChuaDangNhap)
-            {
-                return;
-            }
-
             context.Result = new RedirectToActionResult("Login", "Account", null);
             return;
         }

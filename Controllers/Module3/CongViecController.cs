@@ -142,16 +142,6 @@ public class CongViecController : Controller
             null);
     }
 
-    // Module 3 – 7.4: chuyển sang nhập kết quả trước khi hoàn thành.
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public IActionResult HoanThanh(int id)
-    {
-        return RedirectToAction(
-            "Create",
-            "KetQuaThuGom",
-            new { id });
-    }
 
     // Mở form nhập lý do không thực hiện được.
     [HttpGet]
