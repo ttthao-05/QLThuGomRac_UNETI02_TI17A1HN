@@ -303,6 +303,7 @@ public class TaiKhoanController : Controller
         }
 
 
+
         // Không cho đổi vai trò tài khoản đã liên kết hồ sơ
         if (model.LoaiTaiKhoan != taiKhoan.LoaiTaiKhoan)
         {
@@ -327,7 +328,6 @@ public class TaiKhoanController : Controller
                 return View(model);
             }
         }
-
 
         taiKhoan.TenDangNhap = model.TenDangNhap;
         taiKhoan.HoTen = model.HoTen;

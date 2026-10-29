@@ -1,0 +1,59 @@
+﻿@* Họ và tên: [Vũ Đức Hải]
+   Mã sinh viên: [23103100008]
+   Nội dung thực hiện: Module 4 - Danh sách theo dõi yêu cầu *@
+@using QLThuGomRac_UNETI02_TI17A1HN.Helpers
+@model QLThuGomRac_UNETI02_TI17A1HN.ViewModels.TheoDoiYeuCauVM
+@{ ViewData["Title"] = "Theo dõi yêu cầu thu gom"; var f = Model.Filter; }
+
+<h2>Theo dõi yêu cầu thu gom</h2>
+
+<form method="get" class="row g-2 mb-3">
+    <div class="col-md-3"><input name="TuKhoa" value="@f.TuKhoa" class="form-control" placeholder="Mã yêu cầu / tên người dân" /></div>
+    <div class="col-md-2"><select name="MaKhuVuc" class="form-select" asp-items="Model.KhuVucs"><option value="">-- Khu vực --</option></select></div>
+    <div class="col-md-2"><select name="TrangThai" class="form-select" asp-items="Model.TrangThais"><option value="">-- Trạng thái --</option></select></div>
+    <div class="col-md-2"><select name="MaNhanVien" class="form-select" asp-items="Model.NhanViens"><option value="">-- Nhân viên --</option></select></div>
+    <div class="col-md-1"><input type="date" name="TuNgay" value="@f.TuNgay?.ToString("yyyy-MM-dd")" class="form-control" title="Từ ngày" /></div>
+    <div class="col-md-1"><input type="date" name="DenNgay" value="@f.DenNgay?.ToString("yyyy-MM-dd")" class="form-control" title="Đến ngày" /></div>
+    <div class="col-md-1"><button class="btn btn-primary w-100">Lọc</button></div>
+</form>
+
+<table class="table table-striped table-hover">
+    <thead class="table-light">
+        <tr><th>Mã</th><th>Người dân</th><th>Khu vực</th><th>Nhân viên</th><th>Ngày mong muốn</th><th>Trạng thái</th><th></th></tr>
+    </thead>
+    <tbody>
+    @foreach (var r in Model.Data.Items)
+    {
+        <tr>
+            <td>@r.MaYeuCau</td>
+            <td>@r.NguoiDan</td>
+            <td>@r.KhuVuc</td>
+            <td>@(r.NhanVien ?? "Chưa phân công")</td>
+            <td>@r.NgayMongMuon.ToString("dd/MM/yyyy")</td>
+            <td><span class="badge bg-secondary">@r.TrangThai.TenHienThi()</span></td>
+            <td><a asp-action="Details" asp-route-id="@r.MaYeuCau">Chi tiết</a></td>
+        </tr>
+    }
+    @if (!Model.Data.Items.Any())
+    {
+        <tr><td colspan="7" class="text-center text-muted">Không có yêu cầu phù hợp.</td></tr>
+    }
+    </tbody>
+</table>
+
+@* Phân trang: giữ nguyên toàn bộ điều kiện tìm kiếm/lọc khi chuyển trang *@
+<nav>
+    <ul class="pagination">
+        @for (int p = 1; p <= Model.Data.TotalPages; p++)
+        {
+            <li class="page-item @(p == Model.Data.Page ? "active" : "")">
+                <a class="page-link" asp-action="Index" asp-route-page="@p"
+                   asp-route-TuKhoa="@f.TuKhoa" asp-route-MaKhuVuc="@f.MaKhuVuc"
+                   asp-route-TrangThai="@f.TrangThai" asp-route-MaNhanVien="@f.MaNhanVien"
+                   asp-route-TuNgay="@f.TuNgay?.ToString("yyyy-MM-dd")"
+                   asp-route-DenNgay="@f.DenNgay?.ToString("yyyy-MM-dd")">@p</a>
+            </li>
+        }
+    </ul>
+</nav>
+<p class="text-muted">Tổng: @Model.Data.TotalItems yêu cầu</p>
