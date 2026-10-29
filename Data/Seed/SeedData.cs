@@ -25,7 +25,7 @@ public static class SeedData
         {
             var danhSachTaiKhoan = new List<TaiKhoan>
             {
-                new() { TenDangNhap = "admin", MatKhau = "123456", HoTen = "Quản trị viên", SoDienThoai = "0901000001", LoaiTaiKhoan = LoaiTaiKhoan.Admin, TrangThai = TrangThaiTaiKhoan.DangHoatDong },
+                new() { TenDangNhap = "admin1", MatKhau = "123456", HoTen = "Quản trị viên", SoDienThoai = "0901000001", LoaiTaiKhoan = LoaiTaiKhoan.Admin, TrangThai = TrangThaiTaiKhoan.DangHoatDong },
                 new() { TenDangNhap = "admin2", MatKhau = "123456", HoTen = "Quản trị viên phụ", SoDienThoai = "0901000002", LoaiTaiKhoan = LoaiTaiKhoan.Admin, TrangThai = TrangThaiTaiKhoan.DangHoatDong },
 
                 new() { TenDangNhap = "nv01", MatKhau = "nv123456", HoTen = "Nhân viên 01", SoDienThoai = "0902000001", LoaiTaiKhoan = LoaiTaiKhoan.NhanVien, TrangThai = TrangThaiTaiKhoan.DangHoatDong },

@@ -303,6 +303,32 @@ public class TaiKhoanController : Controller
         }
 
 
+        // Không cho đổi vai trò tài khoản đã liên kết hồ sơ
+        if (model.LoaiTaiKhoan != taiKhoan.LoaiTaiKhoan)
+        {
+            bool coHoSoNhanVien = await _context.NhanViens
+                .AnyAsync(x => x.MaTaiKhoan == taiKhoan.MaTaiKhoan);
+
+            bool coHoSoNguoiDan = await _context.NguoiDans
+                .AnyAsync(x => x.MaTaiKhoan == taiKhoan.MaTaiKhoan);
+
+            if (coHoSoNhanVien || coHoSoNguoiDan)
+            {
+                ModelState.AddModelError(
+                    nameof(model.LoaiTaiKhoan),
+                    "Không thể đổi loại tài khoản vì đã liên kết với hồ sơ nhân viên hoặc người dân.");
+
+                model.LoaiTaiKhoanItems =
+                    BuildEnumItems<LoaiTaiKhoan>(model.LoaiTaiKhoan);
+
+                model.TrangThaiItems =
+                    BuildEnumItems<TrangThaiTaiKhoan>(model.TrangThai);
+
+                return View(model);
+            }
+        }
+
+
         taiKhoan.TenDangNhap = model.TenDangNhap;
         taiKhoan.HoTen = model.HoTen;
         taiKhoan.SoDienThoai = model.SoDienThoai;
