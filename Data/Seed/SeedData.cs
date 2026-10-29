@@ -10,6 +10,7 @@
 using Microsoft.EntityFrameworkCore;
 using QLThuGomRac_UNETI02_TI17A1HN.Models.Entities;
 using QLThuGomRac_UNETI02_TI17A1HN.Models.Enums;
+using QLThuGomRac_UNETI02_TI17A1HN.Services;
 
 namespace QLThuGomRac_UNETI02_TI17A1HN.Data.Seed;
 
@@ -44,6 +45,18 @@ public static class SeedData
                 new() { TenDangNhap = "nd09", MatKhau = "nd123456", HoTen = "Người dân 09", SoDienThoai = "0903000009", LoaiTaiKhoan = LoaiTaiKhoan.NguoiDan, TrangThai = TrangThaiTaiKhoan.DangHoatDong },
                 new() { TenDangNhap = "nd10", MatKhau = "nd123456", HoTen = "Người dân 10", SoDienThoai = "0903000010", LoaiTaiKhoan = LoaiTaiKhoan.NguoiDan, TrangThai = TrangThaiTaiKhoan.DaKhoa }
             };
+
+
+            // Module 1 - Băm mật khẩu mẫu trước khi lưu
+            var matKhauService = new MatKhauService();
+
+            foreach (var taiKhoan in danhSachTaiKhoan)
+            {
+                taiKhoan.MatKhau = matKhauService.BamMatKhau(
+                    taiKhoan,
+                    taiKhoan.MatKhau);
+            }
+
 
             context.TaiKhoans.AddRange(danhSachTaiKhoan);
             context.SaveChanges();

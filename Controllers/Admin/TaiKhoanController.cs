@@ -9,6 +9,7 @@ using QLThuGomRac_UNETI02_TI17A1HN.Data;
 using QLThuGomRac_UNETI02_TI17A1HN.Models.Entities;
 using QLThuGomRac_UNETI02_TI17A1HN.Models.Enums;
 using QLThuGomRac_UNETI02_TI17A1HN.Models.ViewModels.Module1;
+using QLThuGomRac_UNETI02_TI17A1HN.Services;
 
 namespace QLThuGomRac_UNETI02_TI17A1HN.Controllers.Admin;
 
@@ -21,11 +22,14 @@ namespace QLThuGomRac_UNETI02_TI17A1HN.Controllers.Admin;
 public class TaiKhoanController : Controller
 {
     private readonly ApplicationDbContext _context;
+    private readonly MatKhauService _matKhauService;
 
     public TaiKhoanController(ApplicationDbContext context)
     {
         _context = context;
+        _matKhauService = new MatKhauService();
     }
+
 
     // GET: /TaiKhoan
     [HttpGet]
@@ -127,15 +131,20 @@ public class TaiKhoanController : Controller
             return View(model);
         }
 
+
         var taiKhoan = new TaiKhoan
         {
             TenDangNhap = model.TenDangNhap,
-            MatKhau = model.MatKhau,
             HoTen = model.HoTen,
             SoDienThoai = model.SoDienThoai,
             LoaiTaiKhoan = model.LoaiTaiKhoan,
             TrangThai = model.TrangThai
         };
+
+        // Băm mật khẩu trước khi lưu vào CSDL
+        taiKhoan.MatKhau = _matKhauService.BamMatKhau(
+            taiKhoan, model.MatKhau);
+
 
         try
         {
@@ -224,6 +233,76 @@ public class TaiKhoanController : Controller
             return NotFound();
         }
 
+
+        // Không cho làm mất quyền Admin đang hoạt động cuối cùng
+        if (taiKhoan.LoaiTaiKhoan == LoaiTaiKhoan.Admin &&
+            taiKhoan.TrangThai == TrangThaiTaiKhoan.DangHoatDong)
+        {
+            bool matQuyenAdmin =
+                model.LoaiTaiKhoan != LoaiTaiKhoan.Admin ||
+                model.TrangThai != TrangThaiTaiKhoan.DangHoatDong;
+
+            if (matQuyenAdmin)
+            {
+                int soAdminHoatDong = await _context.TaiKhoans
+                    .CountAsync(x =>
+                        x.LoaiTaiKhoan == LoaiTaiKhoan.Admin &&
+                        x.TrangThai == TrangThaiTaiKhoan.DangHoatDong);
+
+                if (soAdminHoatDong <= 1)
+                {
+                    ModelState.AddModelError(
+                        string.Empty,
+                        "Phải có ít nhất một Admin đang hoạt động.");
+
+                    model.LoaiTaiKhoanItems =
+                        BuildEnumItems<LoaiTaiKhoan>(model.LoaiTaiKhoan);
+
+                    model.TrangThaiItems =
+                        BuildEnumItems<TrangThaiTaiKhoan>(model.TrangThai);
+
+                    return View(model);
+                }
+            }
+        }
+
+
+        // Kiểm tra Admin có đang tự sửa tài khoản mình không
+        int? maTaiKhoanDangNhap =
+            HttpContext.Session.GetInt32("MaTaiKhoan");
+
+        if (maTaiKhoanDangNhap == taiKhoan.MaTaiKhoan)
+        {
+            // Không cho tự thay đổi vai trò Admin
+            if (model.LoaiTaiKhoan != LoaiTaiKhoan.Admin)
+            {
+                ModelState.AddModelError(
+                    nameof(model.LoaiTaiKhoan),
+                    "Bạn không thể tự thay đổi vai trò Admin.");
+            }
+
+            // Không cho tự khóa tài khoản
+            if (model.TrangThai != TrangThaiTaiKhoan.DangHoatDong)
+            {
+                ModelState.AddModelError(
+                    nameof(model.TrangThai),
+                    "Bạn không thể tự khóa tài khoản đang đăng nhập.");
+            }
+
+            // Nếu vi phạm thì quay lại trang sửa
+            if (!ModelState.IsValid)
+            {
+                model.LoaiTaiKhoanItems =
+                    BuildEnumItems<LoaiTaiKhoan>(model.LoaiTaiKhoan);
+
+                model.TrangThaiItems =
+                    BuildEnumItems<TrangThaiTaiKhoan>(model.TrangThai);
+
+                return View(model);
+            }
+        }
+
+
         taiKhoan.TenDangNhap = model.TenDangNhap;
         taiKhoan.HoTen = model.HoTen;
         taiKhoan.SoDienThoai = model.SoDienThoai;
@@ -242,10 +321,13 @@ public class TaiKhoanController : Controller
             hoSo.SoDienThoai = taiKhoan.SoDienThoai;
         }
 
+
         // Mật khẩu để trống thì giữ nguyên mật khẩu cũ.
         if (!string.IsNullOrWhiteSpace(model.MatKhau))
         {
-            taiKhoan.MatKhau = model.MatKhau;
+            // Chỉ băm khi người dùng nhập mật khẩu mới
+            taiKhoan.MatKhau = _matKhauService.BamMatKhau(
+                taiKhoan, model.MatKhau);
         }
 
         try
@@ -265,33 +347,80 @@ public class TaiKhoanController : Controller
         return RedirectToAction(nameof(Index));
     }
 
+
     // POST: /TaiKhoan/KhoaMoKhoa/5
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> KhoaMoKhoa(int id)
     {
+        // Bước 1: Tìm tài khoản cần khóa/mở khóa
         TaiKhoan? taiKhoan = await _context.TaiKhoans.FindAsync(id);
+
         if (taiKhoan is null)
         {
             return NotFound();
         }
 
+        // Bước 2: Lấy mã tài khoản Admin đang đăng nhập
+        int? maTaiKhoanDangNhap =
+            HttpContext.Session.GetInt32("MaTaiKhoan");
+
+
+        // Không cho khóa Admin đang hoạt động cuối cùng
+        if (taiKhoan.LoaiTaiKhoan == LoaiTaiKhoan.Admin &&
+            taiKhoan.TrangThai == TrangThaiTaiKhoan.DangHoatDong)
+        {
+            int soAdminHoatDong = await _context.TaiKhoans
+                .CountAsync(x =>
+                    x.LoaiTaiKhoan == LoaiTaiKhoan.Admin &&
+                    x.TrangThai == TrangThaiTaiKhoan.DangHoatDong);
+
+            if (soAdminHoatDong <= 1)
+            {
+                TempData["ThongBaoLoi"] =
+                    "Không thể khóa Admin cuối cùng đang hoạt động.";
+
+                return RedirectToAction(nameof(Index));
+            }
+        }
+
+
+        // Bước 3: Không cho Admin tự khóa tài khoản
+        if (taiKhoan.MaTaiKhoan == maTaiKhoanDangNhap &&
+            taiKhoan.TrangThai == TrangThaiTaiKhoan.DangHoatDong)
+        {
+            TempData["ThongBaoLoi"] =
+                "Bạn không thể tự khóa tài khoản đang đăng nhập.";
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        // Bước 4: Khóa hoặc mở khóa
         if (taiKhoan.TrangThai == TrangThaiTaiKhoan.DangHoatDong)
         {
             taiKhoan.TrangThai = TrangThaiTaiKhoan.DaKhoa;
-            TempData["ThongBao"] = $"Đã khóa tài khoản \"{taiKhoan.TenDangNhap}\".";
+
+            TempData["ThongBao"] =
+                $"Đã khóa tài khoản \"{taiKhoan.TenDangNhap}\".";
         }
         else
         {
             taiKhoan.TrangThai = TrangThaiTaiKhoan.DangHoatDong;
+
+            // Đặt lại số lần đăng nhập sai
             taiKhoan.SoLanDangNhapSai = 0;
             taiKhoan.KhoaDangNhapDen = null;
-            TempData["ThongBao"] = $"Đã mở khóa tài khoản \"{taiKhoan.TenDangNhap}\".";
+
+            TempData["ThongBao"] =
+                $"Đã mở khóa tài khoản \"{taiKhoan.TenDangNhap}\".";
         }
 
+        // Bước 5: Lưu thay đổi xuống CSDL
         await _context.SaveChangesAsync();
+
         return RedirectToAction(nameof(Index));
     }
+
 
     private static bool LaViPhamTenDangNhapTrung(DbUpdateException ex)
     {
