@@ -6,6 +6,10 @@
     Họ và tên: Phạm Văn Hào
     Mã sinh viên: 23103100041
     Nội dung thực hiện: Module 2 – Tích hợp menu chức năng người dân
+
+    Họ và tên: Vũ Đức Hải
+    Mã sinh viên: 23103100008
+    Nội dung thực hiện: Module 4 – Tích hợp menu theo dõi yêu cầu, Dashboard và thống kê
 *@
 
 <!DOCTYPE html>
@@ -141,6 +145,32 @@
 						   <i class="bi bi-list-check"></i>
 					  <span>Theo dõi công việc</span>
 					</a>
+
+                    @* Module 4 – Dashboard, theo dõi yêu cầu và thống kê (8.1, 8.3, 8.4) *@
+                    <div class="sidebar-title">
+                        THEO DÕI & THỐNG KÊ
+                    </div>
+
+                    <a class="sidebar-link @(currentController == "Dashboard" ? "active" : "")"
+                       asp-controller="Dashboard"
+                       asp-action="Index">
+                        <i class="bi bi-speedometer2"></i>
+                        <span>Dashboard</span>
+                    </a>
+
+                    <a class="sidebar-link @(currentController == "TheoDoiYeuCau" ? "active" : "")"
+                       asp-controller="TheoDoiYeuCau"
+                       asp-action="Index">
+                        <i class="bi bi-search"></i>
+                        <span>Theo dõi yêu cầu</span>
+                    </a>
+
+                    <a class="sidebar-link @(currentController == "ThongKe" ? "active" : "")"
+                       asp-controller="ThongKe"
+                       asp-action="Index">
+                        <i class="bi bi-bar-chart-fill"></i>
+                        <span>Thống kê</span>
+                    </a>
                 }
 
                 @* =========================
@@ -354,6 +384,7 @@
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
 
     <script>
             const toggleButton = document.getElementById("sidebarToggle");

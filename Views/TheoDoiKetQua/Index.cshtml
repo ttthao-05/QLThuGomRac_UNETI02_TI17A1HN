@@ -1,0 +1,67 @@
+@* Họ và tên: Vũ Đức Hải
+   Mã sinh viên: 23103100008
+   Nội dung thực hiện: Module 4 - Theo dõi kết quả thu gom *@
+@model QLThuGomRac_UNETI02_TI17A1HN.ViewModels.TheoDoiKetQuaVM
+@{ ViewData["Title"] = "Theo dõi kết quả thu gom"; var f = Model.Filter; }
+
+<h2>Theo dõi kết quả thu gom</h2>
+
+<form method="get" class="row g-2 mb-3">
+    <div class="col-md-3"><input name="TuKhoa" value="@f.TuKhoa" class="form-control" placeholder="Mã yêu cầu / tên người dân" /></div>
+    <div class="col-md-2"><select name="MaKhuVuc" class="form-select" asp-items="Model.KhuVucs"><option value="">-- Khu vực --</option></select></div>
+    <div class="col-md-2"><select name="MaNhanVien" class="form-select" asp-items="Model.NhanViens"><option value="">-- Nhân viên --</option></select></div>
+    <div class="col-md-2"><input type="date" name="TuNgay" value="@f.TuNgay?.ToString("yyyy-MM-dd")" class="form-control" title="Từ ngày" /></div>
+    <div class="col-md-2"><input type="date" name="DenNgay" value="@f.DenNgay?.ToString("yyyy-MM-dd")" class="form-control" title="Đến ngày" /></div>
+    <div class="col-md-1"><button class="btn btn-primary w-100">Lọc</button></div>
+</form>
+
+<div class="row">
+    <div class="col-md-8">
+        <table class="table table-striped">
+            <thead class="table-light">
+                <tr><th>Mã YC</th><th>Người dân</th><th>Khu vực</th><th>Nhân viên</th><th>Ngày thu gom</th><th>Loại rác</th><th class="text-end">Khối lượng</th></tr>
+            </thead>
+            <tbody>
+            @foreach (var r in Model.Data.Items)
+            {
+                <tr>
+                    <td>@r.MaYeuCau</td><td>@r.NguoiDan</td><td>@r.KhuVuc</td><td>@r.NhanVien</td>
+                    <td>@r.NgayThuGom.ToString("dd/MM/yyyy")</td><td>@r.LoaiRac</td>
+                    <td class="text-end">@r.KhoiLuong.ToString("N2")</td>
+                </tr>
+            }
+            @if (!Model.Data.Items.Any())
+            {
+                <tr><td colspan="7" class="text-center text-muted">Chưa có kết quả thu gom phù hợp.</td></tr>
+            }
+            </tbody>
+        </table>
+        <nav>
+            <ul class="pagination">
+                @for (int p = 1; p <= Model.Data.TotalPages; p++)
+                {
+                    <li class="page-item @(p == Model.Data.Page ? "active" : "")">
+                        <a class="page-link" asp-action="Index" asp-route-page="@p"
+                           asp-route-TuKhoa="@f.TuKhoa" asp-route-MaKhuVuc="@f.MaKhuVuc"
+                           asp-route-MaNhanVien="@f.MaNhanVien"
+                           asp-route-TuNgay="@f.TuNgay?.ToString("yyyy-MM-dd")"
+                           asp-route-DenNgay="@f.DenNgay?.ToString("yyyy-MM-dd")">@p</a>
+                    </li>
+                }
+            </ul>
+        </nav>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">Tổng khối lượng theo loại rác</div>
+            <ul class="list-group list-group-flush">
+                @foreach (var t in Model.TongTheoLoai)
+                {
+                    <li class="list-group-item d-flex justify-content-between">
+                        <span>@t.LoaiRac</span><strong>@t.KhoiLuong.ToString("N2") @t.DonViTinh</strong>
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+</div>
