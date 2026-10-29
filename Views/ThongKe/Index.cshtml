@@ -1,0 +1,53 @@
+@* Họ và tên: Vũ Đức Hải
+   Mã sinh viên: 23103100008
+   Nội dung thực hiện: Module 4 - Trang thống kê *@
+@model QLThuGomRac_UNETI02_TI17A1HN.ViewModels.ThongKeVM
+@{ ViewData["Title"] = "Thống kê"; }
+
+<h2 class="mb-3">Thống kê thu gom rác tái chế</h2>
+
+@if (Model.LoaiRacNhieuNhat != null)
+{
+    <div class="alert alert-success">
+        Loại rác được thu gom nhiều nhất: <strong>@Model.LoaiRacNhieuNhat.Ten</strong>
+        (@Model.LoaiRacNhieuNhat.KhoiLuong.ToString("N2"))
+    </div>
+}
+
+<div class="row g-3">
+    @{
+        var soLuong = new (string Tieu, List<QLThuGomRac_UNETI02_TI17A1HN.ViewModels.NhomSoLuongVM> Ds)[] {
+            ("Số yêu cầu theo trạng thái", Model.TheoTrangThai),
+            ("Số yêu cầu theo khu vực", Model.TheoKhuVuc),
+            ("Số yêu cầu theo tháng", Model.TheoThang),
+            ("Số yêu cầu theo nhân viên", Model.TheoNhanVien)
+        };
+        var khoiLuong = new (string Tieu, List<QLThuGomRac_UNETI02_TI17A1HN.ViewModels.NhomKhoiLuongVM> Ds)[] {
+            ("Tổng khối lượng từng loại rác", Model.KhoiLuongTheoLoai),
+            ("Khối lượng theo khu vực", Model.KhoiLuongTheoKhuVuc),
+            ("Khối lượng theo tháng", Model.KhoiLuongTheoThang)
+        };
+    }
+    @foreach (var b in soLuong)
+    {
+        <div class="col-md-6">
+            <div class="card h-100"><div class="card-header">@b.Tieu</div>
+                <table class="table table-sm mb-0">
+                    @foreach (var x in b.Ds) { <tr><td>@x.Ten</td><td class="text-end">@x.SoLuong</td></tr> }
+                    @if (!b.Ds.Any()) { <tr><td class="text-muted">Chưa có dữ liệu</td></tr> }
+                </table>
+            </div>
+        </div>
+    }
+    @foreach (var b in khoiLuong)
+    {
+        <div class="col-md-6">
+            <div class="card h-100"><div class="card-header">@b.Tieu</div>
+                <table class="table table-sm mb-0">
+                    @foreach (var x in b.Ds) { <tr><td>@x.Ten</td><td class="text-end">@x.KhoiLuong.ToString("N2")</td></tr> }
+                    @if (!b.Ds.Any()) { <tr><td class="text-muted">Chưa có dữ liệu</td></tr> }
+                </table>
+            </div>
+        </div>
+    }
+</div>
