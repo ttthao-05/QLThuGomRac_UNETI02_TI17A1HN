@@ -62,6 +62,7 @@ public static class SeedData
             context.SaveChanges();
         }
 
+
         // MODULE 1 - Đồng bộ tên đăng nhập Admin mẫu trên Database cũ.
         // Chỉ đổi admin -> admin1 khi admin1 chưa tồn tại.
         if (!context.TaiKhoans.Any(x => x.TenDangNhap == "admin1"))
@@ -75,6 +76,7 @@ public static class SeedData
                 context.SaveChanges();
             }
         }
+
 
         // MODULE 1 - Cập nhật mật khẩu cũ sang Hash
         var dichVuMatKhau = new MatKhauService();
