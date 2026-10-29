@@ -1,0 +1,38 @@
+﻿@* Họ và tên: [Vũ Đức Hải]
+   Mã sinh viên: [23103100008]
+   Nội dung thực hiện: Module 4 - Dashboard *@
+@model QLThuGomRac_UNETI02_TI17A1HN.ViewModels.DashboardVM
+@{ ViewData["Title"] = "Dashboard"; }
+
+<h2 class="mb-4">Dashboard quản trị</h2>
+<div class="row g-3">
+    @{
+        var cards = new (string Ten, string GiaTri, string Mau)[] {
+            ("Khu vực", Model.TongKhuVuc.ToString(), "primary"),
+            ("Loại rác", Model.TongLoaiRac.ToString(), "primary"),
+            ("Người dân", Model.TongNguoiDan.ToString(), "primary"),
+            ("Nhân viên", Model.TongNhanVien.ToString(), "primary"),
+            ("Tổng yêu cầu", Model.TongYeuCau.ToString(), "dark"),
+            ("Chờ xác nhận", Model.ChoXacNhan.ToString(), "warning"),
+            ("Đang xử lý", Model.DangXuLy.ToString(), "info"),
+            ("Hoàn thành", Model.HoanThanh.ToString(), "success"),
+            ("Từ chối / Hủy", Model.TuChoiHuy.ToString(), "danger"),
+            ("Tổng khối lượng thu gom", Model.TongKhoiLuong.ToString("N2") + " kg", "success")
+        };
+    }
+    @foreach (var c in cards)
+    {
+        <div class="col-md-3">
+            <div class="card border-@c.Mau h-100">
+                <div class="card-body text-center">
+                    <div class="text-muted">@c.Ten</div>
+                    <div class="fs-3 fw-bold text-@c.Mau">@c.GiaTri</div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+<div class="mt-4">
+    <a asp-controller="TheoDoiYeuCau" asp-action="Index" class="btn btn-outline-primary">Theo dõi yêu cầu</a>
+    <a asp-controller="ThongKe" asp-action="Index" class="btn btn-outline-primary">Thống kê</a>
+</div>
