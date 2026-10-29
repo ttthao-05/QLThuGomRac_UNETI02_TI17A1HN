@@ -62,6 +62,21 @@ public static class SeedData
             context.SaveChanges();
         }
 
+        // MODULE 1 - Cập nhật mật khẩu cũ sang Hash
+        var dichVuMatKhau = new MatKhauService();
+
+        foreach (var tk in context.TaiKhoans.ToList())
+        {
+            if (tk.MatKhau == "123456" ||
+                tk.MatKhau == "nv123456" ||
+                tk.MatKhau == "nd123456")
+            {
+                tk.MatKhau = dichVuMatKhau.BamMatKhau(tk, tk.MatKhau);
+            }
+        }
+
+        context.SaveChanges();
+
         // =========================
         // MODULE 2 - Tạo hồ sơ Người dân từ tài khoản Người dân
         // =========================
