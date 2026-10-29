@@ -372,8 +372,8 @@ namespace QLThuGomRac_UNETI02_TI17A1HN.Data.Migrations
 
                     b.Property<string>("MatKhau")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<string>("SoDienThoai")
                         .IsRequired()

@@ -4,46 +4,82 @@
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.EntityFrameworkCore;
+using QLThuGomRac_UNETI02_TI17A1HN.Data;
 using QLThuGomRac_UNETI02_TI17A1HN.Models.Enums;
 
 namespace QLThuGomRac_UNETI02_TI17A1HN.Controllers.Admin;
 
 /// <summary>
-/// Kiểm tra quyền ở phía Controller (§5.1 yêu cầu chỉ Admin được dùng chức năng quản lý tài khoản).
-/// Quyền được đọc từ Session theo key <see cref="KhoaVaiTro"/> – chính là "Vai trò" mà §5.2 Đăng nhập lưu vào Session.
+/// Kiểm tra quyền Admin tại Controller.
+/// Kiểm tra Session, vai trò và trạng thái tài khoản trong CSDL.
 /// </summary>
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = false)]
-public sealed class AdminOnlyAttribute : Attribute, IAuthorizationFilter
+public sealed class AdminOnlyAttribute : Attribute, IAsyncAuthorizationFilter
 {
-    /// <summary>Key Session chứa vai trò, do §5.2 Đăng nhập ghi vào (giá trị: tên của enum LoaiTaiKhoan).</summary>
     public const string KhoaVaiTro = "VaiTro";
 
-    /// <summary>
-    /// Chỉ cho phép tkhoan có vtro Admin truy cập chức năng quản trị
-    /// Nếu chưa đnhập thì chuyển về trang đăng nhập
-    /// Nếu đã đnhập nhưng k phải Admin thì từ chối truy cập
-    /// </summary>
-
-
-    public void OnAuthorization(AuthorizationFilterContext context)
+    public async Task OnAuthorizationAsync(AuthorizationFilterContext context)
     {
-        string? vaiTro = context.HttpContext.Session.GetString(KhoaVaiTro);
+        //b1 Lấy thông tin đăng nhập từ Session
+        var session = context.HttpContext.Session;
 
-        if (string.IsNullOrWhiteSpace(vaiTro))
+        int? maTaiKhoan = session.GetInt32("MaTaiKhoan");
+        string? vaiTro = session.GetString(KhoaVaiTro);
+
+        //b2 Chưa đăng nhập thì chuyển về Login
+        if (maTaiKhoan == null || string.IsNullOrWhiteSpace(vaiTro))
         {
-            // Chưa có phiên đăng nhập thì chuyển về trang đăng nhập
-            context.Result = new RedirectToActionResult("Login", "Account", null);
+            context.Result = new RedirectToActionResult(
+                "Login", "Account", null);
             return;
         }
 
-        // Đã đăng nhập nhưng không phải Admin thì chặn ngay tại Controller.
-        if (!string.Equals(vaiTro, LoaiTaiKhoan.Admin.ToString(), StringComparison.OrdinalIgnoreCase))
+        //b3 Không phải Admin thì từ chối truy cập
+        if (!string.Equals(vaiTro,
+            LoaiTaiKhoan.Admin.ToString(),
+            StringComparison.OrdinalIgnoreCase))
         {
             context.Result = new ContentResult
             {
                 StatusCode = StatusCodes.Status403Forbidden,
                 Content = "Bạn không có quyền sử dụng chức năng quản trị"
             };
+            return;
         }
+
+        // b4 Lấy DbContext để kiểm tra tài khoản
+        var db = context.HttpContext.RequestServices
+            .GetRequiredService<ApplicationDbContext>();
+
+        var taiKhoan = await db.TaiKhoans
+            .AsNoTracking()
+            .FirstOrDefaultAsync(x => x.MaTaiKhoan == maTaiKhoan.Value);
+
+        // b5 Kiểm tra tài khoản có tồn tại và đang hoạt động
+        if (taiKhoan == null ||
+            taiKhoan.TrangThai != TrangThaiTaiKhoan.DangHoatDong)
+        {
+            session.Clear();
+
+            context.Result = new RedirectToActionResult(
+                "Login", "Account", null);
+            return;
+        }
+
+        //b6 Kiểm tra vai trò thực tế trong CSDL
+        if (taiKhoan.LoaiTaiKhoan != LoaiTaiKhoan.Admin)
+        {
+            session.Clear();
+
+            context.Result = new ContentResult
+            {
+                StatusCode = StatusCodes.Status403Forbidden,
+                Content = "Bạn không có quyền sử dụng chức năng quản trị"
+            };
+            return;
+        }
+
+        // Hợp lệ thì cho phép truy cập Controller
     }
 }
