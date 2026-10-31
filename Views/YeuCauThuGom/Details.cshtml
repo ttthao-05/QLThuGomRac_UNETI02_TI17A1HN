@@ -4,6 +4,7 @@
 @{ ViewData["Title"] = "Chi tiết yêu cầu"; }
 <h1>Yêu cầu #@Model.MaYeuCau</h1>
 @if (TempData["ThongBao"] is string message) { <div class="alert alert-success" role="status">@message</div> }
+@if (TempData["ThongBaoLoi"] is string errorMessage) { <div class="alert alert-danger" role="alert">@errorMessage</div> }
 <dl class="row">
     <dt class="col-sm-3">Trạng thái</dt><dd class="col-sm-9">@Model.TrangThai.GetDisplayName()</dd>
     <dt class="col-sm-3">Ngày đăng ký</dt><dd class="col-sm-9">@Model.NgayDangKy.ToString("dd/MM/yyyy HH:mm")</dd>
@@ -18,3 +19,10 @@
 <a asp-action="Index" class="btn btn-primary">
     Về lịch sử yêu cầu
 </a>
+@if (Model.TrangThai == TrangThaiYeuCau.ChoXacNhan)
+{
+    <form asp-action="Huy" asp-route-id="@Model.MaYeuCau" method="post" class="d-inline"
+          onsubmit="return confirm('Bạn có chắc muốn hủy yêu cầu này không?');">
+        <button type="submit" class="btn btn-outline-danger">Hủy yêu cầu</button>
+    </form>
+}

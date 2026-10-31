@@ -187,6 +187,13 @@
                            class="btn btn-sm btn-info">
                             Chi tiết
                         </a>
+                        @if (request.TrangThai == TrangThaiYeuCau.ChoXacNhan)
+                        {
+                            <form asp-action="Huy" asp-route-id="@request.MaYeuCau" method="post" class="d-inline"
+                                  onsubmit="return confirm('Bạn có chắc muốn hủy yêu cầu này không?');">
+                                <button type="submit" class="btn btn-sm btn-outline-danger">Hủy</button>
+                            </form>
+                        }
                     </td>
                 </tr>
             }
