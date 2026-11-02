@@ -75,6 +75,26 @@ public class YeuCauThuGomController(ApplicationDbContext db) : Controller
         return request == null ? NotFound() : View(request);
     }
 
+    [HttpPost, ValidateAntiForgeryToken]
+    public async Task<IActionResult> Huy(int id)
+    {
+        var request = await db.YeuCauThuGoms
+            .Include(x => x.NguoiDan)
+            .SingleOrDefaultAsync(x => x.MaYeuCau == id && x.NguoiDan.MaTaiKhoan == AccountId);
+
+        if (request == null) return NotFound();
+        if (request.TrangThai != TrangThaiYeuCau.ChoXacNhan)
+        {
+            TempData["ThongBaoLoi"] = "Chỉ có thể hủy yêu cầu đang chờ xác nhận.";
+            return RedirectToAction(nameof(Details), new { id });
+        }
+
+        request.TrangThai = TrangThaiYeuCau.Huy;
+        await db.SaveChangesAsync();
+        TempData["ThongBao"] = "Đã hủy yêu cầu thu gom.";
+        return RedirectToAction(nameof(Details), new { id });
+    }
+
     [HttpGet]
     public async Task<IActionResult> Create()
     {
