@@ -1,5 +1,5 @@
-﻿// Họ và tên: [Vũ Đức Hải]
-// Mã sinh viên: [23103100008]
+// Họ và tên: Vũ Đức Hải
+// Mã sinh viên: 23103100008
 // Nội dung thực hiện: Module 4 - Dashboard tổng quan
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -33,7 +33,8 @@ public class DashboardController : Controller
             DangXuLy = await _db.YeuCauThuGoms.CountAsync(x => dangXuLy.Contains(x.TrangThai)),
             HoanThanh = await _db.YeuCauThuGoms.CountAsync(x => x.TrangThai == TrangThaiYeuCau.HoanThanh),
             TuChoiHuy = await _db.YeuCauThuGoms.CountAsync(x => tuChoiHuy.Contains(x.TrangThai)),
-            TongKhoiLuong = 0 // TODO: thay bằng tổng khối lượng thực tế khi Module 3 có KetQuaThuGom (xem thư mục SauKhiCoModule3)
+            // (decimal?) để không lỗi khi bảng chưa có dòng nào
+            TongKhoiLuong = await _db.ChiTietKetQuaThuGoms.SumAsync(c => (decimal?)c.KhoiLuongThucTe) ?? 0
         };
         return View(vm);
     }

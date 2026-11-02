@@ -1,4 +1,4 @@
-﻿// Họ và tên: [Vũ Đức Hải]
+// Họ và tên: [Vũ Đức Hải]
 // Mã sinh viên: [23103100008]
 // Nội dung thực hiện: Module 4 - ViewModel theo dõi yêu cầu
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -9,7 +9,7 @@ namespace QLThuGomRac_UNETI02_TI17A1HN.ViewModels;
 
 public class YeuCauFilterVM
 {
-    public string? TuKhoa { get; set; }            
+    public string? TuKhoa { get; set; }
     public int? MaKhuVuc { get; set; }
     public TrangThaiYeuCau? TrangThai { get; set; }
     public int? MaNhanVien { get; set; }

@@ -1,5 +1,5 @@
-﻿// Họ và tên: [Vũ Đức Hải]
-// Mã sinh viên: [23103100008]
+// Họ và tên: Vũ Đức Hải
+// Mã sinh viên: 23103100008
 // Nội dung thực hiện: Module 4 - ViewModel Dashboard và thống kê
 namespace QLThuGomRac_UNETI02_TI17A1HN.ViewModels;
 
@@ -23,10 +23,20 @@ public class NhomSoLuongVM
     public int SoLuong { get; set; }
 }
 
+public class NhomKhoiLuongVM
+{
+    public string Ten { get; set; } = "";
+    public decimal KhoiLuong { get; set; }
+}
+
 public class ThongKeVM
 {
     public List<NhomSoLuongVM> TheoTrangThai { get; set; } = new();
     public List<NhomSoLuongVM> TheoKhuVuc { get; set; } = new();
     public List<NhomSoLuongVM> TheoThang { get; set; } = new();
     public List<NhomSoLuongVM> TheoNhanVien { get; set; } = new();
+    public List<NhomKhoiLuongVM> KhoiLuongTheoLoai { get; set; } = new();
+    public List<NhomKhoiLuongVM> KhoiLuongTheoKhuVuc { get; set; } = new();
+    public List<NhomKhoiLuongVM> KhoiLuongTheoThang { get; set; } = new();
+    public NhomKhoiLuongVM? LoaiRacNhieuNhat { get; set; }
 }
