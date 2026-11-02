@@ -7,16 +7,19 @@ using Microsoft.EntityFrameworkCore;
 using QLThuGomRac_UNETI02_TI17A1HN.Data;
 using QLThuGomRac_UNETI02_TI17A1HN.Models.Enums;
 using QLThuGomRac_UNETI02_TI17A1HN.Models.ViewModels.Module1;
+using QLThuGomRac_UNETI02_TI17A1HN.Services;
 
 namespace QLThuGomRac_UNETI02_TI17A1HN.Controllers.Account;
 
 public class AccountController : Controller
 {
     private readonly ApplicationDbContext _context;
+    private readonly MatKhauService _matKhauService;
 
     public AccountController(ApplicationDbContext context)
     {
         _context = context;
+        _matKhauService = new MatKhauService();
     }
 
     // GET: /Account/Login
@@ -31,6 +34,7 @@ public class AccountController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Login(LoginViewModel model)
     {
+        // Bước 1: Kiểm tra dữ liệu nhập
         if (!ModelState.IsValid)
         {
             return View(model);
@@ -38,6 +42,7 @@ public class AccountController : Controller
 
         string tenDangNhap = model.TenDangNhap.Trim();
 
+        // Bước 2: Tìm tài khoản
         var taiKhoan = await _context.TaiKhoans
             .FirstOrDefaultAsync(x => x.TenDangNhap == tenDangNhap);
 
@@ -50,7 +55,7 @@ public class AccountController : Controller
             return View(model);
         }
 
-        // Admin khóa tài khoản thì vẫn không được đăng nhập
+        // Bước 3: Kiểm tra tài khoản bị Admin khóa
         if (taiKhoan.TrangThai != TrangThaiTaiKhoan.DangHoatDong)
         {
             ModelState.AddModelError(
@@ -60,39 +65,58 @@ public class AccountController : Controller
             return View(model);
         }
 
-        // Đang trong thời gian khóa tạm
+        // Bước 4: Kiểm tra khóa đăng nhập tạm thời
+        DateTime hienTai = DateTime.Now;
+
         if (taiKhoan.KhoaDangNhapDen.HasValue &&
-            taiKhoan.KhoaDangNhapDen.Value > DateTime.Now)
+            taiKhoan.KhoaDangNhapDen.Value > hienTai)
         {
             int soGiayConLai = (int)Math.Ceiling(
-                (taiKhoan.KhoaDangNhapDen.Value - DateTime.Now).TotalSeconds);
+                (taiKhoan.KhoaDangNhapDen.Value - hienTai).TotalSeconds);
 
             ModelState.AddModelError(
                 string.Empty,
-                $"Bạn đã nhập sai quá 3 lần. Vui lòng thử lại sau {soGiayConLai} giây.");
+                $"Bạn đã nhập sai mật khẩu 3 lần. Vui lòng thử lại sau {soGiayConLai} giây.");
 
             return View(model);
         }
 
-        // Hết 30 giây thì tự mở khóa
+        // Bước 5: Nếu hết thời gian khóa thì đặt lại bộ đếm
         if (taiKhoan.KhoaDangNhapDen.HasValue &&
-            taiKhoan.KhoaDangNhapDen.Value <= DateTime.Now)
+            taiKhoan.KhoaDangNhapDen.Value <= hienTai)
         {
-            taiKhoan.KhoaDangNhapDen = null;
             taiKhoan.SoLanDangNhapSai = 0;
-
-            await _context.SaveChangesAsync();
+            taiKhoan.KhoaDangNhapDen = null;
         }
 
-        // Sai mật khẩu
-        if (taiKhoan.MatKhau != model.MatKhau)
+
+        // Bước 6: Xác minh mật khẩu đã băm
+        bool matKhauHopLe = false;
+
+        try
+        {
+            matKhauHopLe = _matKhauService.KiemTraMatKhau(
+                taiKhoan, model.MatKhau);
+        }
+        catch (FormatException)
+        {
+            matKhauHopLe = false;
+        }
+        catch (ArgumentException)
+        {
+            matKhauHopLe = false;
+        }
+
+
+        // Bước 7: Xử lý nhập sai mật khẩu
+        if (!matKhauHopLe)
         {
             taiKhoan.SoLanDangNhapSai++;
 
-            // Sai lần thứ 3
             if (taiKhoan.SoLanDangNhapSai >= 3)
             {
-                taiKhoan.KhoaDangNhapDen = DateTime.Now.AddSeconds(30);
+                taiKhoan.KhoaDangNhapDen =
+                    DateTime.Now.AddSeconds(30);
 
                 await _context.SaveChangesAsync();
 
@@ -114,12 +138,13 @@ public class AccountController : Controller
             return View(model);
         }
 
-        // Đăng nhập đúng thì reset bộ đếm
+        // Bước 8: Đăng nhập đúng
         taiKhoan.SoLanDangNhapSai = 0;
         taiKhoan.KhoaDangNhapDen = null;
 
         await _context.SaveChangesAsync();
 
+        // Bước 9: Lưu thông tin vào Session
         HttpContext.Session.SetInt32(
             "MaTaiKhoan",
             taiKhoan.MaTaiKhoan);
@@ -135,6 +160,7 @@ public class AccountController : Controller
         TempData["ThongBao"] =
             $"Bạn đã đăng nhập thành công. Xin chào {taiKhoan.HoTen}!";
 
+        // Bước 10: Điều hướng theo vai trò
         if (taiKhoan.LoaiTaiKhoan == LoaiTaiKhoan.Admin)
         {
             return RedirectToAction("Index", "QuanTri");
@@ -148,6 +174,7 @@ public class AccountController : Controller
         return RedirectToAction("Index", "CongViec");
     }
 
+    // GET: /Account/Logout
     [HttpGet]
     public IActionResult Logout()
     {

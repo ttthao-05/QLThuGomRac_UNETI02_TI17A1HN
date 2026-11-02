@@ -67,7 +67,7 @@ public class ApplicationDbContext : DbContext
                 .IsRequired();
 
             entity.Property(x => x.MatKhau)
-                .HasMaxLength(100)
+                .HasMaxLength(500)
                 .IsRequired();
 
             entity.Property(x => x.HoTen)

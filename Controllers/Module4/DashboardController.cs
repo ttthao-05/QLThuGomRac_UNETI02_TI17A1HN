@@ -4,7 +4,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using QLThuGomRac_UNETI02_TI17A1HN.Data;
-using QLThuGomRac_UNETI02_TI17A1HN.Filters;
+using QLThuGomRac_UNETI02_TI17A1HN.Controllers.Admin;
 using QLThuGomRac_UNETI02_TI17A1HN.Models.Enums;
 using QLThuGomRac_UNETI02_TI17A1HN.ViewModels;
 

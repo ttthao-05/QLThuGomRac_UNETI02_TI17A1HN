@@ -16,11 +16,13 @@ public class TaiKhoan
     [Display(Name = "Tên đăng nhập")]
     public string TenDangNhap { get; set; } = string.Empty;
 
+
     [Required(ErrorMessage = "Mật khẩu là bắt buộc")]
-    [StringLength(100, MinimumLength = 6, ErrorMessage = "Mật khẩu phải từ 6 đến 100 ký tự")]
+    [StringLength(500)]
     [DataType(DataType.Password)]
     [Display(Name = "Mật khẩu")]
     public string MatKhau { get; set; } = string.Empty;
+
 
     [Required(ErrorMessage = "Họ tên là bắt buộc")]
     [StringLength(100, ErrorMessage = "Họ tên không được quá 100 ký tự")]

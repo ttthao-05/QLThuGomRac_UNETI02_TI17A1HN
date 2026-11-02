@@ -10,6 +10,7 @@
 using Microsoft.EntityFrameworkCore;
 using QLThuGomRac_UNETI02_TI17A1HN.Models.Entities;
 using QLThuGomRac_UNETI02_TI17A1HN.Models.Enums;
+using QLThuGomRac_UNETI02_TI17A1HN.Services;
 
 namespace QLThuGomRac_UNETI02_TI17A1HN.Data.Seed;
 
@@ -24,7 +25,7 @@ public static class SeedData
         {
             var danhSachTaiKhoan = new List<TaiKhoan>
             {
-                new() { TenDangNhap = "admin", MatKhau = "123456", HoTen = "Quản trị viên", SoDienThoai = "0901000001", LoaiTaiKhoan = LoaiTaiKhoan.Admin, TrangThai = TrangThaiTaiKhoan.DangHoatDong },
+                new() { TenDangNhap = "admin1", MatKhau = "123456", HoTen = "Quản trị viên", SoDienThoai = "0901000001", LoaiTaiKhoan = LoaiTaiKhoan.Admin, TrangThai = TrangThaiTaiKhoan.DangHoatDong },
                 new() { TenDangNhap = "admin2", MatKhau = "123456", HoTen = "Quản trị viên phụ", SoDienThoai = "0901000002", LoaiTaiKhoan = LoaiTaiKhoan.Admin, TrangThai = TrangThaiTaiKhoan.DangHoatDong },
 
                 new() { TenDangNhap = "nv01", MatKhau = "nv123456", HoTen = "Nhân viên 01", SoDienThoai = "0902000001", LoaiTaiKhoan = LoaiTaiKhoan.NhanVien, TrangThai = TrangThaiTaiKhoan.DangHoatDong },
@@ -45,9 +46,52 @@ public static class SeedData
                 new() { TenDangNhap = "nd10", MatKhau = "nd123456", HoTen = "Người dân 10", SoDienThoai = "0903000010", LoaiTaiKhoan = LoaiTaiKhoan.NguoiDan, TrangThai = TrangThaiTaiKhoan.DaKhoa }
             };
 
+
+            // Module 1 - Băm mật khẩu mẫu trước khi lưu
+            var matKhauService = new MatKhauService();
+
+            foreach (var taiKhoan in danhSachTaiKhoan)
+            {
+                taiKhoan.MatKhau = matKhauService.BamMatKhau(
+                    taiKhoan,
+                    taiKhoan.MatKhau);
+            }
+
+
             context.TaiKhoans.AddRange(danhSachTaiKhoan);
             context.SaveChanges();
         }
+
+
+        // MODULE 1 - Đồng bộ tên đăng nhập Admin mẫu trên Database cũ.
+        // Chỉ đổi admin -> admin1 khi admin1 chưa tồn tại.
+        if (!context.TaiKhoans.Any(x => x.TenDangNhap == "admin1"))
+        {
+            var adminCu = context.TaiKhoans.FirstOrDefault(x =>
+                x.TenDangNhap == "admin" && x.LoaiTaiKhoan == LoaiTaiKhoan.Admin);
+
+            if (adminCu != null)
+            {
+                adminCu.TenDangNhap = "admin1";
+                context.SaveChanges();
+            }
+        }
+
+
+        // MODULE 1 - Cập nhật mật khẩu cũ sang Hash
+        var dichVuMatKhau = new MatKhauService();
+
+        foreach (var tk in context.TaiKhoans.ToList())
+        {
+            if (tk.MatKhau == "123456" ||
+                tk.MatKhau == "nv123456" ||
+                tk.MatKhau == "nd123456")
+            {
+                tk.MatKhau = dichVuMatKhau.BamMatKhau(tk, tk.MatKhau);
+            }
+        }
+
+        context.SaveChanges();
 
         // =========================
         // MODULE 2 - Tạo hồ sơ Người dân từ tài khoản Người dân
