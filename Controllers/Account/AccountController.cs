@@ -161,9 +161,10 @@ public class AccountController : Controller
             $"Bạn đã đăng nhập thành công. Xin chào {taiKhoan.HoTen}!";
 
         // Bước 10: Điều hướng theo vai trò
+        // Bước 10: Điều hướng theo vai trò
         if (taiKhoan.LoaiTaiKhoan == LoaiTaiKhoan.Admin)
         {
-            return RedirectToAction("Index", "QuanTri");
+            return RedirectToAction("Index", "Dashboard");
         }
 
         if (taiKhoan.LoaiTaiKhoan == LoaiTaiKhoan.NguoiDan)
