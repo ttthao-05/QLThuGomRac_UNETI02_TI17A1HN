@@ -1,67 +1,125 @@
-@* Họ và tên: Vũ Đức Hải
+﻿@* Họ và tên: Vũ Đức Hải
    Mã sinh viên: 23103100008
-   Nội dung thực hiện: Module 4 - Theo dõi kết quả thu gom *@
+   Nội dung thực hiện: Module 4 - Giao diện theo dõi kết quả *@
 @model QLThuGomRac_UNETI02_TI17A1HN.ViewModels.TheoDoiKetQuaVM
-@{ ViewData["Title"] = "Theo dõi kết quả thu gom"; var f = Model.Filter; }
-
-<h2>Theo dõi kết quả thu gom</h2>
-
-<form method="get" class="row g-2 mb-3">
-    <div class="col-md-3"><input name="TuKhoa" value="@f.TuKhoa" class="form-control" placeholder="Mã yêu cầu / tên người dân" /></div>
-    <div class="col-md-2"><select name="MaKhuVuc" class="form-select" asp-items="Model.KhuVucs"><option value="">-- Khu vực --</option></select></div>
-    <div class="col-md-2"><select name="MaNhanVien" class="form-select" asp-items="Model.NhanViens"><option value="">-- Nhân viên --</option></select></div>
-    <div class="col-md-2"><input type="date" name="TuNgay" value="@f.TuNgay?.ToString("yyyy-MM-dd")" class="form-control" title="Từ ngày" /></div>
-    <div class="col-md-2"><input type="date" name="DenNgay" value="@f.DenNgay?.ToString("yyyy-MM-dd")" class="form-control" title="Đến ngày" /></div>
-    <div class="col-md-1"><button class="btn btn-primary w-100">Lọc</button></div>
-</form>
-
-<div class="row">
-    <div class="col-md-8">
-        <table class="table table-striped">
-            <thead class="table-light">
-                <tr><th>Mã YC</th><th>Người dân</th><th>Khu vực</th><th>Nhân viên</th><th>Ngày thu gom</th><th>Loại rác</th><th class="text-end">Khối lượng</th></tr>
-            </thead>
-            <tbody>
-            @foreach (var r in Model.Data.Items)
-            {
-                <tr>
-                    <td>@r.MaYeuCau</td><td>@r.NguoiDan</td><td>@r.KhuVuc</td><td>@r.NhanVien</td>
-                    <td>@r.NgayThuGom.ToString("dd/MM/yyyy")</td><td>@r.LoaiRac</td>
-                    <td class="text-end">@r.KhoiLuong.ToString("N2")</td>
-                </tr>
-            }
-            @if (!Model.Data.Items.Any())
-            {
-                <tr><td colspan="7" class="text-center text-muted">Chưa có kết quả thu gom phù hợp.</td></tr>
-            }
-            </tbody>
-        </table>
-        <nav>
-            <ul class="pagination">
-                @for (int p = 1; p <= Model.Data.TotalPages; p++)
-                {
-                    <li class="page-item @(p == Model.Data.Page ? "active" : "")">
-                        <a class="page-link" asp-action="Index" asp-route-page="@p"
-                           asp-route-TuKhoa="@f.TuKhoa" asp-route-MaKhuVuc="@f.MaKhuVuc"
-                           asp-route-MaNhanVien="@f.MaNhanVien"
-                           asp-route-TuNgay="@f.TuNgay?.ToString("yyyy-MM-dd")"
-                           asp-route-DenNgay="@f.DenNgay?.ToString("yyyy-MM-dd")">@p</a>
-                    </li>
-                }
-            </ul>
-        </nav>
+@{
+    ViewData["Title"] = "Theo dõi kết quả thu gom";
+    var f = Model.Filter;
+}
+<link rel="stylesheet" href="~/css/module4-modern.css" asp-append-version="true" />
+<div class="m4-page">
+    <div class="m4-header"><div>
+        <div class="m4-kicker">Theo dõi & thống kê</div>
+        <h1><i class="bi bi-check2-square me-2"></i>Theo dõi kết quả thu gom</h1>
+        <p class="m4-subtitle">Khối lượng thực tế theo yêu cầu, nhân viên và từng loại rác</p>
     </div>
-    <div class="col-md-4">
-        <div class="card">
-            <div class="card-header">Tổng khối lượng theo loại rác</div>
-            <ul class="list-group list-group-flush">
-                @foreach (var t in Model.TongTheoLoai)
-                {
-                    <li class="list-group-item d-flex justify-content-between">
-                        <span>@t.LoaiRac</span><strong>@t.KhoiLuong.ToString("N2") @t.DonViTinh</strong>
-                    </li>
-                }
-            </ul>
+    <a class="m4-btn m4-btn-outline" asp-controller="Dashboard" asp-action="Index">
+        <i class="bi bi-speedometer2"></i> Dashboard</a>
         </div>
+    <section class="m4-panel">
+        <div class="m4-panel-title"><i class="bi bi-funnel"></i> Bộ lọc kết quả</div>
+    <form method="get" asp-action="Index" class="m4-filters">
+        <div class="m4-field m4-search">
+            <label for="m4-result-keyword">Mã yêu cầu / người dân</label>
+            <input id="m4-result-keyword" name="TuKhoa" value="@f.TuKhoa" class="form-control" placeholder="Tìm mã YC hoặc họ tên" />
+        </div>
+
+        <div class="m4-field">
+            <label for="m4-result-area">Khu vực</label>
+            <select id="m4-result-area" name="MaKhuVuc" class="form-select" asp-items="Model.KhuVucs">
+                <option value="">Tất cả khu vực</option></select>
+        </div>
+
+        <div class="m4-field">
+            <label for="m4-result-staff">Nhân viên</label>
+            <select id="m4-result-staff" name="MaNhanVien" class="form-select" asp-items="Model.NhanViens">
+                <option value="">Tất cả nhân viên</option>
+            </select>
+        </div>
+
+        <div class="m4-field m4-date">
+            <label for="m4-result-from">Từ ngày</label>
+            <input id="m4-result-from" type="date" name="TuNgay" class="form-control" value="@f.TuNgay?.ToString("yyyy-MM-dd")" />
+        </div>
+
+        <div class="m4-field m4-date">
+            <label for="m4-result-to">Đến ngày</label>
+            <input id="m4-result-to" type="date" name="DenNgay" class="form-control" value="@f.DenNgay?.ToString("yyyy-MM-dd")" />
+        </div>
+
+        <div class="m4-actions">
+            <a asp-action="Index" class="m4-btn m4-btn-outline"><i class="bi bi-arrow-counterclockwise"></i> Xóa lọc</a>
+            <button type="submit" class="m4-btn"><i class="bi bi-search"></i> Lọc kết quả</button>
+        </div>
+    </form></section>
+
+    <div class="m4-two-cols">
+        <section class="m4-panel">
+            <div class="m4-header">
+                <div class="m4-panel-title mb-0"><i class="bi bi-table"></i> Chi tiết kết quả thu gom</div>
+                <span class="m4-subtitle">Tổng: @Model.Data.TotalItems dòng kết quả</span>
+            </div>
+
+            <div class="m4-table-wrap">
+                <table class="m4-table">
+                    <thead>
+                        <tr>
+                            <th>Mã YC</th>
+                            <th>Người dân</th>
+                            <th>Khu vực</th>
+                            <th>Nhân viên</th>
+                            <th>Ngày thu gom</th>
+                            <th>Loại rác</th>
+                            <th class="text-end">Số lượng</th>
+                        </tr>
+                    </thead><tbody>
+
+
+            @foreach (var r in Model.Data.Items)
+            { <tr>
+                <td class="m4-id">#@r.MaYeuCau</td>
+                <td>@r.NguoiDan</td>
+                <td>@r.KhuVuc</td>
+                <td>@r.NhanVien</td>
+                <td>@r.NgayThuGom.ToString("dd/MM/yyyy")</td>
+                <td>@r.LoaiRac</td>
+                <td class="text-end fw-semibold">@r.KhoiLuong.ToString("N2")</td>
+              </tr> }
+
+            @if (!Model.Data.Items.Any()) { 
+                <tr>
+                    <td colspan="7" class="m4-empty">Chưa có kết quả thu gom phù hợp.</td>
+                </tr> }
+            </tbody></table></div>
+
+            <div class="m4-page-footer">
+                <span class="m4-subtitle">Trang @Model.Data.Page / @Math.Max(1, Model.Data.TotalPages)</span>
+                <nav aria-label="Phân trang kết quả">
+                    <ul class="pagination">
+            @for (int p = 1; p <= Model.Data.TotalPages; p++)
+            { <li class="page-item @(p == Model.Data.Page ? "active" : "")">
+                <a class="page-link" asp-action="Index" asp-route-page="@p" asp-route-TuKhoa="@f.TuKhoa" 
+                    asp-route-MaKhuVuc="@f.MaKhuVuc" asp-route-MaNhanVien="@f.MaNhanVien" 
+                    asp-route-TuNgay="@f.TuNgay?.ToString("yyyy-MM-dd")" 
+                    asp-route-DenNgay="@f.DenNgay?.ToString("yyyy-MM-dd")">@p</a></li> }
+            </ul></nav></div>
+        </section>
+
+
+        <aside class="m4-panel">
+            <div class="m4-panel-title">
+                <i class="bi bi-recycle"></i> Tổng theo loại rác
+            </div>
+            <p class="m4-chart-note mb-2">Các đơn vị đo được hiển thị riêng, không cộng kg với cái.</p>
+                <ul class="m4-stat-list">
+            @foreach (var t in Model.TongTheoLoai) { 
+            <li>
+                <span>@t.LoaiRac</span>
+                <strong>@t.KhoiLuong.ToString("N2") @t.DonViTinh</strong>
+            </li> }
+
+            @if (!Model.TongTheoLoai.Any()) { 
+                <li class="m4-muted">Chưa có dữ liệu tổng hợp</li> }
+        </ul></aside>
     </div>
 </div>
