@@ -403,7 +403,7 @@ public class TaiKhoanController : Controller
 
             if (soAdminHoatDong <= 1)
             {
-                TempData["ThongBaoLoi"] =
+                TempData["Loi"] =
                     "Không thể khóa Admin cuối cùng đang hoạt động.";
 
                 return RedirectToAction(nameof(Index));
@@ -415,7 +415,7 @@ public class TaiKhoanController : Controller
         if (taiKhoan.MaTaiKhoan == maTaiKhoanDangNhap &&
             taiKhoan.TrangThai == TrangThaiTaiKhoan.DangHoatDong)
         {
-            TempData["ThongBaoLoi"] =
+            TempData["Loi"] =
                 "Bạn không thể tự khóa tài khoản đang đăng nhập.";
 
             return RedirectToAction(nameof(Index));
