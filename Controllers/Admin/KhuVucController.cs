@@ -190,7 +190,7 @@ public class KhuVucController : Controller
 
         if (daCoYeuCauThuGom)
         {
-            TempData["ThongBao"] =
+            TempData["Loi"] =
                 "Khu vực đã có yêu cầu thu gom nên không thể xóa. " +
                 "Bạn có thể chuyển khu vực sang trạng thái ngừng hoạt động.";
 

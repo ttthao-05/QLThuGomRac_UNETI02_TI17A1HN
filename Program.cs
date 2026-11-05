@@ -30,6 +30,13 @@ app.UseAuthorization();
 
 app.MapStaticAssets();
 
+// Truy cập /TaiKhoan sẽ tự động gọi TaiKhoanController.Index
+app.MapControllerRoute(
+    name: "tai-khoan",
+    pattern: "TaiKhoan",
+    defaults: new { controller = "TaiKhoan", action = "Index" });
+
+// Route mặc định của hệ thống
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Account}/{action=Login}/{id?}")
