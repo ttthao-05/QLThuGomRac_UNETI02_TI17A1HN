@@ -1,53 +1,337 @@
-@* Họ và tên: Vũ Đức Hải
-   Mã sinh viên: 23103100008
-   Nội dung thực hiện: Module 4 - Trang thống kê *@
+﻿@*
+    Họ và tên: Vũ Đức Hải
+    Mã sinh viên: 23103100008
+    Nội dung thực hiện: Module 4 - Giao diện thống kê và biểu đồ
+*@
+
+@using System.Text.Json
 @model QLThuGomRac_UNETI02_TI17A1HN.ViewModels.ThongKeVM
-@{ ViewData["Title"] = "Thống kê"; }
 
-<h2 class="mb-3">Thống kê thu gom rác tái chế</h2>
+@{
+    ViewData["Title"] = "Thống kê thu gom rác";
 
-@if (Model.LoaiRacNhieuNhat != null)
-{
-    <div class="alert alert-success">
-        Loại rác được thu gom nhiều nhất: <strong>@Model.LoaiRacNhieuNhat.Ten</strong>
-        (@Model.LoaiRacNhieuNhat.KhoiLuong.ToString("N2"))
-    </div>
+    var jsonTrangThaiTen = JsonSerializer.Serialize(
+        Model.TheoTrangThai.Select(x => x.Ten).ToList());
+
+    var jsonTrangThaiSo = JsonSerializer.Serialize(
+        Model.TheoTrangThai.Select(x => x.SoLuong).ToList());
+
+    var jsonKhuVucTen = JsonSerializer.Serialize(
+        Model.TheoKhuVuc.Select(x => x.Ten).ToList());
+
+    var jsonKhuVucSo = JsonSerializer.Serialize(
+        Model.TheoKhuVuc.Select(x => x.SoLuong).ToList());
+
+    var jsonThangTen = JsonSerializer.Serialize(
+        Model.TheoThang.Select(x => x.Ten).ToList());
+
+    var jsonThangSo = JsonSerializer.Serialize(
+        Model.TheoThang.Select(x => x.SoLuong).ToList());
+
+    var jsonNhanVienTen = JsonSerializer.Serialize(
+        Model.TheoNhanVien.Select(x => x.Ten).ToList());
+
+    var jsonNhanVienSo = JsonSerializer.Serialize(
+        Model.TheoNhanVien.Select(x => x.SoLuong).ToList());
 }
 
-<div class="row g-3">
+<link rel="stylesheet"
+      href="~/css/module4-modern.css"
+      asp-append-version="true" />
+
+<div class="m4-page">
+
+    <!--1. TIÊU ĐỀ TRANG-->
+    <div class="m4-header">
+        <div>
+            <div class="m4-kicker">Theo dõi & thống kê</div>
+
+            <h1><i class="bi bi-graph-up-arrow me-2"></i>
+                Thống kê thu gom rác tái chế
+            </h1>
+
+            <p class="m4-subtitle">Tổng hợp dữ liệu thực tế từ hệ thống
+                theo trạng thái, khu vực, thời gian và nhân viên
+            </p>
+        </div>
+
+        <!-- Nút quay về Dashboard -->
+        <a asp-controller="Dashboard"asp-action="Index"class="m4-btn m4-btn-outline">
+            <i class="bi bi-speedometer2"></i>Dashboard
+        </a>
+    </div>
+
+
+    <!--2. LOẠI RÁC ĐƯỢC THU GOM NHIỀU NHẤT -->
+    @if (Model.LoaiRacNhieuNhat != null)
+    {
+        <div class="m4-highlight">
+            <i class="bi bi-award"></i>
+
+            <div>
+                <div class="m4-kicker">Loại rác được thu gom nhiều nhất(theo dữ liệu thống kê hiện tại)</div>
+
+                <strong>@Model.LoaiRacNhieuNhat.Ten</strong>
+                —
+                @Model.LoaiRacNhieuNhat.KhoiLuong.ToString("N2")
+
+                <small class="text-muted">(xem lưu ý về đơn vị phía dưới)</small>
+            </div>
+        </div>
+    }
+
+
+    <!--3. BIỂU ĐỒ THỐNG KÊ-->
+    <div class="m4-grid-two">
+        <!-- Biểu đồ 1: Theo trạng thái -->
+        <section class="m4-panel">
+            <div class="m4-panel-title"><i class="bi bi-pie-chart"></i>
+                Tỷ lệ yêu cầu theo trạng thái
+            </div>
+
+            <div class="m4-chart-frame">
+                <canvas id="m4-chart-status"aria-label="Biểu đồ trạng thái yêu cầu"></canvas>
+            </div>
+        </section>
+
+        <!-- Biểu đồ 2: Theo khu vực -->
+        <section class="m4-panel">
+            <div class="m4-panel-title"><i class="bi bi-bar-chart"></i>
+                Số yêu cầu theo khu vực
+            </div>
+
+            <div class="m4-chart-frame">
+                <canvas id="m4-chart-area"aria-label="Biểu đồ theo khu vực"></canvas>
+            </div>
+        </section>
+
+
+        <!-- Biểu đồ 3: Theo tháng -->
+        <section class="m4-panel">
+            <div class="m4-panel-title"><i class="bi bi-calendar3"></i>
+                Số yêu cầu theo tháng
+            </div>
+
+            <div class="m4-chart-frame">
+                <canvas id="m4-chart-month"aria-label="Biểu đồ theo tháng"></canvas>
+            </div>
+        </section>
+
+
+        <!-- Biểu đồ 4: Theo nhân viên -->
+        <section class="m4-panel">
+            <div class="m4-panel-title"><i class="bi bi-people"></i>
+                Số yêu cầu theo nhân viên
+            </div>
+
+            <div class="m4-chart-frame">
+                <canvas id="m4-chart-staff"aria-label="Biểu đồ theo nhân viên"></canvas>
+            </div>
+        </section>
+
+    </div>
+
+
+    <!--4. THÔNG BÁO VỀ ĐƠN VỊ TÍNH-->
+    <div class="m4-highlight" style="padding:12px 16px">
+        <i class="bi bi-info-circle"style="font-size:1.15rem"></i>
+        <div style="font-size:.83rem">
+
+            Lưu ý: thống kê khối lượng ở bảng gốc
+            chưa mang đơn vị tính trong ViewModel.
+
+            Nếu cơ sở dữ liệu có cả
+            <strong>kg</strong> và <strong>cái</strong>,
+            không nên diễn giải tổng số này là kg
+            hoặc so sánh trực tiếp các loại khác đơn vị.
+
+            Các biểu đồ bên trên chỉ thống kê
+            <strong>số yêu cầu</strong>.
+
+        </div>
+
+    </div>
+
+
+    <!--5. CHUẨN BỊ DỮ LIỆU CHO CÁC BẢNG -->
     @{
-        var soLuong = new (string Tieu, List<QLThuGomRac_UNETI02_TI17A1HN.ViewModels.NhomSoLuongVM> Ds)[] {
-            ("Số yêu cầu theo trạng thái", Model.TheoTrangThai),
-            ("Số yêu cầu theo khu vực", Model.TheoKhuVuc),
-            ("Số yêu cầu theo tháng", Model.TheoThang),
-            ("Số yêu cầu theo nhân viên", Model.TheoNhanVien)
+        // Nhóm thống kê số lượng yêu cầu
+        var soLuong = new (string Tieu,
+            List<QLThuGomRac_UNETI02_TI17A1HN.ViewModels.NhomSoLuongVM> Ds
+        )[]
+        {
+            ("Số yêu cầu theo trạng thái",Model.TheoTrangThai),
+            ("Số yêu cầu theo khu vực",Model.TheoKhuVuc),
+            ("Số yêu cầu theo tháng",Model.TheoThang),
+            ("Số yêu cầu theo nhân viên",Model.TheoNhanVien)
         };
-        var khoiLuong = new (string Tieu, List<QLThuGomRac_UNETI02_TI17A1HN.ViewModels.NhomKhoiLuongVM> Ds)[] {
-            ("Tổng khối lượng từng loại rác", Model.KhoiLuongTheoLoai),
-            ("Khối lượng theo khu vực", Model.KhoiLuongTheoKhuVuc),
-            ("Khối lượng theo tháng", Model.KhoiLuongTheoThang)
+
+
+        // Nhóm thống kê số lượng rác thực tế
+        var khoiLuong = new (string Tieu,
+            List<QLThuGomRac_UNETI02_TI17A1HN.ViewModels.NhomKhoiLuongVM> Ds
+        )[]
+        {
+            ("Số lượng thực tế theo loại rác",Model.KhoiLuongTheoLoai),
+            ("Số lượng thực tế theo khu vực",Model.KhoiLuongTheoKhuVuc),
+            ("Số lượng thực tế theo tháng",Model.KhoiLuongTheoThang)
         };
     }
-    @foreach (var b in soLuong)
-    {
-        <div class="col-md-6">
-            <div class="card h-100"><div class="card-header">@b.Tieu</div>
-                <table class="table table-sm mb-0">
-                    @foreach (var x in b.Ds) { <tr><td>@x.Ten</td><td class="text-end">@x.SoLuong</td></tr> }
-                    @if (!b.Ds.Any()) { <tr><td class="text-muted">Chưa có dữ liệu</td></tr> }
+
+
+    <!--6. CÁC BẢNG THỐNG KÊ CHI TIẾT-->
+    <div class="m4-grid-two">
+        <!-- 6.1. BẢNG THỐNG KÊ SỐ YÊU CẦU -->
+        @foreach (var block in soLuong)
+        {
+            <section class="m4-panel">
+                <!-- Tiêu đề bảng -->
+                <div class="m4-panel-title">
+                    <i class="bi bi-list-ol"></i>@block.Tieu
+                </div>
+
+                <!-- Nội dung bảng -->
+                <table class="m4-table">
+                    <thead>
+                        <tr>
+                            <th>Nhóm</th>
+                            <th class="text-end">Số yêu cầu</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @foreach (var x in block.Ds)
+                        {
+                            <tr>
+                                <td>@x.Ten </td>
+                                <td class="text-end fw-semibold">@x.SoLuong</td>
+                            </tr>
+                        }
+
+                        <!-- Không có dữ liệu -->
+                        @if (!block.Ds.Any())
+                        {
+                            <tr><td colspan="2"class="m4-empty">Chưa có dữ liệu</td></tr>
+                        }
+                    </tbody>
                 </table>
-            </div>
-        </div>
-    }
-    @foreach (var b in khoiLuong)
-    {
-        <div class="col-md-6">
-            <div class="card h-100"><div class="card-header">@b.Tieu</div>
-                <table class="table table-sm mb-0">
-                    @foreach (var x in b.Ds) { <tr><td>@x.Ten</td><td class="text-end">@x.KhoiLuong.ToString("N2")</td></tr> }
-                    @if (!b.Ds.Any()) { <tr><td class="text-muted">Chưa có dữ liệu</td></tr> }
+            </section>
+        }
+
+
+        <!-- 6.2. BẢNG THỐNG KÊ SỐ LƯỢNG RÁC -->
+        @foreach (var block in khoiLuong)
+        {
+            <section class="m4-panel">
+                <!-- Tiêu đề bảng -->
+                <div class="m4-panel-title">
+                    <i class="bi bi-recycle"></i>@block.Tieu
+                </div>
+
+                <!-- Nội dung bảng -->
+                <table class="m4-table">
+                    <thead>
+                        <tr>
+                            <th>Nhóm</th>
+                            <th class="text-end">Số lượng</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        @foreach (var x in block.Ds)
+                        {
+                            <tr>
+                                <td>@x.Ten</td>
+                                <td class="text-end fw-semibold">@x.KhoiLuong.ToString("N2")</td>
+                            </tr>
+                        }
+
+                        <!-- Không có dữ liệu -->
+                        @if (!block.Ds.Any())
+                        {
+                            <tr>
+                                <td colspan="2"class="m4-empty">Chưa có dữ liệu</td>
+                            </tr>
+                        }
+                    </tbody>
                 </table>
-            </div>
-        </div>
-    }
+            </section>
+        }
+    </div>
 </div>
+
+
+<!--7. THƯ VIỆN BIỂU ĐỒ CHART.JS-->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
+
+<!--8. JAVASCRIPT VẼ BIỂU ĐỒ-->
+
+<!-- THƯ VIỆN CHART.JS -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
+
+<!-- VẼ BIỂU ĐỒ THỐNG KÊ -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+        // Kiểm tra Chart.js
+        if (typeof Chart === "undefined") {
+            console.error("Không tải được Chart.js");
+            return;
+        }
+
+        const trangThaiTen = @Html.Raw(jsonTrangThaiTen);
+        const trangThaiSo = @Html.Raw(jsonTrangThaiSo);
+
+        const khuVucTen = @Html.Raw(jsonKhuVucTen);
+        const khuVucSo = @Html.Raw(jsonKhuVucSo);
+
+        const thangTen = @Html.Raw(jsonThangTen);
+        const thangSo = @Html.Raw(jsonThangSo);
+
+        const nhanVienTen = @Html.Raw(jsonNhanVienTen);
+        const nhanVienSo = @Html.Raw(jsonNhanVienSo);
+
+        // Màu biểu đồ
+        const colors = ["#168858","#2e87cb","#f3b731","#9a82d0","#e6776d","#38ad9d","#7b95b5"];
+
+        // Hàm vẽ biểu đồ
+        function veBieuDo(id, loai, ten, soLuong) {
+            const canvas = document.getElementById(id);
+
+            if (!canvas) {
+                console.error("Không tìm thấy:", id);
+                return;
+            }
+
+            new Chart(canvas, {
+                type: loai,
+                data: {
+                    labels: ten,
+                    datasets: [{label: "Số yêu cầu",data: soLuong,
+                        backgroundColor:loai === "doughnut"? colors: "#36a672",
+                        borderRadius:loai === "bar" ? 6 : 0
+                    }]
+                },
+
+                options: {responsive: true,maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: loai === "doughnut",position: "bottom"
+                        }
+                    },
+
+                    scales: loai === "bar" ? {
+                            y: {beginAtZero: true,ticks: {precision: 0}}
+                        }
+                        : {}
+                }
+            });
+        }
+
+        // Vẽ 4 biểu đồ
+        veBieuDo("m4-chart-status","doughnut",trangThaiTen,trangThaiSo);
+        veBieuDo("m4-chart-area","bar",khuVucTen,khuVucSo);
+        veBieuDo( "m4-chart-month", "bar",thangTen,thangSo);
+        veBieuDo( "m4-chart-staff","bar",nhanVienTen, nhanVienSo);
+    });
+</script>

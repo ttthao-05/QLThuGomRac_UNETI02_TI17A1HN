@@ -24,7 +24,7 @@
 
 <div class="row g-4">
 
-    <div class="col-md-4">
+    <div class="col-6 col-md-4 col-xl-2">
         <div class="page-card h-100">
             <h4>
                 <i class="bi bi-person-circle me-2"></i>
@@ -41,7 +41,7 @@
         </div>
     </div>
 
-    <div class="col-md-4">
+    <div class="col-6 col-md-4 col-xl-2">
         <div class="page-card h-100">
             <h4>
                 <i class="bi bi-geo-alt-fill me-2"></i>
@@ -58,7 +58,7 @@
         </div>
     </div>
 
-    <div class="col-md-4">
+    <div class="col-6 col-md-4 col-xl-2">
         <div class="page-card h-100">
             <h4>
                 <i class="bi bi-recycle me-2"></i>
@@ -75,7 +75,7 @@
         </div>
     </div>
 
-    <div class="col-md-4">
+    <div class="col-6 col-md-4 col-xl-2">
         <div class="page-card h-100">
             <h4>
                 <i class="bi bi-pin-map-fill me-2"></i>
@@ -92,7 +92,7 @@
         </div>
     </div>
 
-    <div class="col-md-4">
+   <div class="col-6 col-md-4 col-xl-2">
         <div class="page-card h-100">
             <h4>
                 <i class="bi bi-people-fill me-2"></i>
@@ -109,7 +109,7 @@
         </div>
     </div>
 
-    <div class="col-md-4">
+    <div class="col-6 col-md-4 col-xl-2">
         <div class="page-card h-100">
             <h4>
                 <i class="bi bi-person-badge-fill me-2"></i>
@@ -126,4 +126,84 @@
         </div>
     </div>
 
+
+    <!-- Phân công thu gom -->
+<div class="col-6 col-md-4 col-xl-2">
+    <div class="page-card h-100">
+        <h4>
+            <i class="bi bi-person-workspace me-2"></i>
+            Phân công thu gom
+        </h4>
+        <p>Phân công nhân viên thực hiện thu gom rác.</p>
+        <a asp-controller="PhanCong"
+           asp-action="Index"
+           class="btn btn-success">
+            Quản lý phân công
+        </a>
+    </div>
+</div>
+
+<!-- Theo dõi yêu cầu -->
+<div class="col-6 col-md-4 col-xl-2">
+    <div class="page-card h-100">
+        <h4>
+            <i class="bi bi-search me-2"></i>
+            Theo dõi yêu cầu
+        </h4>
+        <p>Theo dõi các yêu cầu thu gom trong hệ thống.</p>
+        <a asp-controller="TheoDoiYeuCau"
+           asp-action="Index"
+           class="btn btn-success">
+            Xem yêu cầu
+        </a>
+    </div>
+</div>
+
+<!-- Theo dõi kết quả -->
+<div class="col-6 col-md-4 col-xl-2">
+    <div class="page-card h-100">
+        <h4>
+            <i class="bi bi-clipboard-check me-2"></i>
+            Theo dõi kết quả
+        </h4>
+        <p>Xem kết quả và khối lượng rác đã thu gom.</p>
+        <a asp-controller="TheoDoiKetQua"
+           asp-action="Index"
+           class="btn btn-success">
+            Xem kết quả
+        </a>
+    </div>
+</div>
+
+<!-- Dashboard -->
+<div class="col-6 col-md-4 col-xl-2">
+    <div class="page-card h-100">
+        <h4>
+            <i class="bi bi-speedometer2 me-2"></i>
+            Dashboard
+        </h4>
+        <p>Xem tổng quan hoạt động thu gom rác.</p>
+        <a asp-controller="Dashboard"
+           asp-action="Index"
+           class="btn btn-success">
+            Xem Dashboard
+        </a>
+    </div>
+</div>
+
+<!-- Thống kê -->
+<div class="col-6 col-md-4 col-xl-2">
+    <div class="page-card h-100">
+        <h4>
+            <i class="bi bi-bar-chart-fill me-2"></i>
+            Thống kê
+        </h4>
+        <p>Thống kê yêu cầu và khối lượng thu gom.</p>
+        <a asp-controller="ThongKe"
+           asp-action="Index"
+           class="btn btn-success">
+            Xem thống kê
+        </a>
+    </div>
+</div>
 </div>

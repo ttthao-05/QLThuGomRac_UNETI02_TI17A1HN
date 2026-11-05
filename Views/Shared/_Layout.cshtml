@@ -165,6 +165,13 @@
                         <span>Theo dõi yêu cầu</span>
                     </a>
 
+                    <a class="sidebar-link @(currentController == "TheoDoiKetQua" ? "active" : "")"
+                       asp-controller="TheoDoiKetQua"
+                       asp-action="Index">
+                        <i class="bi bi-clipboard-check"></i>
+                        <span>Theo dõi kết quả</span>
+                    </a>
+
                     <a class="sidebar-link @(currentController == "ThongKe" ? "active" : "")"
                        asp-controller="ThongKe"
                        asp-action="Index">

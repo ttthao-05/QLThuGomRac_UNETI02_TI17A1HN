@@ -1,38 +1,161 @@
-﻿@* Họ và tên: [Vũ Đức Hải]
-   Mã sinh viên: [23103100008]
-   Nội dung thực hiện: Module 4 - Dashboard *@
+﻿@* Họ và tên: Vũ Đức Hải
+   Mã sinh viên: 23103100008
+   Nội dung thực hiện: Module 4 - Dashboard hiện đại, dữ liệu SQL Server *@
 @model QLThuGomRac_UNETI02_TI17A1HN.ViewModels.DashboardVM
-@{ ViewData["Title"] = "Dashboard"; }
+@using System.Text.Json
+@{
+    ViewData["Title"] = "Dashboard quản trị";
+    var tyLeHoanThanh = Model.TongYeuCau > 0 ? (100.0 * Model.HoanThanh / Model.TongYeuCau) : 0;
+    var trangThaiTen = new Dictionary<string,string> {
+        ["ChoXacNhan"]="Chờ xác nhận", ["DaXacNhan"]="Đã xác nhận",
+        ["DaPhanCong"]="Đã phân công", ["DangThuGom"]="Đang thu gom",
+        ["HoanThanh"]="Hoàn thành", ["TuChoi"]="Từ chối",
+        ["Huy"]="Hủy", ["KhongThucHienDuoc"]="Không thực hiện được"
+    };
+    var trangThaiMau = new Dictionary<string,string> {
+        ["ChoXacNhan"]="warning", ["DaXacNhan"]="info",
+        ["DaPhanCong"]="info", ["DangThuGom"]="primary",
+        ["HoanThanh"]="success", ["TuChoi"]="danger",
+        ["Huy"]="secondary", ["KhongThucHienDuoc"]="danger"
+    };
+}
+<style>
+    .eco-dashboard { color:#15352c; }
+    .eco-kpi,.eco-panel {background:#fff;border:1px solid #e4eee8;border-radius:15px;box-shadow:0 4px 18px rgba(15,75,43,.055);height:100%}
+    .eco-kpi {padding:17px 19px;display:flex;align-items:center;gap:14px}
+    .eco-kpi .ico {width:45px;height:45px;flex:0 0 45px;border-radius:13px;background:#e8f6ed;color:#167748;display:flex;align-items:center;justify-content:center;font-size:22px}
+    .eco-kpi .num {font-size:26px;line-height:1.1;font-weight:800;color:#143b2d}
+    .eco-kpi .name {font-size:13px;color:#63776c;margin-top:5px}
+    .eco-panel {padding:19px 21px}
+    .eco-panel-title {font-weight:750;font-size:16px;color:#174630;display:flex;gap:8px;align-items:center;margin-bottom:15px}
+    .eco-stat {background:#fff;border:1px solid #e4eee8;border-radius:12px;padding:13px 15px;height:100%}
+    .eco-stat .num {font-size:24px;font-weight:800;color:#196e4c}
+    .eco-stat .label {font-size:12px;color:#64776d}
+    .eco-chart {height:255px;position:relative}
+    .eco-dashboard .table {font-size:13px;margin-bottom:0;vertical-align:middle}
+    .eco-dashboard .table th {color:#5c6f62;font-weight:650;background:#f5faf7;white-space:nowrap}
+    .eco-dashboard .table td {color:#254333}
+    .eco-empty {text-align:center;padding:38px 10px;color:#708579}
+    .eco-subtle {font-size:12px;color:#748779}
+    .eco-dashboard a {text-decoration:none}
+    /* KPI: cùng một hàng, ô nhỏ vừa đủ nội dung */
+    .eco-summary-scroll { width:100%; overflow-x:auto; overscroll-behavior-x:contain; padding-bottom:5px; }
+    .eco-summary-row { display:grid; grid-template-columns:repeat(10,minmax(0,1fr)); gap:8px; min-width:1120px; }
+    .eco-summary-item { min-width:0; min-height:90px; padding:10px 5px; background:#fff; border:1px solid #e4eee8; border-radius:12px; box-shadow:0 3px 12px rgba(15,75,43,.045); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px; text-align:center; }
+    .eco-summary-item i { color:#168153; font-size:17px; line-height:1.1; }
+    .eco-summary-item strong { color:#143b2d; font-size:22px; font-weight:800; line-height:1.2; }
+    .eco-summary-item span { color:#64776d; font-size:11px; line-height:1.3; white-space:nowrap; }
+    .eco-summary-warning i,.eco-summary-warning strong {color:#e0a000}
+    .eco-summary-info i,.eco-summary-info strong {color:#089fc1}
+    .eco-summary-success i,.eco-summary-success strong {color:#14804a}
+    .eco-summary-danger i,.eco-summary-danger strong {color:#d33c48}
+</style>
 
-<h2 class="mb-4">Dashboard quản trị</h2>
-<div class="row g-3">
-    @{
-        var cards = new (string Ten, string GiaTri, string Mau)[] {
-            ("Khu vực", Model.TongKhuVuc.ToString(), "primary"),
-            ("Loại rác", Model.TongLoaiRac.ToString(), "primary"),
-            ("Người dân", Model.TongNguoiDan.ToString(), "primary"),
-            ("Nhân viên", Model.TongNhanVien.ToString(), "primary"),
-            ("Tổng yêu cầu", Model.TongYeuCau.ToString(), "dark"),
-            ("Chờ xác nhận", Model.ChoXacNhan.ToString(), "warning"),
-            ("Đang xử lý", Model.DangXuLy.ToString(), "info"),
-            ("Hoàn thành", Model.HoanThanh.ToString(), "success"),
-            ("Từ chối / Hủy", Model.TuChoiHuy.ToString(), "danger"),
-            ("Tổng khối lượng thu gom", Model.TongKhoiLuong.ToString("N2") + " kg", "success")
-        };
-    }
-    @foreach (var c in cards)
-    {
-        <div class="col-md-3">
-            <div class="card border-@c.Mau h-100">
-                <div class="card-body text-center">
-                    <div class="text-muted">@c.Ten</div>
-                    <div class="fs-3 fw-bold text-@c.Mau">@c.GiaTri</div>
-                </div>
-            </div>
+<div class="eco-dashboard">
+    <!-- Mười chỉ số gọn trên cùng một hàng; cuộn ngang khi màn hình hẹp -->
+    <div class="eco-summary-scroll mb-3" aria-label="Tổng quan số liệu">
+        <div class="eco-summary-row">
+            <div class="eco-summary-item"><i class="bi bi-people"></i><strong>@Model.TongNguoiDan</strong><span>Người dân</span></div>
+            <div class="eco-summary-item"><i class="bi bi-recycle"></i><strong>@Model.TongLoaiRac</strong><span>Loại rác</span></div>
+            <div class="eco-summary-item"><i class="bi bi-geo-alt"></i><strong>@Model.TongDiemTapKet</strong><span>Điểm tập kết</span></div>
+            <div class="eco-summary-item"><i class="bi bi-clipboard-data"></i><strong>@Model.TongYeuCau</strong><span>Tổng yêu cầu</span></div>
+            <div class="eco-summary-item"><i class="bi bi-map"></i><strong>@Model.TongKhuVuc</strong><span>Khu vực</span></div>
+            <div class="eco-summary-item"><i class="bi bi-person-badge"></i><strong>@Model.TongNhanVien</strong><span>Nhân viên</span></div>
+            <div class="eco-summary-item eco-summary-warning"><i class="bi bi-clock-history"></i><strong>@Model.ChoXacNhan</strong><span>Chờ xác nhận</span></div>
+            <div class="eco-summary-item eco-summary-info"><i class="bi bi-arrow-repeat"></i><strong>@Model.DangXuLy</strong><span>Đang xử lý</span></div>
+            <div class="eco-summary-item eco-summary-success"><i class="bi bi-check-circle"></i><strong>@Model.HoanThanh</strong><span>Hoàn thành</span></div>
+            <div class="eco-summary-item eco-summary-danger"><i class="bi bi-x-circle"></i><strong>@Model.TuChoiHuy</strong><span>Từ chối / Hủy</span></div>
         </div>
+    </div>
+
+    @if(Model.KhongThucHienDuoc > 0)
+    {
+        <div class="alert alert-warning py-2 mb-3">Có @Model.KhongThucHienDuoc yêu cầu không thực hiện được (trạng thái riêng).</div>
     }
+
+    <div class="row g-3 mb-3">
+        <div class="col-xl-8"><div class="eco-panel">
+            <div class="eco-panel-title"><i class="bi bi-bar-chart-fill"></i> Yêu cầu thu gom theo tháng</div>
+            <div class="eco-chart"><canvas id="ecoMonthly" role="img" aria-label="Biểu đồ số yêu cầu thu gom theo tháng"></canvas></div>
+        </div></div>
+        <div class="col-xl-4"><div class="eco-panel">
+            <div class="eco-panel-title"><i class="bi bi-pie-chart-fill"></i> Khối lượng theo loại rác (kg)</div>
+            <div class="eco-chart">
+                @if(Model.KhoiLuongTheoLoaiKg.Any()) { <canvas id="ecoKinds" role="img" aria-label="Biểu đồ tỷ lệ khối lượng các loại rác tính bằng kg"></canvas> }
+                else { <div class="eco-empty">Chưa có kết quả thu gom tính bằng kg</div> }
+            </div>
+            <div class="text-center eco-subtle mt-2">Tổng khối lượng (chỉ đơn vị kg): <strong>@Model.TongKhoiLuong.ToString("N2") kg</strong></div>
+        </div></div>
+    </div>
+
+    <div class="row g-3 mb-3">
+        <div class="col-xl-7"><div class="eco-panel">
+            <div class="d-flex justify-content-between align-items-center gap-2">
+                <div class="eco-panel-title"><i class="bi bi-card-checklist"></i> Yêu cầu gần đây</div>
+                <a asp-controller="TheoDoiYeuCau" asp-action="Index" class="small">Xem tất cả</a>
+            </div>
+            <div class="table-responsive"><table class="table table-hover">
+                <thead><tr><th>Mã</th><th>Người dân</th><th>Khu vực</th><th>Ngày đăng ký</th><th>Trạng thái</th><th></th></tr></thead>
+                <tbody>
+                    @foreach(var yc in Model.YeuCauGanDay) {
+                        <tr><td>#@yc.MaYeuCau</td><td>@yc.NguoiDan</td><td>@yc.KhuVuc</td><td>@yc.NgayDangKy.ToString("dd/MM/yyyy")</td>
+                        <td><span class="badge bg-@(trangThaiMau.GetValueOrDefault(yc.TrangThai, "secondary"))">@trangThaiTen.GetValueOrDefault(yc.TrangThai, yc.TrangThai)</span></td>
+                        <td><a asp-controller="TheoDoiYeuCau" asp-action="Details" asp-route-id="@yc.MaYeuCau" aria-label="Xem chi tiết yêu cầu @yc.MaYeuCau"><i class="bi bi-eye"></i></a></td></tr>
+                    }
+                    @if(!Model.YeuCauGanDay.Any()) { <tr><td colspan="6" class="eco-empty">Chưa có yêu cầu</td></tr> }
+                </tbody>
+            </table></div>
+        </div></div>
+        <div class="col-xl-5"><div class="eco-panel">
+            <div class="d-flex justify-content-between align-items-center gap-2">
+                <div class="eco-panel-title"><i class="bi bi-calendar-event"></i> Lịch thu gom sắp tới</div>
+                <a asp-controller="TheoDoiYeuCau" asp-action="Index" class="small">Xem tất cả</a>
+            </div>
+            <div class="table-responsive"><table class="table table-hover">
+                <thead><tr><th>Ngày</th><th>Khu vực</th><th>Người dân</th><th>Trạng thái</th></tr></thead>
+                <tbody>
+                    @foreach(var yc in Model.LichSapToi) {
+                        <tr><td>@yc.NgayMongMuon.ToString("dd/MM/yyyy")</td><td>@yc.KhuVuc</td><td>@yc.NguoiDan</td>
+                        <td><span class="badge bg-@(trangThaiMau.GetValueOrDefault(yc.TrangThai, "secondary"))">@trangThaiTen.GetValueOrDefault(yc.TrangThai, yc.TrangThai)</span></td></tr>
+                    }
+                    @if(!Model.LichSapToi.Any()) { <tr><td colspan="4" class="eco-empty">Không có lịch sắp tới</td></tr> }
+                </tbody>
+            </table></div>
+        </div></div>
+    </div>
+    <div class="text-end mb-2"><a asp-controller="ThongKe" asp-action="Index" class="btn btn-outline-success btn-sm"><i class="bi bi-graph-up me-1"></i> Xem thống kê chi tiết</a></div>
 </div>
-<div class="mt-4">
-    <a asp-controller="TheoDoiYeuCau" asp-action="Index" class="btn btn-outline-primary">Theo dõi yêu cầu</a>
-    <a asp-controller="ThongKe" asp-action="Index" class="btn btn-outline-primary">Thống kê</a>
-</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
+<script>
+(() => {
+    if (typeof Chart === 'undefined') {
+        console.warn('Không tải được Chart.js. Kiểm tra kết nối Internet hoặc sử dụng file Chart.js nội bộ.');
+        return;
+    }
+    const labels = @Html.Raw(JsonSerializer.Serialize(Model.NhanThang));
+    const totals = @Html.Raw(JsonSerializer.Serialize(Model.YeuCauTheoThang));
+    const completed = @Html.Raw(JsonSerializer.Serialize(Model.HoanThanhTheoThang));
+    const monthCanvas = document.getElementById('ecoMonthly');
+    if (monthCanvas) new Chart(monthCanvas, {
+        type: 'bar',
+        data: { labels, datasets: [
+            { label: 'Tổng yêu cầu', data: totals, backgroundColor: '#2987c9', borderRadius: 5 },
+            { label: 'Hoàn thành', data: completed, backgroundColor: '#259760', borderRadius: 5 }
+        ] },
+        options: { responsive: true, maintainAspectRatio: false,
+            plugins: { legend: { position: 'bottom' } },
+            scales: { y: { beginAtZero: true, ticks: { precision: 0 } } }
+        }
+    });
+    const kindsCanvas = document.getElementById('ecoKinds');
+    const kindsLabels = @Html.Raw(JsonSerializer.Serialize(Model.KhoiLuongTheoLoaiKg.Select(x => x.Ten).ToList()));
+    const kindsData = @Html.Raw(JsonSerializer.Serialize(Model.KhoiLuongTheoLoaiKg.Select(x => x.KhoiLuong).ToList()));
+    if (kindsCanvas) new Chart(kindsCanvas, {
+        type: 'doughnut',
+        data: { labels: kindsLabels, datasets: [{data: kindsData, backgroundColor: ['#2581d6','#f5ba31','#38a568','#9b85d4','#ed8d53','#6bbbc4','#899b72'] }] },
+        options: {responsive: true, maintainAspectRatio: false, cutout: '62%',
+            plugins: {legend: { position: 'bottom', labels: { boxWidth: 12 } }}}
+    });
+})();
+</script>
