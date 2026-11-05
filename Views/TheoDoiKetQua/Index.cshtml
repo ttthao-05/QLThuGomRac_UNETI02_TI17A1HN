@@ -86,7 +86,7 @@
                 <td class="text-end fw-semibold">@r.KhoiLuong.ToString("N2")</td>
               </tr> }
 
-            @if (!Model.Data.Items.Any()) { 
+            @if (!Model.Data.Items.Any()) {
                 <tr>
                     <td colspan="7" class="m4-empty">Chưa có kết quả thu gom phù hợp.</td>
                 </tr> }
@@ -98,9 +98,9 @@
                     <ul class="pagination">
             @for (int p = 1; p <= Model.Data.TotalPages; p++)
             { <li class="page-item @(p == Model.Data.Page ? "active" : "")">
-                <a class="page-link" asp-action="Index" asp-route-page="@p" asp-route-TuKhoa="@f.TuKhoa" 
-                    asp-route-MaKhuVuc="@f.MaKhuVuc" asp-route-MaNhanVien="@f.MaNhanVien" 
-                    asp-route-TuNgay="@f.TuNgay?.ToString("yyyy-MM-dd")" 
+                <a class="page-link" asp-action="Index" asp-route-page="@p" asp-route-TuKhoa="@f.TuKhoa"
+                    asp-route-MaKhuVuc="@f.MaKhuVuc" asp-route-MaNhanVien="@f.MaNhanVien"
+                    asp-route-TuNgay="@f.TuNgay?.ToString("yyyy-MM-dd")"
                     asp-route-DenNgay="@f.DenNgay?.ToString("yyyy-MM-dd")">@p</a></li> }
             </ul></nav></div>
         </section>
@@ -112,13 +112,13 @@
             </div>
             <p class="m4-chart-note mb-2">Các đơn vị đo được hiển thị riêng, không cộng kg với cái.</p>
                 <ul class="m4-stat-list">
-            @foreach (var t in Model.TongTheoLoai) { 
+            @foreach (var t in Model.TongTheoLoai) {
             <li>
                 <span>@t.LoaiRac</span>
                 <strong>@t.KhoiLuong.ToString("N2") @t.DonViTinh</strong>
             </li> }
 
-            @if (!Model.TongTheoLoai.Any()) { 
+            @if (!Model.TongTheoLoai.Any()) {
                 <li class="m4-muted">Chưa có dữ liệu tổng hợp</li> }
         </ul></aside>
     </div>
