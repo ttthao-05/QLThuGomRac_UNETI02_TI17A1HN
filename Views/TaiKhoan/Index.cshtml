@@ -119,6 +119,16 @@
 </div>
 
 
+
+@if (TempData["ThongBaoLoi"] != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @TempData["ThongBaoLoi"]
+    </div>
+}
+
+
+
 <!-- DANH SÁCH -->
 <div class="page-card">
 

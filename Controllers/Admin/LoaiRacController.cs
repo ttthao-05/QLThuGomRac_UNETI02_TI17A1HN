@@ -184,7 +184,7 @@ public class LoaiRacController : Controller
 
         if (daDuocSuDung)
         {
-            TempData["ThongBao"] =
+            TempData["Loi"] =
                 "Loại rác đã được sử dụng trong yêu cầu thu gom nên không thể xóa. " +
                 "Bạn có thể chuyển loại rác sang trạng thái ngừng phục vụ.";
 

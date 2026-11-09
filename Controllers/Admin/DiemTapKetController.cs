@@ -227,7 +227,7 @@ public class DiemTapKetController : Controller
         }
         catch (DbUpdateException)
         {
-            TempData["ThongBao"] =
+            TempData["Loi"] =
                 "Điểm tập kết đang có dữ liệu liên quan nên không thể xóa.";
 
             return RedirectToAction(nameof(Index));

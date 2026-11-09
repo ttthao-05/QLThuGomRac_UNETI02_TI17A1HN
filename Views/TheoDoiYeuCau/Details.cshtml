@@ -1,0 +1,30 @@
+﻿@* Họ và tên: [Vũ Đức Hải]
+   Mã sinh viên: [23103100008]
+   Nội dung thực hiện: Module 4 - Chi tiết yêu cầu thu gom *@
+@using QLThuGomRac_UNETI02_TI17A1HN.Helpers
+@model QLThuGomRac_UNETI02_TI17A1HN.ViewModels.YeuCauChiTietVM
+@{ ViewData["Title"] = "Chi tiết yêu cầu #" + Model.YeuCau.MaYeuCau; var yc = Model.YeuCau; }
+
+<h2>Yêu cầu #@yc.MaYeuCau</h2>
+<dl class="row">
+    <dt class="col-sm-3">Người dân</dt><dd class="col-sm-9">@yc.NguoiDan.HoTen</dd>
+    <dt class="col-sm-3">Khu vực</dt><dd class="col-sm-9">@yc.KhuVuc.TenKhuVuc</dd>
+    <dt class="col-sm-3">Địa chỉ thu gom</dt><dd class="col-sm-9">@yc.DiaChiThuGom</dd>
+    <dt class="col-sm-3">SĐT liên hệ</dt><dd class="col-sm-9">@yc.SoDienThoaiLienHe</dd>
+    <dt class="col-sm-3">Ngày đăng ký</dt><dd class="col-sm-9">@yc.NgayDangKy.ToString("dd/MM/yyyy HH:mm")</dd>
+    <dt class="col-sm-3">Ngày mong muốn</dt><dd class="col-sm-9">@yc.NgayMongMuonThuGom.ToString("dd/MM/yyyy") (@yc.KhungGio)</dd>
+    <dt class="col-sm-3">Nhân viên phụ trách</dt><dd class="col-sm-9">@(Model.PhanCong?.NhanVien?.HoTen ?? "Chưa phân công")</dd>
+    <dt class="col-sm-3">Trạng thái</dt><dd class="col-sm-9">@yc.TrangThai.TenHienThi()</dd>
+    <dt class="col-sm-3">Ghi chú</dt><dd class="col-sm-9">@yc.GhiChu</dd>
+</dl>
+<h5>Loại rác đăng ký</h5>
+<table class="table table-sm">
+    <thead><tr><th>Loại rác</th><th>Số lượng dự kiến</th><th>Ghi chú</th></tr></thead>
+    <tbody>
+    @foreach (var c in yc.ChiTietYeuCaus)
+    {
+        <tr><td>@c.LoaiRac.TenLoaiRac</td><td>@c.SoLuongDuKien.ToString("N2") @c.LoaiRac.DonViTinh</td><td>@c.GhiChu</td></tr>
+    }
+    </tbody>
+</table>
+<a asp-action="Index" class="btn btn-secondary">Quay lại</a>

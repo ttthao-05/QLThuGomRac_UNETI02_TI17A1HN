@@ -1,0 +1,645 @@
+﻿
+/* =====================================================
+   MODULE 4 - GIAO DIỆN THEO DÕI VÀ THỐNG KÊ
+
+   Áp dụng cho:
+   - Theo dõi yêu cầu
+   - Theo dõi kết quả
+   - Thống kê
+
+   CSS chỉ tác động bên trong .m4-page
+   ===================================================== */
+
+
+/* =====================================================
+   1. MÀU SẮC VÀ CẤU HÌNH CHUNG
+   ===================================================== */
+
+.m4-page {
+    --m4-green: #087a4b;
+    --m4-ink: #12392c;
+    --m4-muted: #6b8178;
+    --m4-border: #e1ece5;
+    --m4-bg: #f7faf8;
+    color: var(--m4-ink);
+}
+
+
+    /* =====================================================
+   2. TIÊU ĐỀ TRANG
+   ===================================================== */
+
+    .m4-page .m4-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        flex-wrap: wrap;
+        margin-bottom: 1.1rem;
+    }
+
+    .m4-page .m4-kicker {
+        font-size: 0.77rem;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: #47876b;
+        font-weight: 700;
+        margin-bottom: 0.3rem;
+    }
+
+    .m4-page h1 {
+        font-size: clamp(1.42rem, 2vw, 1.85rem);
+        font-weight: 750;
+        margin: 0;
+        color: #133d2d;
+    }
+
+    .m4-page .m4-subtitle {
+        font-size: 0.9rem;
+        color: var(--m4-muted);
+        margin: 0.4rem 0 0;
+    }
+
+
+    /* =====================================================
+   3. KHUNG NỘI DUNG (PANEL)
+   ===================================================== */
+
+    .m4-page .m4-panel {
+        background: #ffffff;
+        border: 1px solid var(--m4-border);
+        box-shadow: 0 4px 18px rgba(12, 72, 43, 0.035);
+        border-radius: 15px;
+        padding: 18px;
+        margin-bottom: 16px;
+    }
+
+    .m4-page .m4-panel-title {
+        font-size: 1.01rem;
+        font-weight: 750;
+        color: #13573a;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+
+    /* =====================================================
+   4. BỘ LỌC TÌM KIẾM
+   ===================================================== */
+
+    .m4-page .m4-filters {
+        display: grid;
+        grid-template-columns: repeat(12, minmax(0, 1fr));
+        gap: 12px;
+        align-items: end;
+    }
+
+    .m4-page .m4-field {
+        grid-column: span 3;
+        min-width: 0;
+    }
+
+        /* Ô tìm kiếm rộng hơn các ô còn lại */
+
+        .m4-page .m4-field.m4-search {
+            grid-column: span 4;
+        }
+
+        /* Ô lọc ngày */
+
+        .m4-page .m4-field.m4-date {
+            grid-column: span 2;
+        }
+
+        /* Nhãn của ô nhập liệu */
+
+        .m4-page .m4-field label {
+            font-size: 0.78rem;
+            font-weight: 650;
+            color: #517163;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+    /* Input và Select */
+
+    .m4-page .form-control,
+    .m4-page .form-select {
+        border: 1px solid #dbe6df;
+        border-radius: 9px;
+        min-height: 42px;
+        font-size: 0.87rem;
+        background-color: #ffffff;
+    }
+
+        /* Hiệu ứng khi chọn ô nhập liệu */
+
+        .m4-page .form-control:focus,
+        .m4-page .form-select:focus {
+            border-color: #55ad84;
+            box-shadow: 0 0 0 0.2rem rgba(26, 145, 82, 0.1);
+        }
+
+
+    /* =====================================================
+   5. NÚT CHỨC NĂNG
+   ===================================================== */
+
+    /* Khu vực chứa các nút */
+
+    .m4-page .m4-actions {
+        grid-column: span 12;
+        display: flex;
+        justify-content: flex-end;
+        gap: 8px;
+    }
+
+    /* Nút chính */
+
+    .m4-page .m4-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.45rem;
+        min-height: 40px;
+        padding: 8px 15px;
+        border-radius: 9px;
+        border: 1px solid #087a4b;
+        background: #087a4b;
+        color: #ffffff;
+        font-weight: 600;
+        text-decoration: none;
+        cursor: pointer;
+        font-size: 0.88rem;
+    }
+
+        /* Khi di chuột vào nút chính */
+
+        .m4-page .m4-btn:hover {
+            background: #05633c;
+            color: #ffffff;
+        }
+
+    /* Nút viền xanh */
+
+    .m4-page .m4-btn-outline {
+        background: #ffffff;
+        color: #087a4b;
+        border: 1px solid #b9ddc9;
+    }
+
+        /* Khi di chuột vào nút viền */
+
+        .m4-page .m4-btn-outline:hover {
+            background: #edf8f1;
+            color: #05633c;
+        }
+
+
+    /* =====================================================
+   6. BẢNG DANH SÁCH DỮ LIỆU
+   ===================================================== */
+
+    /* Cho phép cuộn ngang nếu bảng quá rộng */
+
+    .m4-page .m4-table-wrap {
+        width: 100%;
+        overflow-x: auto;
+    }
+
+    /* Cấu hình chung cho bảng */
+
+    .m4-page .m4-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.86rem;
+        margin-bottom: 0;
+    }
+
+        /* Tiêu đề các cột */
+
+        .m4-page .m4-table th {
+            text-align: left;
+            font-size: 0.78rem;
+            white-space: nowrap;
+            background: #f2f8f4;
+            color: #526e5f;
+            padding: 13px 12px;
+            border-bottom: 1px solid #dce7df;
+        }
+
+        /* Nội dung từng ô */
+
+        .m4-page .m4-table td {
+            padding: 13px 12px;
+            border-bottom: 1px solid #edf2ee;
+            vertical-align: middle;
+            color: #254438;
+        }
+
+        /* Hiệu ứng khi di chuột vào hàng */
+
+        .m4-page .m4-table tbody tr:hover {
+            background: #f8fbf9;
+        }
+
+        /* Bỏ đường kẻ dưới ở hàng cuối */
+
+        .m4-page .m4-table tbody tr:last-child td {
+            border-bottom: 0;
+        }
+
+        /* Mã yêu cầu */
+
+        .m4-page .m4-table .m4-id {
+            font-weight: 750;
+            color: #087a4b;
+        }
+
+        /* Chữ phụ */
+
+        .m4-page .m4-table .m4-muted {
+            color: #8a9891;
+        }
+
+
+    /* =====================================================
+   7. MÀU TRẠNG THÁI YÊU CẦU
+   ===================================================== */
+
+    /* Trạng thái mặc định */
+
+    .m4-page .m4-status {
+        display: inline-flex;
+        align-items: center;
+        border-radius: 999px;
+        padding: 4px 9px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        white-space: nowrap;
+        background: #eef2f2;
+        color: #59686c;
+    }
+
+    /* Hoàn thành - Xanh lá */
+
+    .m4-page .m4-status-done {
+        background: #e4f5ea;
+        color: #087847;
+    }
+
+    /* Chờ xác nhận - Vàng */
+
+    .m4-page .m4-status-pending {
+        background: #fff4db;
+        color: #a76a00;
+    }
+
+    /* Đang xử lý - Xanh dương */
+
+    .m4-page .m4-status-running {
+        background: #e6f5ff;
+        color: #0873a3;
+    }
+
+    /* Từ chối hoặc hủy - Đỏ */
+
+    .m4-page .m4-status-cancel {
+        background: #fee7e9;
+        color: #be3543;
+    }
+
+    /* Trạng thái khác - Xám */
+
+    .m4-page .m4-status-neutral {
+        background: #ecf0f1;
+        color: #657480;
+    }
+
+
+    /* =====================================================
+   8. PHÂN TRANG
+   ===================================================== */
+
+    /* Phần cuối bảng */
+
+    .m4-page .m4-page-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin-top: 17px;
+    }
+
+        /* Danh sách nút chuyển trang */
+
+        .m4-page .m4-page-footer .pagination {
+            margin: 0;
+            flex-wrap: wrap;
+            gap: 4px;
+        }
+
+        /* Nút số trang */
+
+        .m4-page .m4-page-footer .page-link {
+            border-radius: 8px;
+            border-color: #dce9e0;
+            color: #11784d;
+        }
+
+        /* Trang đang được chọn */
+
+        .m4-page .m4-page-footer .page-item.active .page-link {
+            background: #087a4b;
+            border-color: #087a4b;
+            color: #ffffff;
+        }
+
+
+    /* =====================================================
+   9. BỐ CỤC CỘT VÀ THẺ THỐNG KÊ
+   ===================================================== */
+
+    /* Bố cục 2 cột: bảng chính rộng hơn */
+
+    .m4-page .m4-two-cols {
+        display: grid;
+        grid-template-columns: minmax(0, 2.15fr) minmax(260px, 1fr);
+        gap: 16px;
+        align-items: start;
+    }
+
+    /* Danh sách thống kê */
+
+    .m4-page .m4-stat-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+        /* Từng dòng thống kê */
+
+        .m4-page .m4-stat-list li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 0;
+            border-bottom: 1px solid #edf2ee;
+            font-size: 0.87rem;
+        }
+
+            .m4-page .m4-stat-list li:last-child {
+                border-bottom: 0;
+            }
+
+    /* Thẻ thống kê nhỏ */
+
+    .m4-page .m4-mini-card {
+        background: #f2f8f4;
+        border: 1px solid #dcece0;
+        padding: 16px;
+        border-radius: 12px;
+        margin-bottom: 12px;
+    }
+
+        /* Giá trị thống kê */
+
+        .m4-page .m4-mini-card .m4-mini-value {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: #087847;
+        }
+
+
+    /* =====================================================
+   10. BIỂU ĐỒ VÀ THÔNG BÁO NỔI BẬT
+   ===================================================== */
+
+    /* Khung chứa biểu đồ */
+
+    .m4-page .m4-chart-frame {
+        position: relative;
+        height: 295px;
+        width: 100%;
+    }
+
+    /* Ghi chú biểu đồ */
+
+    .m4-page .m4-chart-note {
+        font-size: 0.8rem;
+        color: #7f8f85;
+        margin: 10px 0 0;
+    }
+
+    /* Bố cục 2 biểu đồ hoặc 2 bảng trên một hàng */
+
+    .m4-page .m4-grid-two {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
+    }
+
+    /* Khung thông báo nổi bật */
+
+    .m4-page .m4-highlight {
+        background: linear-gradient(105deg, #e6f6ea, #f4fbf2);
+        border: 1px solid #cfe8d8;
+        border-radius: 14px;
+        padding: 20px;
+        margin-bottom: 18px;
+        display: flex;
+        gap: 15px;
+        align-items: center;
+    }
+
+        /* Biểu tượng trong khung thông báo */
+
+        .m4-page .m4-highlight i {
+            font-size: 2rem;
+            color: #078146;
+        }
+
+    /* Thông báo khi không có dữ liệu */
+
+    .m4-page .m4-empty {
+        padding: 25px;
+        text-align: center;
+        color: #7d8e84;
+    }
+
+
+/* =====================================================
+   11. RESPONSIVE - MÀN HÌNH DƯỚI 1200PX
+   ===================================================== */
+
+@media (max-width: 1200px) {
+
+    .m4-page .m4-field {
+        grid-column: span 4;
+    }
+
+        .m4-page .m4-field.m4-search {
+            grid-column: span 6;
+        }
+
+        .m4-page .m4-field.m4-date {
+            grid-column: span 3;
+        }
+}
+
+
+/* =====================================================
+   12. RESPONSIVE - TABLET VÀ ĐIỆN THOẠI
+   ===================================================== */
+
+/* Tablet: chuyển các khung 2 cột thành 1 cột */
+
+@media (max-width: 900px) {
+
+    .m4-page .m4-two-cols,
+    .m4-page .m4-grid-two {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+/* Điện thoại: bộ lọc và nút tự xuống dòng */
+
+@media (max-width: 650px) {
+
+    .m4-page .m4-field,
+    .m4-page .m4-field.m4-search,
+    .m4-page .m4-field.m4-date {
+        grid-column: span 12;
+    }
+
+    .m4-page .m4-actions {
+        justify-content: stretch;
+    }
+
+        .m4-page .m4-actions > * {
+            flex: 1;
+        }
+
+    .m4-page .m4-panel {
+        padding: 14px;
+    }
+
+    .m4-page .m4-page-footer {
+        align-items: flex-start;
+    }
+}
+
+
+/* ==========================================
+   THỐNG KÊ - BỐ CỤC 4 CỘT GỌN GÀNG
+   ========================================== */
+
+/* 4 biểu đồ hoặc 4 bảng trên 1 hàng */
+.m4-page .m4-grid-two {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+    align-items: stretch;
+}
+
+    /* Thu nhỏ các khung */
+    .m4-page .m4-grid-two .m4-panel {
+        min-width: 0;
+        padding: 12px;
+        margin-bottom: 0;
+    }
+
+    /* Thu nhỏ tiêu đề */
+    .m4-page .m4-grid-two .m4-panel-title {
+        font-size: 13px;
+        line-height: 1.4;
+        margin-bottom: 10px;
+        gap: 6px;
+    }
+
+/* Thu nhỏ chiều cao biểu đồ */
+.m4-page .m4-chart-frame {
+    position: relative;
+    width: 100%;
+    height: 210px;
+}
+
+/* Thu nhỏ bảng */
+.m4-page .m4-grid-two .m4-table {
+    font-size: 12px;
+}
+
+    /* Tiêu đề cột */
+    .m4-page .m4-grid-two .m4-table th {
+        padding: 9px 7px;
+        font-size: 11px;
+    }
+
+    /* Dữ liệu trong bảng */
+    .m4-page .m4-grid-two .m4-table td {
+        padding: 9px 7px;
+        font-size: 12px;
+    }
+
+/* Khoảng cách giữa các nhóm biểu đồ / bảng */
+.m4-page .m4-grid-two {
+    margin-bottom: 16px;
+}
+
+/* ==========================================
+   RESPONSIVE
+   ========================================== */
+
+/* Màn hình vừa: 2 cột */
+@media (max-width: 1250px) {
+    .m4-page .m4-grid-two {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+/* Điện thoại: 1 cột */
+@media (max-width: 650px) {
+    .m4-page .m4-grid-two {
+        grid-template-columns: 1fr;
+    }
+
+    .m4-page .m4-chart-frame {
+        height: 240px;
+    }
+}
+
+
+/* ======================================
+   TRANG QUẢN TRỊ - GIAO DIỆN GỌN
+   ====================================== */
+
+/* Chỉ áp dụng khi trang có class quantri-compact */
+.quantri-compact .page-card {
+    padding: 14px;
+    border-radius: 12px;
+    min-height: 145px;
+}
+
+    .quantri-compact .page-card h4 {
+        font-size: 16px;
+        font-weight: 700;
+        margin-bottom: 8px;
+    }
+
+    .quantri-compact .page-card p {
+        font-size: 12px;
+        line-height: 1.4;
+        margin-bottom: 12px;
+        color: #6b8178;
+    }
+
+    .quantri-compact .page-card .btn {
+        font-size: 12px;
+        padding: 6px 10px;
+        border-radius: 7px;
+    }
